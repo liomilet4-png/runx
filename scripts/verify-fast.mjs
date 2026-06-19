@@ -45,6 +45,7 @@ await runParallelGroup("source checks", [
   step("boundary:check", "pnpm", ["boundary:check"]),
   step("test:boundary", "pnpm", ["test:boundary"]),
   step("typecheck", "pnpm", ["typecheck"]),
+  step("release version sync", "pnpm", ["release:version:check"]),
   step("integration module guard", "node", ["scripts/check-integration-test-modules.mjs"]),
 ]);
 
@@ -89,7 +90,6 @@ if (cliBuild.status === 0 && oracleBuild.status === 0) {
     [
       step("build workspace", "node", ["scripts/build-workspace.mjs"]),
       step("authoring package contract", "node", ["scripts/check-authoring-package-contract.mjs"]),
-      step("create-skill package contract", "node", ["scripts/check-create-skill-package-contract.mjs"]),
       step("publishable manifests", "node", ["scripts/check-publishable-package-manifests.mjs"]),
       step("fixtures:kernel:validate", "pnpm", ["fixtures:kernel:validate"]),
       step("fixtures:kernel:check", "pnpm", ["fixtures:kernel:check"]),

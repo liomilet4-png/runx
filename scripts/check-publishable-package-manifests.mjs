@@ -6,7 +6,6 @@ const packageNames = [
   "authoring",
   "cli",
   "contracts",
-  "create-skill",
   "host-adapters",
   "langchain",
 ];
