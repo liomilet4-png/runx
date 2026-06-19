@@ -22,12 +22,14 @@ interface Finding {
   readonly message: string;
 }
 
-const options = parseArgs(process.argv.slice(2));
-const findings: Finding[] = [];
-
 const packageJsonPath = path.join(workspaceRoot, "packages", "cli", "package.json");
 const cargoTomlPath = path.join(workspaceRoot, "crates", "runx-cli", "Cargo.toml");
 const cargoLockPath = path.join(workspaceRoot, "crates", "Cargo.lock");
+const parsedOptions = parseArgs(process.argv.slice(2));
+const options = parsedOptions.version
+  ? parsedOptions
+  : { ...parsedOptions, version: currentPackageVersion(packageJsonPath) };
+const findings: Finding[] = [];
 
 stampPackageJson(packageJsonPath, options, findings);
 stampCargoToml(cargoTomlPath, options, findings);
@@ -117,7 +119,7 @@ function parseArgs(argv: readonly string[]): Options {
       continue;
     }
     if (arg === "--help" || arg === "-h") {
-      console.log("Usage: tsx scripts/release-version.ts --version X.Y.Z [--check]");
+      console.log("Usage: tsx scripts/set-release-version.ts [--version X.Y.Z] [--check]");
       process.exit(0);
     }
     if (!version && !arg.startsWith("--")) {
@@ -129,10 +131,22 @@ function parseArgs(argv: readonly string[]): Options {
   }
   // Tolerate a leading cli-v / v prefix so the raw tag can be passed through.
   version = version.replace(/^(?:cli-)?v/u, "");
-  if (!SEMVER.test(version)) {
+  if (version && !SEMVER.test(version)) {
     throw new Error(`--version must be semver (got "${version}")`);
   }
+  if (!version && !check) {
+    throw new Error("--version is required unless --check is used");
+  }
   return { version, check };
+}
+
+function currentPackageVersion(filePath: string): string {
+  const manifest = JSON.parse(readFileSync(filePath, "utf8")) as { version?: string };
+  const version = manifest.version ?? "";
+  if (!SEMVER.test(version)) {
+    throw new Error(`packages/cli/package.json has invalid version "${version}"`);
+  }
+  return version;
 }
 
 function relative(filePath: string): string {

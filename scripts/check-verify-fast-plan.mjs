@@ -13,7 +13,6 @@ const parallelSourceGroup = sliceBetween(
 
 for (const forbidden of [
   "authoring package contract",
-  "create-skill package contract",
   "rust:crate-graph",
   "rust:style",
   "cutover:legacy-check",
@@ -29,13 +28,13 @@ for (const forbidden of [
 for (const required of [
   'step("readiness structural guard"',
   'step("demo inventory guard"',
+  'step("release version sync"',
   'await runSerialGroup("rust structure checks"',
   'step("cutover:legacy-check"',
   'step("build native runx binary"',
   'step("build harness fixture oracle binary"',
   'step("build workspace"',
   'step("authoring package contract"',
-  'step("create-skill package contract"',
 ]) {
   if (!source.includes(required)) {
     throw new Error(`verify:fast is missing required serialized step marker: ${required}`);
@@ -45,7 +44,6 @@ for (const required of [
 const buildWorkspaceIndex = source.indexOf('step("build workspace"');
 for (const requiredAfterBuild of [
   'step("authoring package contract"',
-  'step("create-skill package contract"',
 ]) {
   const stepIndex = source.indexOf(requiredAfterBuild);
   if (stepIndex < buildWorkspaceIndex) {
@@ -53,7 +51,7 @@ for (const requiredAfterBuild of [
   }
 }
 
-console.log("verify:fast plan keeps package checks after build and Rust-heavy checks serialized.");
+console.log("verify:fast plan keeps release drift checks early, package checks after build, and Rust-heavy checks serialized.");
 
 function sliceBetween(contents, start, end) {
   const startIndex = contents.indexOf(start);
