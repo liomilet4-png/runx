@@ -73,6 +73,10 @@ harness:
                   thread_locator: github://example/repo/issues/101
                 size: micro
                 risk: low
+            closure:
+              disposition: closed
+              reason_code: issue_intake_completed
+              summary: Bounded docs fix is ready for the issue-to-pr lane.
             change_set:
               change_set_id: change_set_docs_work_101
               thread_locator: github://example/repo/issues/101
@@ -205,6 +209,10 @@ harness:
                 success_criteria:
                   - One shared plan exists before repo mutation starts.
                   - Repo-scoped workers receive explicit shared invariants.
+            closure:
+              disposition: closed
+              reason_code: issue_intake_completed
+              summary: Feature request needs a planning lane before mutation.
             change_set:
               change_set_id: change_set_abandoned_cart_982
               thread_locator: support://request/982
@@ -292,6 +300,10 @@ harness:
               action_decision: stop
               review_target: none
               operator_notes: []
+            closure:
+              disposition: closed
+              reason_code: issue_intake_completed
+              summary: Support question should be answered without a mutation lane.
             change_set:
               change_set_id: change_set_support_983
               thread_locator: support://request/983
@@ -383,6 +395,10 @@ harness:
                 target surface is explicit.
               operator_notes:
                 - Do not open issue-to-pr until the target repo is explicit.
+            closure:
+              disposition: closed
+              reason_code: issue_intake_completed
+              summary: Ambiguous request needs review before mutation.
             change_set:
               change_set_id: change_set_support_984
               thread_locator: github://example/repo/issues/984
