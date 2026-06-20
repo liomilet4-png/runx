@@ -216,6 +216,8 @@ impl FileRegistryStore {
                     owner: latest.owner.clone(),
                     name: latest.name.clone(),
                     description: latest.description.clone(),
+                    category: latest.category.clone(),
+                    source_category: latest.source_category.clone(),
                     latest_version: latest.version.clone(),
                     latest_digest: latest.digest.clone(),
                     versions,

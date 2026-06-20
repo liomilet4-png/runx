@@ -37,6 +37,8 @@ export interface RegistrySkillVersion {
   readonly runner_names: readonly string[];
   readonly skill_id: string;
   readonly name: string;
+  readonly category?: string;
+  readonly source_category?: string;
   readonly version: string;
   readonly digest: string;
   readonly source_type: string;

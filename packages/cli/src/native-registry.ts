@@ -67,6 +67,8 @@ function normalizeRustRegistrySearchResult(value: unknown): SkillSearchResult {
     !result ||
     typeof result.skill_id !== "string" ||
     typeof result.name !== "string" ||
+    (result.category !== undefined && typeof result.category !== "string") ||
+    (result.source_category !== undefined && typeof result.source_category !== "string") ||
     typeof result.owner !== "string" ||
     result.source !== "runx-registry" ||
     typeof result.source_label !== "string" ||

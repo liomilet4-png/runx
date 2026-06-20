@@ -69,6 +69,10 @@ would stand behind:
   demo framing unless the project itself uses that framing
 - never describe pages as machine output, agent output, or AI-generated docs;
   the site should read like the project maintainer wrote and stands behind it
+- when publishing public docs, use a credible durable project, maintainer,
+  organization, product, or documentation home. Random personal domains,
+  placeholder parent sites, sandbox hosts, preview deploys, throwaway
+  subdomains, and unrelated novelty domains are not publication-quality homes
 - if the repo evidence is too thin for a strong docs page, surface that as an
   evidence gap instead of manufacturing confident filler
 
@@ -88,6 +92,9 @@ would stand behind:
 - Strategic bar: the docs should make a real user action easier: install,
   evaluate, integrate, operate, or contribute. A pretty site with thin content
   is a failed run.
+- Public value bar: a public Sourcey site should be something a real maintainer,
+  user, or ecosystem account would link. If the target project, host, or content
+  has no credible audience, return `needs_review` instead of shipping.
 - Stop conditions: return `needs_more_evidence`, `needs_review`, or an empty
   author/revise bundle when the repo already has the right docs or the evidence
   does not support new pages.
@@ -223,6 +230,10 @@ with `needs_more_evidence` or `needs_review` instead of producing filler.
 - CI or deploy may run deterministic `sourcey build` from committed source.
 - Deploy must not be the step where docs scope, prose, or IA is invented. Do
   discovery, authoring, and review before deploy.
+- For public publication, include enough proof for an external reviewer to
+  inspect the target project, source commit, Sourcey config or input source,
+  generated page list, deployment URL, parent domain, and durability of the
+  hosting choice.
 
 ## Config reference
 
@@ -357,5 +368,8 @@ Invalid card icon names are a blocking quality issue. The build report includes
   missing ignore rule as an operational gap.
 - Build output may be regenerated in CI or deploy, but deploy must not author
   or revise docs content.
+- Public deployments must be durable and socially credible. Do not treat a
+  throwaway preview URL, unrelated personal domain, placeholder parent site, or
+  sandbox subdomain as a completed public docs home.
 - Do not encode open-ended critique or revision behavior. Critique is one
   bounded evaluation pass. Revision is at most one explicit bounded pass.

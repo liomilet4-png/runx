@@ -80,10 +80,22 @@ pub(super) fn render_search(
         results.len()
     );
     for result in results {
+        let category = result
+            .category
+            .as_ref()
+            .map(|category| format!("    category {category}\n"))
+            .or_else(|| {
+                result
+                    .source_category
+                    .as_ref()
+                    .map(|category| format!("    source-category {category}\n"))
+            })
+            .unwrap_or_default();
         output.push_str(&format!(
-            "  - {}@{}\n    digest   {}\n    trust    {}\n    install  {}\n    run      {}\n",
+            "  - {}@{}\n{}    digest   {}\n    trust    {}\n    install  {}\n    run      {}\n",
             result.skill_id,
             result.version.as_deref().unwrap_or("unknown"),
+            category,
             result
                 .digest
                 .as_deref()
@@ -102,9 +114,21 @@ pub(super) fn render_read(
     registry_ref: &str,
     skill: &runx_runtime::registry::RegistrySkillDetail,
 ) -> String {
+    let category = skill
+        .category
+        .as_ref()
+        .map(|category| format!("  category         {category}\n"))
+        .or_else(|| {
+            skill
+                .source_category
+                .as_ref()
+                .map(|category| format!("  source category  {category}\n"))
+        })
+        .unwrap_or_default();
     format!(
-        "\n  registry read    {registry_ref}\n  source           {source}\n  skill            {}\n  version          {}\n  digest           {}\n  trust            {}\n  signed           {}\n  next             {}\n\n",
+        "\n  registry read    {registry_ref}\n  source           {source}\n  skill            {}\n{}  version          {}\n  digest           {}\n  trust            {}\n  signed           {}\n  next             {}\n\n",
         skill.skill_id,
+        category,
         skill.version,
         digest_label(&skill.digest),
         trust_tier_label(&skill.trust_tier),

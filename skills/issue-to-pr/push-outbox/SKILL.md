@@ -1,6 +1,8 @@
 ---
 name: issue-to-pr-push-outbox
 description: Publish issue-to-PR outbox entries through the governed Rust thread-outbox-provider front.
+runx:
+  category: code
 source:
   type: thread-outbox-provider
   thread_outbox_provider:

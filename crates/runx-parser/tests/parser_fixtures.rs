@@ -164,6 +164,30 @@ fn skill_fixtures_match_typescript() -> Result<(), String> {
 }
 
 #[test]
+fn skill_category_accepts_portable_top_level_field() -> Result<(), String> {
+    let skill = validate_skill(parse_skill_markdown(
+        "---\nname: docs-demo\ndescription: Demo skill.\ncategory: documentation\n---\n# Demo\n",
+    ).map_err(|error| error.to_string())?)
+    .map_err(|error| error.to_string())?;
+
+    assert_eq!(skill.category.as_deref(), Some("documentation"));
+    assert_eq!(skill.runx_category.as_deref(), None);
+    Ok(())
+}
+
+#[test]
+fn skill_category_accepts_runx_catalog_override() -> Result<(), String> {
+    let skill = validate_skill(parse_skill_markdown(
+        "---\nname: docs-demo\ndescription: Demo skill.\ncategory: documentation\nrunx:\n  category: content\n---\n# Demo\n",
+    ).map_err(|error| error.to_string())?)
+    .map_err(|error| error.to_string())?;
+
+    assert_eq!(skill.category.as_deref(), Some("documentation"));
+    assert_eq!(skill.runx_category.as_deref(), Some("content"));
+    Ok(())
+}
+
+#[test]
 fn runner_manifest_fixtures_match_typescript() -> Result<(), String> {
     for fixture_json in RUNNER_MANIFEST_FIXTURES {
         let fixture: RunnerManifestFixture =

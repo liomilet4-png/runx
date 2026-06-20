@@ -124,6 +124,10 @@ pub struct RegistrySearchResult {
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub summary: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub category: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub source_category: Option<String>,
     pub owner: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
@@ -156,6 +160,10 @@ pub struct RegistrySkillVersion {
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub category: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub source_category: Option<String>,
     pub version: String,
     pub digest: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -206,6 +214,10 @@ pub struct RegistrySkill {
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub category: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub source_category: Option<String>,
     pub latest_version: String,
     pub latest_digest: String,
     pub versions: Vec<RegistrySkillVersion>,
@@ -311,6 +323,10 @@ pub struct RegistrySkillDetail {
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub category: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub source_category: Option<String>,
     pub version: String,
     pub digest: String,
     #[serde(skip_serializing_if = "Option::is_none")]

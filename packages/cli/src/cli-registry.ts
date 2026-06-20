@@ -6,6 +6,8 @@ export interface SkillSearchResult {
   readonly skill_id: string;
   readonly name: string;
   readonly summary?: string;
+  readonly category?: string;
+  readonly source_category?: string;
   readonly owner: string;
   readonly version?: string;
   readonly digest?: string;
