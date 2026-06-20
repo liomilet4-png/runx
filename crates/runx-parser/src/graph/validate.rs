@@ -69,3 +69,54 @@ fn reject_unsupported_top_level(document: &JsonObject) -> Result<(), ValidationE
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{parse_graph_yaml, validate_graph};
+
+    #[test]
+    fn inputs_reject_previous_step_output_references() -> Result<(), String> {
+        let raw = parse_graph_yaml(
+            r#"
+name: bad-input-ref
+steps:
+  - id: select
+    run:
+      type: agent-task
+  - id: review
+    run:
+      type: agent-task
+    inputs:
+      bounty: select.result
+"#,
+        )
+        .map_err(|error| error.to_string())?;
+        let error = validate_graph(raw)
+            .err()
+            .ok_or_else(|| "graph unexpectedly validated".to_owned())?;
+        let message = error.to_string();
+        assert!(message.contains("steps.1.inputs.bounty"));
+        assert!(message.contains("move it to context"));
+        Ok(())
+    }
+
+    #[test]
+    fn inputs_allow_literals_that_are_not_previous_step_refs() -> Result<(), String> {
+        let raw = parse_graph_yaml(
+            r#"
+name: literal-input
+steps:
+  - id: review
+    run:
+      type: agent-task
+    inputs:
+      literal: select.result
+      variable: $input.claim
+      url: https://example.com/a.b
+"#,
+        )
+        .map_err(|error| error.to_string())?;
+        validate_graph(raw).map_err(|error| error.to_string())?;
+        Ok(())
+    }
+}

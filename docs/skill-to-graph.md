@@ -214,3 +214,40 @@ runx skill <skill> \
 `--secret-env NAME` names an environment variable to deliver as the secret;
 `--credential`'s final segment is the scope, which must match the tool's declared
 `scopes`. See `examples/byo-http-tool` and `examples/http-tool-catalog`.
+
+For repeated local operator runs, keep the secret in project env and put only the
+non-secret descriptor in `.runx/credentials.json`:
+
+```json
+{
+  "profiles": {
+    "operator": {
+      "credential": "frantic:bearer:local://frantic/internal:frantic.review",
+      "secret_env": "INTERNAL_SYNC_SECRET"
+    }
+  }
+}
+```
+
+Then run with `--credential-profile operator`. If `RUNX_CREDENTIAL_PROFILES` is
+set, runx reads that JSON file instead; otherwise it checks the project
+`.runx/credentials.json` and then the global runx home. The profile file never
+contains the secret value.
+
+Use `inputs` for literals, `$input.*` values, and static configuration. Use
+`context` when a step needs an earlier step's output:
+
+```yaml
+steps:
+  - id: select
+    run:
+      type: agent-task
+  - id: review
+    run:
+      type: agent-task
+    context:
+      bounty: select.result
+```
+
+`inputs: { bounty: select.result }` is rejected because it looks like a step
+output reference placed in the wrong field.

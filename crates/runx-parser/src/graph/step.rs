@@ -37,6 +37,10 @@ pub fn validate_step(
     .unwrap_or_default();
     validate_context_skills(&context_skills, field, &target)?;
 
+    let inputs =
+        optional_object(raw_step.get("inputs"), &format!("{field}.inputs"))?.unwrap_or_default();
+    reject_step_output_refs_in_inputs(&inputs, previous_step_ids, &format!("{field}.inputs"))?;
+
     Ok(GraphStep {
         id,
         label: optional_non_empty_string(raw_step.get("label"), &format!("{field}.label"))?,
@@ -49,8 +53,7 @@ pub fn validate_step(
         )?,
         artifacts: optional_object(raw_step.get("artifacts"), &format!("{field}.artifacts"))?,
         runner,
-        inputs: optional_object(raw_step.get("inputs"), &format!("{field}.inputs"))?
-            .unwrap_or_default(),
+        inputs,
         context_edges: context_edges(&context, previous_step_ids, field)?,
         context,
         context_skills,
@@ -71,6 +74,64 @@ pub fn validate_step(
             &format!("{field}.idempotency_key"),
         )?,
     })
+}
+
+fn reject_step_output_refs_in_inputs(
+    inputs: &JsonObject,
+    previous_step_ids: &BTreeSet<String>,
+    field: &str,
+) -> Result<(), ValidationError> {
+    for (key, value) in inputs {
+        reject_step_output_refs_in_input_value(
+            value,
+            previous_step_ids,
+            &format!("{field}.{key}"),
+        )?;
+    }
+    Ok(())
+}
+
+fn reject_step_output_refs_in_input_value(
+    value: &JsonValue,
+    previous_step_ids: &BTreeSet<String>,
+    field: &str,
+) -> Result<(), ValidationError> {
+    match value {
+        JsonValue::String(value) => {
+            if looks_like_previous_step_output_ref(value, previous_step_ids) {
+                return Err(validation_error(format!(
+                    "{field} looks like step output reference {value:?}; move it to context if you meant to read a previous step output."
+                )));
+            }
+        }
+        JsonValue::Object(object) => {
+            for (key, value) in object {
+                reject_step_output_refs_in_input_value(
+                    value,
+                    previous_step_ids,
+                    &format!("{field}.{key}"),
+                )?;
+            }
+        }
+        JsonValue::Array(values) => {
+            for (index, value) in values.iter().enumerate() {
+                reject_step_output_refs_in_input_value(
+                    value,
+                    previous_step_ids,
+                    &format!("{field}.{index}"),
+                )?;
+            }
+        }
+        _ => {}
+    }
+    Ok(())
+}
+
+fn looks_like_previous_step_output_ref(value: &str, previous_step_ids: &BTreeSet<String>) -> bool {
+    let Some((from_step, output)) = value.split_once('.') else {
+        return false;
+    };
+    !output.is_empty() && previous_step_ids.contains(from_step)
 }
 
 fn validate_when(
