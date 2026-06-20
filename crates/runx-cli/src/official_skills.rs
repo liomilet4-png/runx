@@ -82,7 +82,7 @@ pub(crate) const OFFICIAL_SKILLS: &[OfficialSkillLockEntry] = &[
     },
     OfficialSkillLockEntry {
         skill_id: "runx/issue-intake",
-        version: "sha-94c248e98a1c",
+        version: "sha-15369469618b",
         digest: "cc964980fe249ac3633e7b30c664648f0df9406a0254ede9bb0e3cbcdebdd603",
     },
     OfficialSkillLockEntry {

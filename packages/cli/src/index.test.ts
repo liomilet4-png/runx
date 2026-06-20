@@ -127,6 +127,11 @@ Return the provided task id.
           answers: {
             "agent_task.child-task.output": {
               echoed_task: "abc-123",
+              closure: {
+                disposition: "closed",
+                reason_code: "test_answer",
+                summary: "test answer supplied by caller",
+              },
             },
           },
         },
@@ -176,7 +181,7 @@ Return the provided task id.
     expect(secondJson).toMatchObject({
       status: "sealed",
     });
-    expect(JSON.parse(secondJson.execution.stdout)).toEqual({ echoed_task: "abc-123" });
+    expect(JSON.parse(secondJson.execution.stdout)).toMatchObject({ echoed_task: "abc-123" });
   });
 
   it("does not treat arbitrary top-level commands as skill invocations", () => {
@@ -821,6 +826,11 @@ Return the grounded label.
           answers: {
             "agent_task.summarize-label.output": {
               summary: "grounded from caller answer",
+              closure: {
+                disposition: "closed",
+                reason_code: "test_answer",
+                summary: "test answer supplied by caller",
+              },
             },
           },
         },
@@ -840,7 +850,7 @@ Return the grounded label.
     expect(continuedExit).toBe(0);
     expect(continuedStderr.contents()).toBe("");
     const continued = JSON.parse(continuedStdout.contents()) as { execution: { stdout: string } };
-    expect(JSON.parse(continued.execution.stdout)).toEqual({ summary: "grounded from caller answer" });
+    expect(JSON.parse(continued.execution.stdout)).toMatchObject({ summary: "grounded from caller answer" });
     expect(requestCount).toBe(0);
   });
 

@@ -132,7 +132,12 @@ Interpret the runx JSON result exactly:
 {{
   \"answers\": {{
     \"<request.id>\": {{
-      \"...\": \"object matching request.invocation.envelope.output\"
+      \"...\": \"object matching request.invocation.envelope.output\",
+      \"closure\": {{
+        \"disposition\": \"closed\",
+        \"reason_code\": \"completed\",
+        \"summary\": \"concise outcome summary\"
+      }}
     }}
   }}
 }}
