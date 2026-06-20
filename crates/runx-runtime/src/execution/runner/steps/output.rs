@@ -46,14 +46,13 @@ fn expose_declared_run_outputs(
     let Some(JsonValue::Object(declared_outputs)) = run.get("outputs") else {
         return Ok(());
     };
-    if claim.is_empty() {
-        return Ok(());
-    }
-
     for name in declared_outputs.keys() {
         reject_reserved_step_output_name(step, name, "declared run output")?;
         let Some(value) = declared_claim_value(claim, name) else {
-            continue;
+            return Err(RuntimeError::InvalidRunStep {
+                step_id: step.id.clone(),
+                reason: format!("declared run output {name:?} was not returned by the step"),
+            });
         };
         outputs.insert(name.clone(), value);
     }
