@@ -49,7 +49,10 @@ Full walkthrough, including production signing keys, is in [docs/getting-started
 
 ## a skill is a URL
 
-A skill is one file: prose for the model, a typed execution profile for the runtime.
+A skill starts with one portable file, `SKILL.md`: prose for the model and the
+human-readable contract. When the skill needs deterministic runners, graphs,
+harness cases, or governed side effects, the package also carries an execution
+profile named `X.yaml`.
 
 ```yaml
 ---
@@ -64,18 +67,25 @@ source:
     cwd_policy: skill-directory
 inputs:
   message: { type: string, required: true }
+runx:
+  category: ops
 ---
 
 Print one message so a new contributor can verify the local runx execution path.
 ```
 
-The prose tells the agent what to do. The frontmatter tells runx what it is allowed to do. Publish it and the URL is the skill. Browse the open catalog at [runx.ai/x](https://runx.ai/x).
+The prose tells the agent what to do. The execution profile tells runx how the
+skill is allowed to run. `X.yaml` owns runner wiring, typed inputs/outputs,
+receipt mapping, harness cases, and side-effect posture; it should not become a
+strategy document, copy deck, target registry, or private state file. Publish it
+and the URL is the skill. Browse the open catalog at
+[runx.ai/x](https://runx.ai/x).
 
 ## the model
 
 Nine objects, one runtime. A run is a graph; every hop runs the same four steps, and authority only narrows as it descends.
 
-- **skill**: expertise plus a typed execution profile.
+- **skill**: expertise plus an optional checked-in execution profile.
 - **graph**: skills calling skills. runx renders the topology from the skills themselves and scopes authority at every branch, with no orchestration layer to maintain.
 - **bounds**: least privilege by default. Grants are explicit, and an over-scope request is refused before anything runs.
 - **receipt**: every act is signed and linked into one reproducible record. The artifact a CISO accepts and a developer can replay.

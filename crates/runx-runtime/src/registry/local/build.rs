@@ -48,6 +48,8 @@ pub fn build_registry_skill_version(
         owner: defaults.owner,
         name: skill.name.clone(),
         description: skill.description.clone(),
+        category: skill.runx_category.clone(),
+        source_category: skill.category.clone(),
         version: defaults.version,
         digest,
         signed_manifest: None,
@@ -180,6 +182,7 @@ pub(super) fn registry_tags(
     unique(
         extract_tags(skill)
             .into_iter()
+            .chain(skill.runx_category.clone())
             .chain(extract_runner_tags(manifest))
             .collect(),
     )
@@ -207,15 +210,22 @@ pub fn normalize_registry_skill_version(
             message: "declared without package_files".to_owned(),
         });
     }
+    let markdown = required_string(payload.markdown, "registry_version.markdown")?;
+    let derived_categories = derive_categories_from_markdown(&markdown);
+    let category = payload.category.or(derived_categories.runx_category);
+    let source_category = payload.source_category.or(derived_categories.category);
+
     Ok(RegistrySkillVersion {
         skill_id: required_string(payload.skill_id, "registry_version.skill_id")?,
         owner: governance.owner,
         name: required_string(payload.name, "registry_version.name")?,
         description: payload.description,
+        category,
+        source_category,
         version: required_string(payload.version, "registry_version.version")?,
         digest: required_string(payload.digest, "registry_version.digest")?,
         signed_manifest: payload.signed_manifest,
-        markdown: required_string(payload.markdown, "registry_version.markdown")?,
+        markdown,
         profile_document: payload.profile_document,
         profile_digest: payload.profile_digest,
         package_files,
@@ -240,6 +250,27 @@ pub fn normalize_registry_skill_version(
         updated_at: governance.updated_at,
         created_at: governance.created_at,
     })
+}
+
+struct DerivedCategories {
+    category: Option<String>,
+    runx_category: Option<String>,
+}
+
+fn derive_categories_from_markdown(markdown: &str) -> DerivedCategories {
+    let Some(skill) = parse_skill_markdown(markdown)
+        .ok()
+        .and_then(|raw| validate_skill(raw).ok())
+    else {
+        return DerivedCategories {
+            category: None,
+            runx_category: None,
+        };
+    };
+    DerivedCategories {
+        category: skill.category,
+        runx_category: skill.runx_category,
+    }
 }
 
 struct NormalizedRegistryVersionGovernance {
@@ -336,6 +367,8 @@ pub struct RegistrySkillVersionPayload {
     owner: Option<String>,
     name: Option<String>,
     description: Option<String>,
+    category: Option<String>,
+    source_category: Option<String>,
     version: Option<String>,
     digest: Option<String>,
     signed_manifest: Option<super::super::types::RegistrySignedManifest>,

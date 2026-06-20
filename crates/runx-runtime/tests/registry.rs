@@ -105,6 +105,8 @@ fn file_registry_store_covers_profiled_skill_surface() -> Result<(), Box<dyn std
     )?;
 
     assert_eq!(version.skill_id, "acme/sourcey");
+    assert_eq!(version.category.as_deref(), Some("content"));
+    assert_eq!(version.source_category.as_deref(), None);
     assert_eq!(version.source_type, "agent");
     assert_eq!(version.runner_names, vec!["sourcey"]);
     assert_eq!(
@@ -120,6 +122,8 @@ fn file_registry_store_covers_profiled_skill_surface() -> Result<(), Box<dyn std
 
     let skills = store.list_skills()?;
     assert_eq!(skills.len(), 1);
+    assert_eq!(skills[0].category.as_deref(), Some("content"));
+    assert_eq!(skills[0].source_category.as_deref(), None);
     assert_eq!(skills[0].latest_version, "1.0.0");
     assert_eq!(skills[0].versions[0].skill_id, "acme/sourcey");
 
@@ -133,6 +137,9 @@ fn file_registry_store_covers_profiled_skill_surface() -> Result<(), Box<dyn std
     )?;
     assert_eq!(search_results.len(), 1);
     assert_eq!(search_results[0].skill_id, "acme/sourcey");
+    assert_eq!(search_results[0].category.as_deref(), Some("content"));
+    assert_eq!(search_results[0].source_category.as_deref(), None);
+    assert!(search_results[0].tags.iter().any(|tag| tag == "content"));
     assert_eq!(search_results[0].source.as_deref(), Some("runx-registry"));
     assert_eq!(
         search_results[0].source_label.as_deref(),
@@ -146,6 +153,11 @@ fn file_registry_store_covers_profiled_skill_surface() -> Result<(), Box<dyn std
     assert_eq!(
         search_results[0].install_command,
         "runx add acme/sourcey@1.0.0 --registry https://runx.example.test"
+    );
+    assert_eq!(
+        search_registry_with_options(&store, "content", RegistrySearchOptions::default())?[0]
+            .skill_id,
+        "acme/sourcey"
     );
     assert!(
         search_results[0]
@@ -163,6 +175,8 @@ fn file_registry_store_covers_profiled_skill_surface() -> Result<(), Box<dyn std
     let detail = read_registry_skill(&store, "acme/sourcey", Some("1.0.0"), None)?
         .ok_or_else(|| std::io::Error::other("missing registry detail"))?;
     assert_eq!(detail.markdown, markdown);
+    assert_eq!(detail.category.as_deref(), Some("content"));
+    assert_eq!(detail.source_category.as_deref(), None);
     assert_eq!(detail.profile_digest, version.profile_digest);
 
     let resolved = resolve_registry_skill(

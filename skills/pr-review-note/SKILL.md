@@ -1,6 +1,8 @@
 ---
 name: pr-review-note
 description: Govern a GitHub PR review-note lane over MCP; comment scope is admitted, merge scope is refused.
+runx:
+  category: code
 ---
 # PR Review Note
 

@@ -83,6 +83,8 @@ export interface SkillSandbox {
 export interface ValidatedSkill {
   readonly name: string;
   readonly description?: string;
+  readonly category?: string;
+  readonly runxCategory?: string;
   readonly body: string;
   readonly source: SkillSource;
   readonly inputs: Readonly<Record<string, SkillInput>>;
@@ -326,11 +328,15 @@ export function validateSkill(raw: RawSkillIR, options: ValidateSkillOptions = {
   }
   const source = validateSource(sourceRecord ?? { type: "agent" }, isRecord(runxValue) ? runxValue : undefined);
   const runx = isRecord(runxValue) ? runxValue : undefined;
+  const category = validatePortableSkillCategory(raw.frontmatter.category);
+  const runxCategory = validateRunxSkillCategory(readField(runx, "category"));
   const risk = raw.frontmatter.risk;
 
   return {
     name,
     description,
+    category,
+    runxCategory,
     body: raw.body,
     source,
     inputs,
@@ -350,6 +356,19 @@ export function validateSkill(raw: RawSkillIR, options: ValidateSkillOptions = {
     runx,
     raw,
   };
+}
+
+function validatePortableSkillCategory(value: unknown): string | undefined {
+  return normalizeOptionalCategory(optionalNullableString(value, "category"));
+}
+
+function validateRunxSkillCategory(value: unknown): string | undefined {
+  return normalizeOptionalCategory(optionalNullableString(value, "runx.category"));
+}
+
+function normalizeOptionalCategory(value: string | undefined): string | undefined {
+  const normalized = value?.trim();
+  return normalized ? normalized : undefined;
 }
 
 export function extractSkillQualityProfile(body: string): SkillQualityProfile | undefined {

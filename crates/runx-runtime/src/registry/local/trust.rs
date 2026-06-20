@@ -303,6 +303,8 @@ pub(super) fn search_result_for_version(
         skill_id: version.skill_id.clone(),
         name: version.name.clone(),
         summary: version.description.clone(),
+        category: version.category.clone(),
+        source_category: version.source_category.clone(),
         owner: version.owner.clone(),
         version: Some(version.version.clone()),
         digest: Some(version.digest.clone()),
@@ -339,6 +341,8 @@ pub(super) fn detail_for_version(
         owner: version.owner.clone(),
         name: version.name.clone(),
         description: version.description.clone(),
+        category: version.category.clone(),
+        source_category: version.source_category.clone(),
         version: version.version.clone(),
         digest: version.digest.clone(),
         signed_manifest: version.signed_manifest.clone(),
@@ -388,6 +392,12 @@ pub(super) fn searchable_text(version: &RegistrySkillVersion) -> String {
     ];
     if let Some(description) = &version.description {
         parts.push(description.clone());
+    }
+    if let Some(category) = &version.category {
+        parts.push(category.clone());
+    }
+    if let Some(source_category) = &version.source_category {
+        parts.push(source_category.clone());
     }
     parts.extend(version.runner_names.clone());
     parts.extend(version.tags.clone());

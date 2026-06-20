@@ -17,13 +17,26 @@ they behave differently.
 
 The skill must be real and runnable:
 
-- A valid `SKILL.md` (frontmatter `name`, `description`, and `source`) and an
-  `X.yaml` execution profile when the skill has a runnable path. Format:
+- A valid `SKILL.md` (frontmatter `name`, `description`, and `source`, with
+  optional portable `category`) and an execution profile (`X.yaml`) when the
+  skill has a runnable path. Format:
   https://runx.ai/SKILL.md
+  Use top-level `category` only for the upstream skill's own portable taxonomy.
+  Use `runx.category` for the runx catalog category/facet; runx categories are
+  intentionally specific and should not be inferred from arbitrary upstream
+  category values.
 - It passes the harness:
   ```bash
   runx harness ./skills/<your-skill> --json
   ```
+
+`X.yaml` is the canonical v1 filename, but the artifact is an execution profile:
+runner wiring, typed inputs and outputs, tool/context refs, authority and receipt
+mapping, side-effect posture, and harness cases. Do not use it as a strategy
+document, target registry, copy deck, generated state file, or secret container.
+Keep profile YAML explicit: anchors, aliases, merge keys, custom tags,
+multi-document markers, duplicate mapping keys, and unknown profile fields are
+not supported.
 
 ## Publish locally first
 

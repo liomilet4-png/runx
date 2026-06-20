@@ -31,8 +31,33 @@ adopt, publish, sandbox, or reject the skill.
 - Strategic bar: explain whether the skill strengthens the catalog, fills a
   real operator need, duplicates existing capability, or carries unacceptable
   trust risk.
+- Public value bar: a skill is not publication-ready merely because it parses or
+  runs once. It should solve a real operator or user problem, be something the
+  catalog would stand behind, and produce evidence a stranger can verify. A
+  wrapper, placeholder, toy, or copied example with no credible adoption path is
+  a reject or sandbox-only recommendation.
 - Stop conditions: return `needs_more_evidence` when receipts or harness proof
   are missing, and `reject` when the skill cannot be bounded or audited.
+
+## Review Gates
+
+Check these before recommending adoption or publication:
+
+- The `SKILL.md` states a bounded capability and does not promise more than the
+  execution profile implements.
+- The execution profile declares typed inputs, outputs, side-effect posture,
+  allowed refs/tools, authority or approval posture, receipt mapping when a
+  domain act occurs, and harness cases.
+- At least one meaningful happy path and one error or stop path are covered by
+  harness evidence or receipts. Local assertions without captured output are not
+  enough.
+- Any published URL, registry listing, docs site, or repo is durable and public.
+  Placeholder hosts, private previews, unrelated parent domains, and dead links
+  lower trust or block publication.
+- The evidence pack contains no secrets, private tokens, customer data, private
+  inbox content, or provider dumps.
+- The recommendation states who would use or trust the skill and why. If that
+  answer is weak, recommend rejection, sandboxing, or a narrower redesign.
 
 ## Output
 

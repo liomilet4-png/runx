@@ -26,8 +26,29 @@ packages the approved output for publication or operator handoff.
   gaps directly.
 - Strategic bar: make adoption, sandboxing, rejection, or further testing
   easier.
+- Public value bar: test whether the skill has a credible user, operator,
+  maintainer, or catalog reason to exist. Passing harnesses do not rescue a
+  placeholder, toy, duplicate, or low-value package.
 - Stop conditions: stop at review when trust evidence is insufficient or the
   skill cannot be bounded.
+
+## Trust Audit Checks
+
+Before packaging a recommendation, confirm:
+
+- The skill contract is bounded and matches the execution profile.
+- The execution profile declares typed inputs and outputs, side-effect posture,
+  allowed refs/tools, approval or authority posture, receipt mapping where
+  relevant, and harness cases.
+- Harness or receipt evidence covers a meaningful happy path and at least one
+  stop or error path.
+- Published artifacts are durable and public. Private previews, localhost,
+  placeholder hosts, unrelated parent domains, or dead links block a publication
+  recommendation.
+- The audit names the concrete user-visible value: who would use, link, install,
+  trust, or maintain the skill.
+- The evidence pack contains no secrets, raw credentials, private customer data,
+  private email bodies, wallet private keys, or provider response dumps.
 
 ## Inputs
 

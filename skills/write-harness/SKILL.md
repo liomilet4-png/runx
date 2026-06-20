@@ -62,6 +62,11 @@ Start from the skill contract (SKILL.md + execution profile). Design fixtures fo
   invalid tool path. Expect failure with meaningful error.
 - **Governance gates** (composite skills only): one fixture per approval
   or policy transition that matters.
+- **Publication evidence**: for skills intended for registry or public use,
+  include checks that prove the registry listing or public artifact is reachable,
+  durable, and tied to the submitted source.
+- **User-value boundary**: include at least one assertion or acceptance check
+  that protects the real user-visible promise, not only internal step success.
 
 Each fixture tests one thing. Do not combine happy-path and error checks.
 Test the contract, not the internal wiring.
@@ -83,6 +88,7 @@ internal builder transcript. That means:
 - explain catalog fit against adjacent current runx skills or graphs
 - describe the concrete user-visible artifact, not only the internal execution
   sequence
+- name who would use, trust, link, install, or maintain the artifact and why
 - convert unresolved ambiguity into explicit maintainer decisions
 - keep issue comments, amendments, and approval records as provenance instead
   of copying them into the public proposal
@@ -110,6 +116,9 @@ that in `maintainer_decisions` rather than leaking it into the fixture target.
   bundle.
 - Strategic bar: every fixture should protect a user-visible promise, trust
   boundary, or failure mode that matters for the skill's purpose.
+- Public value bar: do not write fixtures for a skill whose only value is that it
+  exists. Return `not_first_party` or `needs_agent` when the proposal lacks a
+  credible user, operator, maintainer, catalog, or public proof value.
 - Stop conditions: return `needs_agent` when the contract is too vague to
   harness, and return `not_first_party` when the proposed skill should be reuse,
   Sourcey/content work, or a graph amendment instead.

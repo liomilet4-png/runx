@@ -62,6 +62,12 @@ export function renderSearchResults(
     if (result.summary) {
       lines.push(`  ${t.dim}${result.summary}${t.reset}`);
     }
+    if (result.category) {
+      lines.push(`  ${t.dim}category:${t.reset} ${result.category}`);
+    }
+    if (!result.category && result.source_category) {
+      lines.push(`  ${t.dim}source category:${t.reset} ${result.source_category}`);
+    }
     if (result.profile_mode === "profiled" && result.runner_names.length > 0) {
       lines.push(`  ${t.dim}runners:${t.reset} ${result.runner_names.join(", ")}`);
     }

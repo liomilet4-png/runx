@@ -105,6 +105,10 @@ product gap. Do not invent a private workaround.
    - Treat missing evidence as missing. Do not infer success from UI state alone.
    - Separate health, money, communications, provider mutations, access,
      deployment, and incident signals.
+   - For review, catalog, publication, bounty, or marketplace work, classify
+     whether the artifact is real, useful, complete, and valuable. A reachable
+     artifact with no credible user, maintainer, operator, public proof, or
+     marketing value is not ready.
 
 3. Route to governed lanes.
    - Release questions route to `release` plus the project release profile and
@@ -126,6 +130,9 @@ product gap. Do not invent a private workaround.
    - Live sends, payouts, refunds, customer-visible posts, provider mutations,
      target changes, credential changes, deploys, destructive actions, and broad
      audience decisions: explicit approval required.
+   - A review verdict, recommendation, or green dry-run is not payment approval.
+     Money movement needs a separate approval prompt naming the amount, recipient,
+     rail, target class, and verification receipt expected after settlement.
    - Missing approval means `awaiting_approval`, not "ready".
 
 5. Produce the operator packet.
@@ -236,6 +243,8 @@ operator_packet:
   provider response dumps.
 - Never claim a state is settled, sent, deployed, paid, or refunded without a
   receipt/effect/readback reference.
+- Never route a public artifact, skill, bounty result, or docs deployment as
+  ready when it lacks a credible real-world audience or durable public evidence.
 - Never widen authority because a dashboard widget would be convenient.
 - Never duplicate an existing CLI command, workflow, hosted endpoint, or domain
   skill in operator prose. Route to it.

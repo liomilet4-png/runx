@@ -72,10 +72,14 @@ pub fn validate_skill_with_options(
         .unwrap_or_else(default_agent_source);
     let risk = raw.frontmatter.get("risk").cloned();
     let governance = validate_skill_governance(&raw, runx.as_ref(), risk.as_ref())?;
+    let category = validate_portable_skill_category(&raw)?;
+    let runx_category = validate_runx_skill_category(runx.as_ref())?;
 
     Ok(ValidatedSkill {
         name: FIELDS.required_string(raw.frontmatter.get("name"), "name")?,
         description: FIELDS.optional_string(raw.frontmatter.get("description"), "description")?,
+        category,
+        runx_category,
         body: raw.body.clone(),
         source: validate_source(&source, runx.as_ref())?,
         inputs: validate_inputs(
@@ -96,6 +100,28 @@ pub fn validate_skill_with_options(
         runx,
         raw,
     })
+}
+
+fn validate_portable_skill_category(raw: &RawSkillIr) -> Result<Option<String>, ValidationError> {
+    Ok(normalize_optional_category(FIELDS.optional_string(
+        raw.frontmatter.get("category"),
+        "category",
+    )?))
+}
+
+fn validate_runx_skill_category(
+    runx: Option<&JsonObject>,
+) -> Result<Option<String>, ValidationError> {
+    Ok(normalize_optional_category(FIELDS.optional_string(
+        field_value(runx, "category"),
+        "runx.category",
+    )?))
+}
+
+fn normalize_optional_category(value: Option<String>) -> Option<String> {
+    value
+        .map(|value| value.trim().to_owned())
+        .filter(|value| !value.is_empty())
 }
 
 fn validate_runx_metadata(
