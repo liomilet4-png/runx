@@ -33,6 +33,7 @@ fn native_skill_pauses_and_resumes_with_run_id() -> Result<(), Box<dyn std::erro
     assert_eq!(pause_json["status"], "needs_agent");
     assert_eq!(pause_json["run_id"], "run_agent_task-issue-intake-output");
     assert_eq!(pause_json["requests"][0]["kind"], "agent_act");
+    let run_id = pause_json["run_id"].as_str().ok_or("missing run_id")?;
 
     let answers_path = root.join("answers.json");
     fs::write(
@@ -52,7 +53,7 @@ fn native_skill_pauses_and_resumes_with_run_id() -> Result<(), Box<dyn std::erro
     let resume = runx_command()
         .args([
             "resume",
-            "issue-intake-run",
+            run_id,
             answers_path.to_str().ok_or("non-utf8 answers path")?,
             "--receipt-dir",
             receipt_dir.to_str().ok_or("non-utf8 receipt dir")?,
@@ -61,7 +62,7 @@ fn native_skill_pauses_and_resumes_with_run_id() -> Result<(), Box<dyn std::erro
         .output()?;
     let resume_json = assert_json(&resume, Some(0))?;
     assert_eq!(resume_json["status"], "sealed");
-    assert_eq!(resume_json["run_id"], "issue-intake-run");
+    assert_eq!(resume_json["run_id"], run_id);
     assert_eq!(resume_json["closure"]["disposition"], "closed");
     assert_eq!(resume_json["receipt"]["schema"], "runx.receipt.v1");
     let receipt_id = resume_json["receipt_id"]

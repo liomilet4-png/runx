@@ -275,7 +275,7 @@ fn write_inspection_text(value: &JsonValue) -> ExitCode {
                 object_string(resume, "command").unwrap_or("runx resume <run-id> answers.json")
             ));
         }
-        out.push_str("run: add inputs, or pass --run for a zero-input runner\n");
+        out.push_str("run: runx skill <skill> [runner]\n");
     } else if let Some(runners) = object.get("runners").and_then(JsonValue::as_array) {
         out.push_str("runners:\n");
         for runner in runners {

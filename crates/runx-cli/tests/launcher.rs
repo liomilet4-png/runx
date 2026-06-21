@@ -35,7 +35,11 @@ fn top_level_help_and_version_are_native() {
     );
     assert_help_line(
         &help,
-        "runx skill <skill-ref|owner/name@version|skill-dir|SKILL.md> [runner] [-p profile] [-i key=value] [--input-json key=json] [--run] [-j] [--registry url|path] [--digest sha256] [--flag value] [--credential descriptor --secret-env NAME] [-R dir]",
+        "runx skill <skill-ref|owner/name@version|skill-dir|SKILL.md> [runner] [-p profile] [-i key=value] [--input-json key=json] [-j] [--registry url|path] [--digest sha256] [--flag value] [--credential descriptor --secret-env NAME] [-R dir]",
+    );
+    assert_help_line(
+        &help,
+        "runx skill inspect <skill-ref|owner/name@version|skill-dir|SKILL.md> [runner] [-j] [--registry url|path] [--digest sha256]",
     );
     assert_help_line(
         &help,
@@ -104,7 +108,11 @@ fn nested_skill_history_verify_and_publish_help_are_native() {
 
     assert_help_line(
         &skill_help_text(),
-        "runx skill <skill-ref|owner/name@version|skill-dir|SKILL.md> [runner] [-p profile] [-i key=value] [--input-json key=json] [--run] [-j] [--registry url|path] [--digest sha256] [--flag value] [--credential descriptor --secret-env NAME] [-R dir]",
+        "runx skill <skill-ref|owner/name@version|skill-dir|SKILL.md> [runner] [-p profile] [-i key=value] [--input-json key=json] [-j] [--registry url|path] [--digest sha256] [--flag value] [--credential descriptor --secret-env NAME] [-R dir]",
+    );
+    assert_help_line(
+        &skill_help_text(),
+        "runx skill inspect <skill-ref|owner/name@version|skill-dir|SKILL.md> [runner] [-j] [--registry url|path] [--digest sha256]",
     );
     assert_help_line(
         &skill_help_text(),
@@ -393,7 +401,7 @@ fn skill_rejects_legacy_runner_and_continuation_flags() {
 
 #[test]
 fn skill_rejects_resolver_flags_for_management_actions() {
-    for action in ["inspect", "publish", "search", "validate"] {
+    for action in ["publish", "search", "validate"] {
         assert_eq!(
             plan(&["skill", action, "--registry", "fixtures/registry"]),
             LauncherAction::Error(

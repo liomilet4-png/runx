@@ -16,11 +16,26 @@ const fixtureSigningEnv = {
   RUNX_RECEIPT_SIGN_ISSUER_TYPE: process.env.RUNX_RECEIPT_SIGN_ISSUER_TYPE ?? "hosted",
 };
 
+function hostDrivenRunxEnv(overrides: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  const env: NodeJS.ProcessEnv = {
+    ...process.env,
+    ...fixtureSigningEnv,
+    ...overrides,
+  };
+  delete env.RUNX_AGENT_PROVIDER;
+  delete env.RUNX_AGENT_MODEL;
+  delete env.RUNX_AGENT_API_KEY;
+  delete env.ANTHROPIC_API_KEY;
+  delete env.OPENAI_API_KEY;
+  return env;
+}
+
 describe("recognizable work lanes", () => {
   it("runs issue-intake through the local CLI with a bounded next-lane packet", async () => {
     const tempDir = await mkdtemp(path.join(os.tmpdir(), "runx-issue-intake-cli-"));
     const answersPath = path.join(tempDir, "answers.json");
     const receiptDir = path.join(tempDir, "receipts");
+    const runxHome = path.join(tempDir, "home");
     const stdout = createMemoryStream();
     const stderr = createMemoryStream();
 
@@ -134,7 +149,7 @@ describe("recognizable work lanes", () => {
       const firstExitCode = await runCli(
         startArgs,
         { stdin: process.stdin, stdout: firstStdout, stderr: firstStderr },
-        { ...process.env, ...fixtureSigningEnv, RUNX_CWD: process.cwd() },
+        hostDrivenRunxEnv({ RUNX_CWD: process.cwd(), RUNX_HOME: runxHome }),
       );
 
       expect(firstExitCode, firstStderr.contents() || firstStdout.contents()).toBe(2);
@@ -153,16 +168,14 @@ describe("recognizable work lanes", () => {
           "--json",
         ],
         { stdin: process.stdin, stdout, stderr },
-        { ...process.env, ...fixtureSigningEnv, RUNX_CWD: process.cwd() },
+        hostDrivenRunxEnv({ RUNX_CWD: process.cwd(), RUNX_HOME: runxHome }),
       );
 
       expect(exitCode, stderr.contents() || stdout.contents()).toBe(0);
       expect(stderr.contents()).toBe("");
       expect(JSON.parse(stdout.contents())).toMatchObject({
         status: "sealed",
-        skill: {
-          name: "issue-intake",
-        },
+        skill_name: "issue-intake",
         execution: {
           stdout: expect.stringContaining("\"recommended_lane\":\"issue-to-pr\""),
         },
@@ -199,7 +212,7 @@ describe("recognizable work lanes", () => {
         kind: "runx.thread.v1",
         adapter: {
           type: "file",
-          adapter_ref: threadPath,
+          adapter_ref: threadLocator,
         },
         thread_kind: "signal",
         thread_locator: threadLocator,
@@ -275,7 +288,7 @@ describe("recognizable work lanes", () => {
           "--json",
         ],
         { stdin: process.stdin, stdout: firstStdout, stderr: firstStderr },
-        { ...process.env, ...fixtureSigningEnv, RUNX_CWD: tempDir, RUNX_HOME: runxHome },
+        hostDrivenRunxEnv({ RUNX_CWD: process.cwd(), RUNX_HOME: runxHome }),
       );
       expect(firstExitCode, firstStderr.contents() || firstStdout.contents()).toBe(2);
       expect(firstStderr.contents()).toBe("");
@@ -295,15 +308,13 @@ describe("recognizable work lanes", () => {
           "--json",
         ],
         { stdin: process.stdin, stdout, stderr },
-        { ...process.env, ...fixtureSigningEnv, RUNX_CWD: tempDir, RUNX_HOME: runxHome },
+        hostDrivenRunxEnv({ RUNX_CWD: process.cwd(), RUNX_HOME: runxHome }),
       );
       expect(exitCode, stderr.contents() || stdout.contents()).toBe(0);
       expect(stderr.contents()).toBe("");
       expect(JSON.parse(stdout.contents())).toMatchObject({
         status: "sealed",
-        skill: {
-          name: "issue-to-pr",
-        },
+        skill_name: "issue-to-pr",
         execution: {
           stdout: expect.stringContaining("\"draft_pull_request\""),
         },
@@ -430,7 +441,11 @@ Profile: standard
 
 Definition of done:
 - [ ] \`dod1\` app.txt contains the fixed output.
+  - Command: \`grep -q '^fixed$' app.txt\`
+  - Expected kind: \`exit_code_zero\`
 - [ ] \`dod2\` notes.md contains the governed output.
+  - Command: \`grep -q '^governed$' notes.md\`
+  - Expected kind: \`exit_code_zero\`
 
 Validation:
 - [ ] \`v1\` test - app.txt contains the fixed output.

@@ -32,10 +32,10 @@ pub fn parse_skill_plan(args: &[OsString]) -> Result<SkillPlan, String> {
     };
     reject_resolver_flags_for_skill_management_action(skill_path, &state)?;
     let skill_path = skill_path.clone();
-    let action = if state.force_run || !state.inputs.is_empty() {
-        SkillAction::Run
-    } else {
+    let action = if state.inspect {
         SkillAction::Inspect
+    } else {
+        SkillAction::Run
     };
 
     Ok(SkillPlan {
@@ -63,6 +63,7 @@ struct SkillParseState {
     registry: Option<String>,
     expected_digest: Option<String>,
     json: bool,
+    inspect: bool,
     force_run: bool,
     inputs: BTreeMap<String, JsonValue>,
     credential: Option<CredentialBinding>,
@@ -454,7 +455,9 @@ fn parse_skill_arg(
             index = parse_direct_input_arg(args, index, value, &mut state.inputs)?;
         }
         value => {
-            if state.skill_path.is_none() {
+            if state.skill_path.is_none() && value == "inspect" {
+                state.inspect = true;
+            } else if state.skill_path.is_none() {
                 state.skill_path = Some(PathBuf::from(value));
             } else if state.runner.is_none() {
                 state.runner = Some(value.to_owned());
@@ -639,8 +642,38 @@ mod tests {
     }
 
     #[test]
-    fn skill_without_inputs_inspects_skill_card() -> Result<(), String> {
+    fn skill_without_inputs_executes_default_runner() -> Result<(), String> {
         let args = ["skill", "skills/messageboard"]
+            .into_iter()
+            .map(std::ffi::OsString::from)
+            .collect::<Vec<_>>();
+        let plan = super::parse_skill_plan(&args)?;
+
+        assert_eq!(plan.action, SkillAction::Run);
+        assert_eq!(
+            plan.skill_path,
+            std::path::PathBuf::from("skills/messageboard")
+        );
+        assert_eq!(plan.runner, None);
+        Ok(())
+    }
+
+    #[test]
+    fn positional_runner_without_inputs_executes_runner() -> Result<(), String> {
+        let args = ["skill", "skills/messageboard", "post_and_append"]
+            .into_iter()
+            .map(std::ffi::OsString::from)
+            .collect::<Vec<_>>();
+        let plan = super::parse_skill_plan(&args)?;
+
+        assert_eq!(plan.action, SkillAction::Run);
+        assert_eq!(plan.runner.as_deref(), Some("post_and_append"));
+        Ok(())
+    }
+
+    #[test]
+    fn explicit_inspect_returns_skill_card() -> Result<(), String> {
+        let args = ["skill", "inspect", "skills/messageboard", "post_and_append"]
             .into_iter()
             .map(std::ffi::OsString::from)
             .collect::<Vec<_>>();
@@ -651,19 +684,6 @@ mod tests {
             plan.skill_path,
             std::path::PathBuf::from("skills/messageboard")
         );
-        assert_eq!(plan.runner, None);
-        Ok(())
-    }
-
-    #[test]
-    fn positional_runner_without_inputs_inspects_runner_card() -> Result<(), String> {
-        let args = ["skill", "skills/messageboard", "post_and_append"]
-            .into_iter()
-            .map(std::ffi::OsString::from)
-            .collect::<Vec<_>>();
-        let plan = super::parse_skill_plan(&args)?;
-
-        assert_eq!(plan.action, SkillAction::Inspect);
         assert_eq!(plan.runner.as_deref(), Some("post_and_append"));
         Ok(())
     }

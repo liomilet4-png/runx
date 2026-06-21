@@ -76,6 +76,7 @@ const commands: readonly CommandMatrixEntry[] = [
   command("export", "runx export <claude|codex> [skill-ref...]", [], ["--project", "--json"], "filesystem", ["skill-export", "cli-presentation"], ["export.validate"]),
   command("mcp.serve", "runx mcp serve <skill-ref...>", [], ["--receipt-dir"], "adapter", ["mcp", "adapter-mcp"], ["mcp.serve.validate"]),
   command("skill.run", "runx skill <skill-ref|owner/name@version|skill-dir|SKILL.md> [runner]", [], ["--registry", "--digest", "--input", "--receipt-dir", "--credential", "--secret-env", "--non-interactive", "--json"], "local-runtime", ["skill-resolution", "graph-runtime", "receipts", "sandbox", "authority", "caller-mediated-resolution", "adapter-cli-tool", "adapter-a2a", "adapter-agent"], ["skill.run.validate"]),
+  command("skill.inspect", "runx skill inspect <skill-ref|owner/name@version|skill-dir|SKILL.md> [runner]", [], ["--registry", "--digest", "--json"], "filesystem", ["skill-resolution", "cli-presentation"], ["skill.inspect.validate"]),
   command("harness", "runx harness <fixture.yaml...>", [], ["--json"], "local-runtime", ["harness", "receipts", "sandbox"], ["harness.execute"]),
   command("tool.build", "runx tool build <tool-dir>|--all", [], ["--all", "--json"], "filesystem", ["tool-catalog", "authoring"], ["tool.build.validate"], { conditionalPositionals: ["<tool-dir>"] }),
   command("tool.search", "runx tool search <query>", [], ["--source", "--json"], "external-stub", ["tool-catalog", "adapter-catalog"], ["tool.search.validate"]),
@@ -313,6 +314,9 @@ function extractHelpBlock(helpText: string, label: string): readonly string[] {
 function helpUsageCommandIds(usage: string): readonly string[] {
   if (usage.startsWith("runx skill <")) {
     return ["skill.run"];
+  }
+  if (usage.startsWith("runx skill inspect ")) {
+    return ["skill.inspect"];
   }
   if (usage.startsWith("runx config ")) {
     return ["config.set", "config.get", "config.list"];

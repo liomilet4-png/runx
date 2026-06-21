@@ -2,7 +2,7 @@
 // validation, secret rejection, and redaction in one module so the provider boundary is reviewed
 // as a single trust surface.
 use std::collections::BTreeSet;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::{Command, ExitStatus, Stdio};
 use std::time::{Duration, Instant};
 
@@ -303,14 +303,48 @@ fn validate_request_identity(
 
 fn process_command(
     manifest: &ThreadOutboxProviderManifest,
-) -> Result<&str, ThreadOutboxProviderSupervisorError> {
+) -> Result<PathBuf, ThreadOutboxProviderSupervisorError> {
     let Some(command) = manifest.transport.command.as_deref() else {
         return Err(ThreadOutboxProviderSupervisorError::MissingProcessCommand);
     };
-    if command.trim().is_empty() {
+    let command = command.trim();
+    if command.is_empty() {
         return Err(ThreadOutboxProviderSupervisorError::EmptyProcessCommand);
     }
-    Ok(command)
+    Ok(resolve_process_command(command))
+}
+
+fn resolve_process_command(command: &str) -> PathBuf {
+    let path = Path::new(command);
+    if path.is_absolute() || path.components().count() > 1 {
+        return path.to_path_buf();
+    }
+
+    if let Some(paths) = std::env::var_os("PATH") {
+        for dir in std::env::split_paths(&paths) {
+            let candidate = dir.join(command);
+            if candidate.is_file() {
+                return candidate;
+            }
+            #[cfg(windows)]
+            {
+                if candidate.extension().is_some() {
+                    continue;
+                }
+                if let Some(exts) = std::env::var_os("PATHEXT") {
+                    for ext in std::env::split_paths(&exts) {
+                        let ext = ext.to_string_lossy();
+                        let candidate = dir.join(format!("{command}{ext}"));
+                        if candidate.is_file() {
+                            return candidate;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    PathBuf::from(command)
 }
 
 fn write_request(
