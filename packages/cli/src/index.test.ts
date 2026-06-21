@@ -389,8 +389,8 @@ Return the provided task id.
       status: "needs_agent",
       requests: [
         {
-          id: "agent_task.sourcey-discover.output",
-          kind: "agent_act",
+          id: "graph.required-inputs",
+          kind: "graph.required_inputs",
         },
       ],
     });
@@ -1310,8 +1310,8 @@ Answer the prompt directly.
       status: "needs_agent",
       requests: [
         {
-          id: "agent_task.sourcey-discover.output",
-          kind: "agent_act",
+          id: "graph.required-inputs",
+          kind: "graph.required_inputs",
         },
       ],
     });
