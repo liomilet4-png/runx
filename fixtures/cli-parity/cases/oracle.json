@@ -295,6 +295,15 @@
       ]
     },
     {
+      "id": "skill.inspect.validate",
+      "commandId": "skill.inspect",
+      "mode": "validate",
+      "proves": [
+        "skill-resolution",
+        "cli-presentation"
+      ]
+    },
+    {
       "id": "tool.build.validate",
       "commandId": "tool.build",
       "mode": "validate",

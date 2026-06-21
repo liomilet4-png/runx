@@ -181,10 +181,7 @@ pub fn trusted_registry_manifest_keys_from_env_with_source(
         source_authority,
         Some(RegistryManifestSourceAuthority::OfficialRunx)
     ) {
-        let key = TrustedRegistryManifestKey::official_from_base64(key_id, public_key)
-            .map_err(|_| RegistryManifestTrustEnvError::InvalidKey)?;
-        trusted_keys.push(key);
-        return Ok(trusted_keys);
+        return Err(RegistryManifestTrustEnvError::InvalidKey);
     }
     let allowed_owner = env
         .get(RUNX_REGISTRY_MANIFEST_TRUST_OWNER_ENV)
@@ -358,21 +355,12 @@ mod tests {
     }
 
     #[test]
-    fn official_source_trust_key_is_official_scoped_without_owner() {
+    fn env_trust_key_cannot_promote_itself_to_official_source() {
         let result = trusted_registry_manifest_keys_from_env_with_source(
             &trust_env(),
             Some(RegistryManifestSourceAuthority::OfficialRunx),
         );
-        assert!(
-            result.is_ok(),
-            "official source trust key should be accepted: {result:?}"
-        );
-        let keys = result.unwrap_or_default();
-
-        assert_eq!(
-            keys.last().map(|key| &key.scope),
-            Some(&RegistryManifestTrustScope::OfficialRunx)
-        );
+        assert_eq!(result, Err(RegistryManifestTrustEnvError::InvalidKey));
     }
 
     #[test]

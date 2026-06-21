@@ -699,6 +699,38 @@
       ]
     },
     {
+      "id": "skill.inspect",
+      "usage": "runx skill inspect <skill-ref|owner/name@version|skill-dir|SKILL.md> [runner]",
+      "aliases": [],
+      "requiredPositionals": [
+        "<skill-ref|owner/name@version|skill-dir|SKILL.md>"
+      ],
+      "flags": [
+        "--registry",
+        "--digest",
+        "--json"
+      ],
+      "exitCodes": [
+        0,
+        1,
+        2,
+        64
+      ],
+      "parity": {
+        "humanOutput": "semantic",
+        "jsonOutput": "schema-exact",
+        "receipt": "none",
+        "sideEffect": "filesystem",
+        "surfaces": [
+          "skill-resolution",
+          "cli-presentation"
+        ]
+      },
+      "cases": [
+        "skill.inspect.validate"
+      ]
+    },
+    {
       "id": "harness",
       "usage": "runx harness <fixture.yaml...>",
       "aliases": [],

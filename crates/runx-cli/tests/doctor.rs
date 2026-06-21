@@ -259,6 +259,7 @@ fn diagnostic_has_repair(report: &serde_json::Value, id: &str) -> bool {
 fn runx_command() -> Command {
     let mut command = Command::new(env!("CARGO_BIN_EXE_runx"));
     command.env("NO_COLOR", "1");
+    command.env("RUNX_HOME", temp_root("runx-doctor-home"));
     command
 }
 

@@ -37,6 +37,7 @@ use crate::execution::runner::{
     GraphCheckpoint, GraphRun, RUNX_RUN_ID_ENV, Runtime, RuntimeOptions,
 };
 use crate::host::Host;
+use crate::journal::{PausedRunCheckpoint, append_paused_run_checkpoint};
 use crate::receipts::{DomainActReceiptRequest, RuntimeReceiptSignatureConfig, domain_act_receipt};
 use crate::services::{ReceiptServices, WorkspaceEnv};
 
@@ -207,6 +208,16 @@ pub(super) fn execute_graph_skill_run(
                 let (request_id, request_value) = host
                     .pending_request()
                     .ok_or_else(|| invalid("graph blocked without pending request"))?;
+                write_paused_graph_checkpoint(PausedGraphCheckpoint {
+                    request,
+                    workspace,
+                    receipts,
+                    manifest,
+                    runner,
+                    graph: &graph,
+                    run_id: &run_id,
+                    request_id,
+                })?;
                 return Ok(JsonValue::Object(needs_agent_output(
                     &run_id,
                     request_id,
@@ -253,6 +264,49 @@ pub(super) fn execute_graph_skill_run(
             Err(error) => return Err(error.into()),
         }
     }
+}
+
+struct PausedGraphCheckpoint<'a> {
+    request: &'a SkillRunRequest,
+    workspace: &'a WorkspaceEnv,
+    receipts: &'a ReceiptServices,
+    manifest: &'a SkillRunnerManifest,
+    runner: &'a SkillRunnerDefinition,
+    graph: &'a ExecutionGraph,
+    run_id: &'a str,
+    request_id: &'a str,
+}
+
+fn write_paused_graph_checkpoint(input: PausedGraphCheckpoint<'_>) -> Result<(), SkillRunError> {
+    let receipt_path =
+        input
+            .receipts
+            .resolve_path(input.workspace, input.request.receipt_dir.as_deref(), None);
+    let checkpoint = PausedRunCheckpoint {
+        id: input.run_id.to_owned(),
+        name: input
+            .manifest
+            .skill
+            .clone()
+            .unwrap_or_else(|| input.graph.name.clone()),
+        kind: "graph".to_owned(),
+        started_at: Some(crate::time::now_iso8601()),
+        resume_skill_ref: Some(input.request.skill_path.to_string_lossy().into_owned()),
+        selected_runner: Some(input.runner.name.clone()),
+        step_ids: vec![input.request_id.to_owned()],
+        step_labels: vec![input.request_id.to_owned()],
+    };
+    append_paused_run_checkpoint(&receipt_path.path, &checkpoint).map_err(|source| {
+        RuntimeError::io(
+            format!(
+                "writing paused run checkpoint for {} in {}",
+                checkpoint.id,
+                receipt_path.path.display()
+            ),
+            source,
+        )
+    })?;
+    Ok(())
 }
 
 fn missing_required_graph_input_request(
