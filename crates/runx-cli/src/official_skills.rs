@@ -11,18 +11,23 @@ pub(crate) struct OfficialSkillLockEntry {
 
 pub(crate) const OFFICIAL_SKILLS: &[OfficialSkillLockEntry] = &[
     OfficialSkillLockEntry {
+        skill_id: "runx/agency",
+        version: "sha-f53e65733d67",
+        digest: "cc47b9574d8aeddc679dc08ca983702e7a75c576ce04fb5bc50b63c7541747c8",
+    },
+    OfficialSkillLockEntry {
         skill_id: "runx/brand-voice",
         version: "sha-79c56911c0ba",
         digest: "54bf1ed1013ebc91a5491fb86f15a1bda2e872ac073a12680c58278af0867528",
     },
     OfficialSkillLockEntry {
         skill_id: "runx/business-ops",
-        version: "sha-fd875c18ba3d",
+        version: "sha-75acf9d53694",
         digest: "7801492f5b8fa34f0f6e91f9f2729396744c35fe517ae275885e07204bc52b6f",
     },
     OfficialSkillLockEntry {
         skill_id: "runx/charge",
-        version: "sha-0e2f6aef60db",
+        version: "sha-0d05afcfa6ae",
         digest: "c151b98be3a2a7ccd306d7395d906ffd1fc22e45a7d94ffe34c294e9db1c47ce",
     },
     OfficialSkillLockEntry {
@@ -77,12 +82,12 @@ pub(crate) const OFFICIAL_SKILLS: &[OfficialSkillLockEntry] = &[
     },
     OfficialSkillLockEntry {
         skill_id: "runx/github-sync",
-        version: "sha-1a2573539bb7",
+        version: "sha-e685e9e8b5c6",
         digest: "6981adc877736f05a41d764b3e42d479d87de3bc2d69a65992dff457b635bd9a",
     },
     OfficialSkillLockEntry {
         skill_id: "runx/governed-outbound",
-        version: "sha-07106d71a184",
+        version: "sha-9c60b1c0cfd8",
         digest: "e177cd002efb896e0bba7a6352f19f4d1ec575db1ef548849244ea42725356a6",
     },
     OfficialSkillLockEntry {
@@ -102,7 +107,7 @@ pub(crate) const OFFICIAL_SKILLS: &[OfficialSkillLockEntry] = &[
     },
     OfficialSkillLockEntry {
         skill_id: "runx/issue-to-pr",
-        version: "sha-a96ff9490a20",
+        version: "sha-15ad5657509d",
         digest: "c62756dd6f63d2600075cd5ffcee74786b81ef9db99b8ccf9d79362c43595010",
     },
     OfficialSkillLockEntry {
@@ -197,8 +202,8 @@ pub(crate) const OFFICIAL_SKILLS: &[OfficialSkillLockEntry] = &[
     },
     OfficialSkillLockEntry {
         skill_id: "runx/ops-desk",
-        version: "sha-5e1d3dc7c252",
-        digest: "386e43482f0bb6eaacd50fd836cd0dc112ad70eca8625bcaf50d8a86e6226f07",
+        version: "sha-38eb0b2e2b09",
+        digest: "f32f21b6ed6c03f5623bc98f2823365ebcabc721cedf64e8a67c556613a35f59",
     },
     OfficialSkillLockEntry {
         skill_id: "runx/overlay-generator",

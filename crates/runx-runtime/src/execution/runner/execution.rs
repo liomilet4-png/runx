@@ -1132,6 +1132,11 @@ pub(super) fn transition_field_value<'a>(
     let step_id = segments.next()?;
     let run = runs.iter().rev().find(|run| run.step_id == step_id)?;
     let first = segments.next()?;
+    // Guards and `when` conditions gate control flow, not data binding, so they may
+    // reference diagnostic fields (notably `status`, to branch on a prior step's
+    // success). Only the raw structured `skill_claim` blob is excluded here; the
+    // stricter `BASE_OUTPUT_FIELDS` rejection applies to context EDGES (data inputs),
+    // not to control-flow predicates.
     if first == "skill_claim" {
         return None;
     }

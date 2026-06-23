@@ -550,6 +550,8 @@ mod tests {
             when: None,
             mutating,
             idempotency_key: Some(format!("{id}-key")),
+            mint_authority: None,
+            requested_scope_from: None,
         }
     }
 

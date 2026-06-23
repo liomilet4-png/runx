@@ -122,9 +122,10 @@ function reconcileThread(thread, config) {
       labels_changed: labelAdds.length + labelRemoves.length + (stateDrift ? 1 : 0),
       comments_posted: missingComments.length,
     },
-    // Only a freshly created thread needs an observation: an existing locator is
-    // already linked on the source, so re-posting it every run is pure churn.
-    observation: created ? buildObservation(thread, locator, providerThreadId) : undefined,
+    // Observe every reconciled thread so the source advances its per-thread
+    // cursor (via the echoed watermark) and stops returning this thread until it
+    // changes again. The source only sends changed threads, so this stays cheap.
+    observation: buildObservation(thread, locator, providerThreadId),
   };
 }
 
@@ -164,7 +165,9 @@ function readConfig(env) {
     targetRepo: trim(env.THREAD_SYNC_TARGET_REPO),
     sourceId: trim(env.THREAD_SYNC_SOURCE_ID) ?? "tenant",
     adapterId: trim(env.THREAD_SYNC_ADAPTER_ID) ?? "runx-github-thread-adapter",
-    limit: positiveInteger(env.THREAD_SYNC_LIMIT, 50),
+    // No cap by default: reconcile every changed thread the source returns. A
+    // limit is only for bounded test/repair runs.
+    limit: optionalPositiveInteger(env.THREAD_SYNC_LIMIT),
     dryRun: env.THREAD_SYNC_DRY_RUN === "1" || env.THREAD_SYNC_DRY_RUN === "true",
     continueOnError: env.THREAD_SYNC_FAIL_FAST !== "1" && env.THREAD_SYNC_FAIL_FAST !== "true",
     env,
@@ -174,7 +177,9 @@ function readConfig(env) {
 async function fetchDesiredState(config) {
   const url = new URL("/internal/thread-desired-state", config.apiBaseUrl);
   url.searchParams.set("provider", config.provider);
-  url.searchParams.set("limit", String(config.limit));
+  if (config.limit) {
+    url.searchParams.set("limit", String(config.limit));
+  }
   if (config.targetRepo) {
     url.searchParams.set("target_repo", config.targetRepo);
   }
@@ -249,6 +254,11 @@ function messageOf(error) {
 function positiveInteger(value, fallback) {
   const parsed = Number.parseInt(String(value ?? ""), 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+function optionalPositiveInteger(value) {
+  const parsed = positiveInteger(value, 0);
+  return parsed > 0 ? parsed : undefined;
 }
 
 function trim(value) {

@@ -8,13 +8,14 @@ pub use subset::is_payment_authority_subset;
 
 use runx_contracts::{
     AuthorityCapability, AuthorityEffectCredentialForm, AuthorityEffectLimit,
-    AuthorityResourceFamily, AuthoritySubsetProof, AuthoritySubsetRelation, AuthoritySubsetResult,
-    AuthorityTerm, AuthorityVerb, Decision, DecisionChoice, Reference,
+    AuthorityResourceFamily, AuthoritySubsetProof, AuthorityTerm, AuthorityVerb, Decision,
+    DecisionChoice, Reference,
 };
 #[cfg(test)]
 use runx_core::policy::authority_effect_proof_kinds as generic_authority_effect_proof_kinds;
 use runx_core::policy::{
-    authority_effect_family as generic_authority_effect_family, evaluate_authority_effect_guards,
+    SubsetProofError, authority_effect_family as generic_authority_effect_family,
+    ensure_subset_proof as core_ensure_subset_proof, evaluate_authority_effect_guards,
 };
 use thiserror::Error;
 
@@ -336,35 +337,19 @@ fn admit_payment_rail(
     })
 }
 
+// The structural proof validation is the lifted, family-agnostic core
+// `ensure_subset_proof`; payment maps its result onto the payment error so the
+// admission keeps a single error vocabulary. There is exactly one validator in
+// the workspace.
 fn ensure_subset_proof(
     proof: Option<&AuthoritySubsetProof>,
     child: &AuthorityTerm,
     parent: &AuthorityTerm,
 ) -> Result<(), PaymentAuthorityError> {
-    let Some(proof) = proof else {
-        return Err(PaymentAuthorityError::MissingSubsetProof);
-    };
-    if proof.comparison_algorithm.trim().is_empty() || proof.checked_at.trim().is_empty() {
-        return Err(PaymentAuthorityError::InvalidSubsetProof);
-    }
-    if proof.parent_authority_ref != parent.resource_ref {
-        return Err(PaymentAuthorityError::InvalidSubsetProof);
-    }
-    if !matches!(proof.result, AuthoritySubsetResult::Subset) {
-        return Err(PaymentAuthorityError::InvalidSubsetProof);
-    }
-    let compared_terms_match = proof.compared_terms.iter().any(|comparison| {
-        comparison.child_term_id == child.term_id
-            && comparison.parent_term_id == parent.term_id
-            && matches!(
-                comparison.relation,
-                AuthoritySubsetRelation::Subset | AuthoritySubsetRelation::Equal
-            )
-    });
-    if !compared_terms_match {
-        return Err(PaymentAuthorityError::InvalidSubsetProof);
-    }
-    Ok(())
+    core_ensure_subset_proof(proof, child, parent).map_err(|error| match error {
+        SubsetProofError::Missing => PaymentAuthorityError::MissingSubsetProof,
+        SubsetProofError::Invalid => PaymentAuthorityError::InvalidSubsetProof,
+    })
 }
 
 fn decision_selects_payment_execution(decision: &Decision) -> bool {
