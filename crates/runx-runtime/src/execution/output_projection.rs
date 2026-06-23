@@ -19,15 +19,11 @@ pub(crate) struct StepOutputRefs {
     pub(crate) verification_refs: Vec<Reference>,
 }
 
-/// The diagnostic/base fields `project_step_output` always injects into a step's
-/// `outputs` map. They exist for receipts, effect replay, and debugging, but they are
-/// NOT part of a step's addressable contract: a context edge may bind only to declared
-/// outputs and artifact packets, never to these. This is the single source of truth;
-/// the resolver (`graph_index::reject_base_key_edge`), the nested-graph terminal
-/// adoption (`runner::steps::adopt_terminal_step_contract`), and the declared-output
-/// guard (`runner::steps::output::reject_reserved_step_output_name`) all reference it,
-/// so adding or removing a base field here updates every site at once.
-pub(crate) const BASE_OUTPUT_FIELDS: &[&str] = &["raw", "skill_claim", "stdout", "stderr", "status"];
+/// The diagnostic/base fields `project_step_output` injects into a step's `outputs`
+/// map. Re-exported from `runx_contracts::output` so the runtime projection/resolver
+/// and the parser's parse-time context-edge validation share one source of truth and
+/// the addressable surface cannot drift between layers.
+pub(crate) use runx_contracts::output::BASE_OUTPUT_FIELDS;
 
 #[must_use]
 pub(crate) fn project_step_output(output: &SkillOutput) -> StepOutputProjection {

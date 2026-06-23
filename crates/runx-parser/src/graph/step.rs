@@ -444,10 +444,18 @@ fn parse_context_reference(
             "{field} references unknown or later step '{from_step}'."
         )));
     }
+    let output = &reference[dot_index + 1..];
+    let first_segment = output.split('.').next().unwrap_or(output);
+    if runx_contracts::output::BASE_OUTPUT_FIELDS.contains(&first_segment) {
+        return Err(validation_error(format!(
+            "{field} binds base/diagnostic field '{first_segment}' of step '{from_step}'; base fields ({}) are not addressable, bind a declared output or artifact packet instead.",
+            runx_contracts::output::BASE_OUTPUT_FIELDS.join("/")
+        )));
+    }
     Ok(GraphContextEdge {
         input: input.to_owned(),
         from_step: from_step.to_owned(),
-        output: reference[dot_index + 1..].to_owned(),
+        output: output.to_owned(),
     })
 }
 
