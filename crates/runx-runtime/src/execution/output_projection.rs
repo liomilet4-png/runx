@@ -19,6 +19,16 @@ pub(crate) struct StepOutputRefs {
     pub(crate) verification_refs: Vec<Reference>,
 }
 
+/// The diagnostic/base fields `project_step_output` always injects into a step's
+/// `outputs` map. They exist for receipts, effect replay, and debugging, but they are
+/// NOT part of a step's addressable contract: a context edge may bind only to declared
+/// outputs and artifact packets, never to these. This is the single source of truth;
+/// the resolver (`graph_index::reject_base_key_edge`), the nested-graph terminal
+/// adoption (`runner::steps::adopt_terminal_step_contract`), and the declared-output
+/// guard (`runner::steps::output::reject_reserved_step_output_name`) all reference it,
+/// so adding or removing a base field here updates every site at once.
+pub(crate) const BASE_OUTPUT_FIELDS: &[&str] = &["raw", "skill_claim", "stdout", "stderr", "status"];
+
 #[must_use]
 pub(crate) fn project_step_output(output: &SkillOutput) -> StepOutputProjection {
     let mut outputs = JsonObject::new();
@@ -50,6 +60,25 @@ pub(crate) fn project_step_output(output: &SkillOutput) -> StepOutputProjection 
         outputs,
         claim,
         refs,
+    }
+}
+
+/// Wrap a value in the canonical `{ "data": ... }` artifact envelope, idempotently.
+///
+/// This is the single owner of the envelope convention: a value that is already an
+/// object carrying a `data` key is returned untouched, so the envelope is applied at
+/// most once no matter how many layers (catalog adapter, step projection) handle the
+/// same payload. Without this guard a payload wrapped by one layer is re-wrapped by the
+/// next, producing the `data.data` depth drift that silently breaks context-edge paths.
+#[must_use]
+pub(crate) fn data_envelope(value: JsonValue) -> JsonValue {
+    match value {
+        JsonValue::Object(object) if object.contains_key("data") => JsonValue::Object(object),
+        other => {
+            let mut wrapper = JsonObject::new();
+            wrapper.insert("data".to_owned(), other);
+            JsonValue::Object(wrapper)
+        }
     }
 }
 

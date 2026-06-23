@@ -14,7 +14,7 @@ use runx_pay::effect_state::{
     EffectCapabilityConsumption, EffectFinalityEventRecord, EffectFinalityIntent,
     EffectFinalityIntentStatus, EffectFinalityRecord, EffectIdempotencyEntry, EffectIdempotencyKey,
     EffectMutation, EffectMutationStatus, EffectPeriodSpendReservation, EffectRecoveryState,
-    EffectRunSpendReservation, EffectStepStateInput, FileBackedEffectStateStore,
+    EffectRunSpendReservation, EffectStateStore, EffectStepStateInput, FileBackedEffectStateStore,
     RUNX_EFFECT_STATE_PATH_ENV, RUNX_HOSTED_EFFECT_STATE_BACKEND_JSON_ENV,
     consumed_spend_capability_recorded, escalate_effect_mutation, lookup_effect_idempotency_entry,
     lookup_effect_mutation, period_window_start, persist_effect_step_state,

@@ -769,6 +769,9 @@ fn write_graph_receipts(
 /// inputs. The graph's per-step receipts remain as the execution trace; this
 /// standalone domain receipt is what the turn presents and what chains by
 /// lineage. Transport (the http step, status, token) never enters it.
+// rust-style-allow: long-function - assembling the domain-act receipt is one frame
+// build/mint/seal sequence; splitting it would separate the authority mint from the
+// frame it seals into.
 fn graph_domain_act_receipt(
     runner: &SkillRunnerDefinition,
     graph_inputs: &JsonObject,
@@ -791,7 +794,7 @@ fn graph_domain_act_receipt(
         .filter(|step| step.output.succeeded())
         .and_then(|step| serde_json::from_str::<JsonValue>(step.output.stdout.trim()).ok());
     let authority_grant_refs = graph_credential_grant_refs(run);
-    let Some(frame) = build_domain_act_frame(
+    let Some(mut frame) = build_domain_act_frame(
         act,
         graph_inputs,
         &reason_source,
@@ -800,6 +803,23 @@ fn graph_domain_act_receipt(
     ) else {
         return Ok(None);
     };
+    // Compute path: when the act declares `mint_authority`, the runtime mints the
+    // child term and proves the subset against the graph charter off the model
+    // path, overriding the (empty, since the parser holds them mutually exclusive)
+    // pre-built attenuation fields. Fail-loud: a request exceeding the charter
+    // fails the turn rather than sealing a false or missing attenuation.
+    if let Some((terms, attenuation)) = mint_charter_attenuation(
+        act,
+        runner
+            .source
+            .graph
+            .as_ref()
+            .and_then(|graph| graph.charter_from.as_deref()),
+        graph_inputs,
+    )? {
+        frame.authority_terms = terms;
+        frame.authority_attenuation = Some(attenuation);
+    }
     let graph_name = identifier_segment(run_id);
     let created_at = crate::time::now_iso8601();
     let receipt = domain_act_receipt(DomainActReceiptRequest {
@@ -814,6 +834,83 @@ fn graph_domain_act_receipt(
         signature_policy: signature_config.signature_policy(),
     })?;
     Ok(Some(receipt))
+}
+
+/// Mint the charter -> member attenuation for a graph turn that declares
+/// `mint_authority`. The parent charter is the AuthorityTerm carried by the graph
+/// runner's `charter_from` input; the requested narrowing is the AttenuationRequest
+/// carried by `requested_scope_from`. The child term and subset proof are computed
+/// and verified by the core mint primitive, so the runtime never trusts a pre-built
+/// proof here and a request exceeding the charter fails the turn loudly.
+fn mint_charter_attenuation(
+    act: &runx_parser::ActDeclaration,
+    charter_key: Option<&str>,
+    graph_inputs: &JsonObject,
+) -> Result<
+    Option<(
+        Vec<runx_contracts::AuthorityTerm>,
+        runx_contracts::AuthorityAttenuation,
+    )>,
+    SkillRunError,
+> {
+    use runx_core::policy::{AttenuationRequest, ScopeBoundsComparator, mint_attenuated};
+    use runx_parser::MintScopeSource;
+
+    let Some(directive) = act.mint_authority.as_ref() else {
+        return Ok(None);
+    };
+    let charter_key = charter_key
+        .ok_or_else(|| invalid("mint_authority requires the graph runner to declare charter_from"))?;
+    let charter: runx_contracts::AuthorityTerm =
+        decode_graph_input(graph_inputs, charter_key).ok_or_else(|| {
+            invalid(format!(
+                "mint_authority charter input '{charter_key}' did not resolve to an authority term"
+            ))
+        })?;
+    let request: AttenuationRequest = match directive.source {
+        MintScopeSource::RequestedScope => {
+            let key = act.requested_scope_from.as_deref().ok_or_else(|| {
+                invalid("mint_authority requested_scope requires requested_scope_from")
+            })?;
+            decode_graph_input(graph_inputs, key).ok_or_else(|| {
+                invalid(format!(
+                    "mint_authority requested_scope input '{key}' did not resolve to an attenuation request"
+                ))
+            })?
+        }
+        MintScopeSource::StaticScopes => {
+            return Err(invalid(
+                "mint_authority source static_scopes is not yet wired in the runtime; use requested_scope",
+            ));
+        }
+    };
+    let (child, proof) = mint_attenuated(
+        &charter,
+        &request,
+        &ScopeBoundsComparator,
+        crate::time::now_iso8601().into(),
+    )
+    .map_err(|error| {
+        invalid(format!(
+            "mint_authority requested child is not a subset of the charter ({error:?})"
+        ))
+    })?;
+    let attenuation = runx_contracts::AuthorityAttenuation {
+        parent_authority_ref: Some(proof.parent_authority_ref.clone()),
+        subset_proof: Some(proof),
+    };
+    Ok(Some((vec![child], attenuation)))
+}
+
+/// Decode a trusted graph input value into a typed contract struct.
+fn decode_graph_input<T: serde::de::DeserializeOwned>(
+    inputs: &JsonObject,
+    key: &str,
+) -> Option<T> {
+    inputs
+        .get(key)
+        .and_then(|value| serde_json::to_value(value).ok())
+        .and_then(|value| serde_json::from_value(value).ok())
 }
 
 /// Gather the credential grant refs the turn actually held, read from the
@@ -847,6 +944,90 @@ mod tests {
 
     use super::*;
     use crate::adapter::SkillAdapter;
+
+    #[test]
+    fn mint_authority_seals_a_subset_proven_child() -> Result<(), SkillRunError> {
+        use runx_contracts::{
+            AuthorityBounds, AuthorityResourceFamily, AuthorityTerm, AuthorityVerb, Reference,
+            ReferenceType,
+        };
+        use runx_core::policy::{AttenuationRequest, ensure_subset_proof};
+
+        let principal = Reference::with_uri(ReferenceType::Principal, "runx:principal:agency");
+        let member = Reference::with_uri(ReferenceType::Principal, "runx:principal:writer");
+        let resource = Reference::with_uri(ReferenceType::Repository, "runx:repository:docs");
+        let bounds = AuthorityBounds {
+            filesystem_roots: vec!["/repo".into()],
+            ..AuthorityBounds::default()
+        };
+        let charter = AuthorityTerm {
+            term_id: "charter".into(),
+            principal_ref: principal.clone(),
+            resource_ref: resource.clone(),
+            resource_family: AuthorityResourceFamily::Workspace,
+            verbs: vec![AuthorityVerb::Read, AuthorityVerb::Write],
+            bounds: bounds.clone(),
+            conditions: Vec::new(),
+            approvals: Vec::new(),
+            capabilities: Vec::new(),
+            expires_at: None,
+            issued_by_ref: principal,
+            credential_ref: None,
+        };
+        let make_request = |verbs: Vec<AuthorityVerb>| AttenuationRequest {
+            principal_ref: member.clone(),
+            resource_ref: resource.clone(),
+            resource_family: AuthorityResourceFamily::Workspace,
+            verbs,
+            capabilities: Vec::new(),
+            bounds: bounds.clone(),
+            expires_at: None,
+        };
+
+        let act: runx_parser::ActDeclaration = serde_json::from_value(serde_json::json!({
+            "mint_authority": {"source": "requested_scope"},
+            "requested_scope_from": "requested"
+        }))
+        .map_err(|error| invalid(format!("act fixture: {error}")))?;
+
+        // Valid narrowing: a read-only child of a read+write charter, same resource.
+        let mut inputs = JsonObject::new();
+        inputs.insert("charter".to_owned(), contract_json_value(&charter)?);
+        inputs.insert(
+            "requested".to_owned(),
+            contract_json_value(&make_request(vec![AuthorityVerb::Read]))?,
+        );
+        let (terms, attenuation) = mint_charter_attenuation(&act, Some("charter"), &inputs)?
+            .ok_or_else(|| invalid("expected minted attenuation"))?;
+        assert_eq!(terms.len(), 1, "exactly one minted child term");
+        let proof = attenuation
+            .subset_proof
+            .as_ref()
+            .ok_or_else(|| invalid("minted attenuation must carry a subset proof"))?;
+        // The receipt verifier accepts the computed proof.
+        ensure_subset_proof(Some(proof), &terms[0], &charter)
+            .map_err(|error| invalid(format!("verifier rejected minted proof: {error:?}")))?;
+
+        // Fail-closed: widening verbs beyond the charter errors and seals nothing.
+        let mut widen = JsonObject::new();
+        widen.insert("charter".to_owned(), contract_json_value(&charter)?);
+        widen.insert(
+            "requested".to_owned(),
+            contract_json_value(&make_request(vec![AuthorityVerb::Read, AuthorityVerb::Delete]))?,
+        );
+        assert!(
+            mint_charter_attenuation(&act, Some("charter"), &widen).is_err(),
+            "a request that widens beyond the charter must fail closed"
+        );
+
+        // Fail-closed: an unresolved charter input errors rather than sealing a root.
+        assert!(
+            mint_charter_attenuation(&act, Some("absent"), &inputs).is_err(),
+            "an unresolved charter must fail closed"
+        );
+
+        Ok(())
+    }
 
     #[test]
     fn graph_source_registry_fails_closed_on_unregistered_source() {

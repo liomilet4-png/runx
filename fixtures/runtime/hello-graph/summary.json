@@ -6,8 +6,8 @@
     "second"
   ],
   "stdout": [
-    "hello from graph\n",
-    "hello from graph\n\n"
+    "{\"message\":\"hello from graph\"}\n",
+    "{\"message\":\"hello from graph\"}\n"
   ],
   "createdAt": "2026-05-18T00:00:00Z",
   "graphSealDigest": "sha256:d2213925ec0850b1ba909e33fb88a596927aa3987edba18288d3f925665faa88",

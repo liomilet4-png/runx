@@ -11,7 +11,7 @@ use crate::execution::output_projection::{
 use crate::{RuntimeError, StepRun};
 use runx_contracts::schema::NonEmptyString;
 use runx_contracts::{
-    ActForm, AuthorityAttenuation, AuthoritySubsetResult, Closure, ClosureDisposition,
+    ActForm, AuthorityAttenuation, AuthoritySubsetResult, AuthorityTerm, Closure, ClosureDisposition,
     CredentialDeliveryObservation, CriterionBinding, CriterionStatus, Decision, DecisionChoice,
     DecisionInputs, DecisionJustification, FanoutReceiptSyncPoint, Intent, JsonObject, Lineage,
     RECEIPT_CANONICALIZATION, Receipt, ReceiptAct, ReceiptAuthority, ReceiptEnforcement,
@@ -653,6 +653,12 @@ pub(crate) struct DomainActFrame {
     pub actor_ref: Reference,
     pub authority_grant_refs: Vec<Reference>,
     pub authority_scope_refs: Vec<Reference>,
+    /// The member's own authority term (the child grant minted from the charter).
+    /// Empty for an unattenuated turn.
+    pub authority_terms: Vec<AuthorityTerm>,
+    /// The charter attenuation: the parent authority and the subset proof that the
+    /// child term is no broader. `None` for a root (unattenuated) turn.
+    pub authority_attenuation: Option<AuthorityAttenuation>,
     pub previous: Option<Reference>,
 }
 
@@ -750,11 +756,11 @@ pub(crate) fn domain_act_receipt(
         authority_proof_refs: Vec::new(),
         grant_refs: frame.authority_grant_refs,
         scope_refs: frame.authority_scope_refs,
-        terms: Vec::new(),
-        attenuation: AuthorityAttenuation {
+        terms: frame.authority_terms,
+        attenuation: frame.authority_attenuation.unwrap_or(AuthorityAttenuation {
             parent_authority_ref: None,
             subset_proof: None,
-        },
+        }),
         mandate_ref: None,
         enforcement: ReceiptEnforcement {
             profile_hash: "sha256:runtime-skeleton-enforcement".into(),
