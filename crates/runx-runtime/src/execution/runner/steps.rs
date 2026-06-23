@@ -395,7 +395,12 @@ where
 // graph that needs a specific emit step should name it explicitly rather than rely on
 // completion order.
 fn adopt_terminal_step_contract(run: &GraphRun, outputs: &mut JsonObject) {
-    let Some(terminal) = run.steps.last() else {
+    // The graph's result is the contract of its terminal producer. `run.steps` is in
+    // completion order, so for a linear graph that is the last step; but a graph whose
+    // tail is a fanout group can push FAILED branch runs last (branches execute under
+    // RecordAndContinue), so adopt the last SUCCEEDED step rather than blindly the last
+    // one, to avoid adopting a failed branch's empty contract.
+    let Some(terminal) = run.steps.iter().rev().find(|step| step.output.succeeded()) else {
         return;
     };
     for (name, value) in &terminal.outputs {
