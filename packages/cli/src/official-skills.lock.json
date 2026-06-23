@@ -106,7 +106,7 @@
   },
   {
     "skill_id": "runx/governed-outbound",
-    "version": "sha-9c60b1c0cfd8",
+    "version": "sha-1af59c16f770",
     "digest": "e177cd002efb896e0bba7a6352f19f4d1ec575db1ef548849244ea42725356a6",
     "catalog_visibility": "public",
     "catalog_role": "context"
@@ -309,7 +309,7 @@
   },
   {
     "skill_id": "runx/redact-pii",
-    "version": "sha-987fc5a99db4",
+    "version": "sha-2aff473ec36f",
     "digest": "200d22c5e671b89e0ac8b837564c3a27e17ba6eb5bf93c80277966e981cf2b52",
     "catalog_visibility": "public",
     "catalog_role": "canonical"
@@ -372,7 +372,7 @@
   },
   {
     "skill_id": "runx/send-as",
-    "version": "sha-ab821b54b4e6",
+    "version": "sha-37e798437c61",
     "digest": "ee71759e8099dba9a4925a81b2da69c1d83e73a6fd57b3e21839a6bb637e9ca1",
     "catalog_visibility": "public",
     "catalog_role": "canonical"
@@ -498,7 +498,7 @@
   },
   {
     "skill_id": "runx/web-fetch",
-    "version": "sha-a6c2443bbaa1",
+    "version": "sha-fec9491a67bf",
     "digest": "9d744ec5179a797007727f63eab50ac5d45b321d07a7de73a31baa2b60e1c5a8",
     "catalog_visibility": "public",
     "catalog_role": "canonical"
