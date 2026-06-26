@@ -59,12 +59,12 @@ jobs:
             -R "$RUNX_RECEIPTS" \
             --json | tee .runx/evidence/ci-failure-triage/dogfood.json
 
-      - name: Verify dogfood receipt
+      - name: Verify harness receipt
         run: |
-          receipt_id="$(jq -r '.receipt_id // .receipt.id // .receipt_ref // empty' .runx/evidence/ci-failure-triage/dogfood.json)"
+          receipt_id="$(jq -r '.receipt_ids[0] // empty' .runx/evidence/ci-failure-triage/harness.json)"
           if [ -z "$receipt_id" ]; then
-            echo "dogfood output did not include receipt id" >&2
-            cat .runx/evidence/ci-failure-triage/dogfood.json >&2
+            echo "harness output did not include receipt id" >&2
+            cat .runx/evidence/ci-failure-triage/harness.json >&2
             exit 1
           fi
           runx verify "$receipt_id" --receipt-dir "$RUNX_RECEIPTS" --json \
