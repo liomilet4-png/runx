@@ -19,7 +19,15 @@ evidence = read_json("frantic-delivery-evidence.json")
 
 receipt_id = receipt["id"]
 receipt_ref = f"runx:receipt:{receipt_id}"
-verify_verdict = verify.get("status") or verify.get("verdict", {}).get("status") or "unknown"
+if verify.get("valid") is True:
+    verify_verdict = "valid=true"
+else:
+    verify_verdict = (
+        verify.get("status")
+        or verify.get("verdict", {}).get("status")
+        or verify.get("signature", {}).get("status")
+        or "unknown"
+    )
 
 resume_output = (
     resume.get("output")
