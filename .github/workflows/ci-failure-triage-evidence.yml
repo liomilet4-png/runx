@@ -16,6 +16,8 @@ jobs:
       RUNX_RECEIPT_SIGN_KID: runx-demo-key
       RUNX_RECEIPT_SIGN_ED25519_SEED_BASE64: QkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkI=
       RUNX_RECEIPT_SIGN_ISSUER_TYPE: hosted
+      RUNX_RECEIPT_VERIFY_KID: runx-demo-key
+      RUNX_RECEIPT_VERIFY_ED25519_PUBLIC_KEY_BASE64: IVL40Zt5HSRFMkLhXy6rbLfP+ntqXtMAl5YOBpiB2xI=
       RUNX_RECEIPTS: ${{ github.workspace }}/.runx/receipts/ci-failure-triage
     steps:
       - name: Checkout
@@ -68,7 +70,7 @@ jobs:
             cat .runx/evidence/ci-failure-triage/harness.json >&2
             exit 1
           fi
-          runx verify "$receipt_id" --receipt-dir "$RUNX_RECEIPTS" --allow-local-development-signatures --json \
+          runx verify "$receipt_id" --receipt-dir "$RUNX_RECEIPTS" --json \
             | tee .runx/evidence/ci-failure-triage/verification.json
 
       - name: Summarize evidence
@@ -87,7 +89,7 @@ jobs:
                 {name: "skill_inspect", status: $inspect[0].status, runners: $inspect[0].runners},
                 {name: "harness", status: $harness[0].status, case_count: $harness[0].case_count, assertion_error_count: $harness[0].assertion_error_count, receipt_ids: $harness[0].receipt_ids},
                 {name: "dogfood", status: $dogfood[0].status, receipt_id: ($dogfood[0].receipt_id // $dogfood[0].receipt.id // $dogfood[0].receipt_ref // null)},
-                {name: "verification", status: $verification[0].status, receipt_id: ($verification[0].receipt_id // $verification[0].receipt.id // null)}
+                {name: "verification", valid: $verification[0].valid, signature_mode: $verification[0].signature_mode, receipt_id: ($verification[0].trees[0].root_receipt_id // null)}
               ],
               known_gaps: []
             }' | tee .runx/evidence/ci-failure-triage/evidence.json
