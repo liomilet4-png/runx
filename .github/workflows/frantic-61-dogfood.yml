@@ -18,7 +18,7 @@ jobs:
     env:
       RUNX_RECEIPT_SIGN_KID: ${{ secrets.RUNX_RECEIPT_SIGN_KID }}
       RUNX_RECEIPT_SIGN_ED25519_SEED_BASE64: ${{ secrets.RUNX_RECEIPT_SIGN_ED25519_SEED_BASE64 }}
-      RUNX_RECEIPT_SIGN_ISSUER_TYPE: ${{ secrets.RUNX_RECEIPT_SIGN_ISSUER_TYPE }}
+      RUNX_RECEIPT_SIGN_ISSUER_TYPE: hosted
       RUNX_RECEIPTS: ${{ github.workspace }}/.runx/frantic-61-dogfood
       EVIDENCE_DIR: ${{ github.workspace }}/skills/ci-failure-triage/harness-evidence
 
