@@ -21,9 +21,18 @@ receipt_id = receipt["id"]
 receipt_ref = f"runx:receipt:{receipt_id}"
 verify_verdict = verify.get("status") or verify.get("verdict", {}).get("status") or "unknown"
 
-classification = resume["output"]["classification"]
-triage_packet = resume["output"]["triage_packet"]
-operator_note = resume["output"]["operator_note"]
+resume_output = (
+    resume.get("output")
+    or resume.get("payload")
+    or resume.get("execution", {}).get("structured_output")
+    or resume.get("execution", {}).get("skill_claim")
+)
+if not resume_output:
+    raise KeyError("dogfood resume output not found")
+
+classification = resume_output["classification"]
+triage_packet = resume_output["triage_packet"]
+operator_note = resume_output["operator_note"]
 
 evidence["summary"] = (
     "ci-failure-triage was published to the hosted runx registry, proposed upstream "
