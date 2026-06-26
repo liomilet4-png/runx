@@ -1,0 +1,158 @@
+skill: renewal-risk-judge
+version: "0.1.0"
+
+catalog:
+  kind: graph
+  audience: operator
+  visibility: public
+  role: canonical
+harness:
+  cases:
+    - name: high_risk_with_save_play
+      inputs:
+        account_ref: acct_renewal_042
+        usage_signals:
+          trend: declining
+          mau_pct_change: -32
+        support_history:
+          volume: 9
+          ticket_severity_avg: 4.2
+        payment_snapshot:
+          days_late: 8
+          churn_flag: true
+        operator_context: Renewal is due this week; recommend a bounded save message only if the evidence supports high risk.
+      caller:
+        answers:
+          agent_task.qualify-renewal-risk.output:
+            qualification_status: ready
+            reason: Usage trend, support history, and payment snapshot are present and non-contradictory.
+            missing: []
+            contradictions: []
+            normalized_inputs:
+              usage_mau_pct_change: -32
+              support_volume: 9
+              ticket_severity_avg: 4.2
+              days_late: 8
+              churn_flag: true
+          agent_task.score-renewal-risk.output:
+            decision:
+              risk_level: high
+              justification: Usage dropped by 32 percent, support volume is high with severe tickets, and payment is 8 days late with churn_flag true.
+            fused_score:
+              total: 86
+              weights:
+                usage_trend: 40
+                support: 25
+                payment: 21
+            escalation:
+              lane: human_approval
+              reason: High-risk renewal save plans require operator approval before any downstream send-as run.
+            save_plan:
+              channel: email
+              audience: account_owner
+              content_ref: renewal-save-high-risk-acct_renewal_042
+            receipt_notes:
+              recommendation_only: true
+              sends_message: false
+              touches_money: false
+              dispatch_by_naming: downstream send-as run must be separately approved
+      expect:
+        status: sealed
+        receipt:
+          schema: runx.receipt.v1
+
+    - name: missing_usage_signals_stop
+      inputs:
+        account_ref: acct_renewal_099
+        support_history:
+          volume: 3
+          ticket_severity_avg: 2.1
+        payment_snapshot:
+          days_late: 0
+          churn_flag: false
+      caller:
+        answers:
+          agent_task.qualify-renewal-risk.output:
+            qualification_status: blocked
+            reason: Missing usage_signals.trend and usage_signals.mau_pct_change; renewal risk cannot be grounded.
+            missing:
+              - usage_signals
+            contradictions: []
+            normalized_inputs: {}
+      expect:
+        status: needs_agent
+
+runners:
+  judge:
+    default: true
+    type: graph
+    inputs:
+      account_ref:
+        type: string
+        required: false
+        description: Stable internal account reference used only to label the verdict.
+      usage_signals:
+        type: json
+        required: true
+        description: Usage evidence with trend and mau_pct_change. Required to ground renewal risk.
+      support_history:
+        type: json
+        required: true
+        description: Support signal packet with volume and ticket_severity_avg.
+      payment_snapshot:
+        type: json
+        required: true
+        description: Payment risk snapshot with days_late and churn_flag.
+      operator_context:
+        type: string
+        required: false
+        description: Operator notes that bound the renewal decision and approval lane.
+    graph:
+      name: renewal-risk-judge
+      steps:
+        - id: qualify
+          run:
+            type: agent-task
+            agent: support
+            task: qualify-renewal-risk
+            outputs:
+              qualification_status: string
+              reason: string
+              missing: array
+              contradictions: array
+              normalized_inputs: object
+          inputs:
+            required_signals:
+              - usage_signals.trend
+              - usage_signals.mau_pct_change
+              - support_history.volume
+              - support_history.ticket_severity_avg
+              - payment_snapshot.days_late
+              - payment_snapshot.churn_flag
+
+        - id: judge
+          label: fuse renewal risk and bounded save-plan recommendation
+          when:
+            field: qualify.qualification_status
+            equals: ready
+          run:
+            type: agent-task
+            agent: support
+            task: score-renewal-risk
+            outputs:
+              decision: object
+              fused_score: object
+              escalation: object
+              save_plan: object
+              receipt_notes: object
+          context:
+            normalized_inputs: qualify.normalized_inputs
+            qualification_reason: qualify.reason
+          artifacts:
+            wrap_as: renewal_risk_verdict
+            packet: runx.support.renewal_risk.v1
+      policy:
+        guards:
+          - step: judge
+            field: qualify.qualification_status
+            equals: ready
