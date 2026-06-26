@@ -98,4 +98,3 @@ jobs:
           path: |
             .runx/evidence/ci-failure-triage/*.json
             .runx/evidence/ci-failure-triage/*.txt
-            .runx/receipts/ci-failure-triage/**/*.json
