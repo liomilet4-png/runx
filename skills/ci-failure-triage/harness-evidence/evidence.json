@@ -1,0 +1,35 @@
+{
+  "schema": "runx.ci_failure_triage.evidence.v1",
+  "summary": "ci-failure-triage package inspected, harnessed, dogfooded, and receipt-verified on Ubuntu GitHub Actions.",
+  "runx_version": "runx-cli 0.6.13",
+  "observations": [
+    {
+      "name": "skill_inspect",
+      "status": "ok",
+      "runners": [
+        "classify"
+      ]
+    },
+    {
+      "name": "harness",
+      "status": "passed",
+      "case_count": 2,
+      "assertion_error_count": 0,
+      "receipt_ids": [
+        "sha256:dd03fbdf6a08ca324821ea13862490979c00258d4fbaffc1dabda8dc5ba2e59f"
+      ]
+    },
+    {
+      "name": "dogfood",
+      "status": "needs_agent",
+      "receipt_id": null
+    },
+    {
+      "name": "verification",
+      "valid": true,
+      "signature_mode": "production",
+      "receipt_id": "sha256:dd03fbdf6a08ca324821ea13862490979c00258d4fbaffc1dabda8dc5ba2e59f"
+    }
+  ],
+  "known_gaps": []
+}

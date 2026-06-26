@@ -1,0 +1,15 @@
+{
+  "receipt_dir": "/home/runner/work/runx/runx/.runx/receipts/ci-failure-triage",
+  "signature_mode": "production",
+  "trees": [
+    {
+      "root_receipt_id": "sha256:dd03fbdf6a08ca324821ea13862490979c00258d4fbaffc1dabda8dc5ba2e59f",
+      "receipt_count": 1,
+      "parent_missing": null,
+      "valid": true,
+      "findings": []
+    }
+  ],
+  "unreadable_files": [],
+  "valid": true
+}

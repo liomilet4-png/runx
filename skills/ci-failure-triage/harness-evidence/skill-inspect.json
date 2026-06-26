@@ -1,0 +1,11 @@
+{
+  "description": "Classify CI failures as flake, infra, real-break, or dependency break and emit an evidence-backed routing packet.",
+  "name": "ci-failure-triage",
+  "runners": [
+    "classify"
+  ],
+  "schema": "runx.skill.inspect.v1",
+  "skill_path": "./skills/ci-failure-triage",
+  "status": "ok",
+  "version": "0.1.0"
+}

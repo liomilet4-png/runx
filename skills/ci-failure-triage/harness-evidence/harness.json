@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "case_count": 2,
+  "assertion_error_count": 0,
+  "assertion_errors": [],
+  "case_names": [
+    "real_break_clear_logs",
+    "ambiguous_truncated_logs"
+  ],
+  "receipt_ids": [
+    "sha256:dd03fbdf6a08ca324821ea13862490979c00258d4fbaffc1dabda8dc5ba2e59f"
+  ],
+  "graph_case_count": 0
+}
