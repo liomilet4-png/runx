@@ -1,0 +1,82 @@
+name: Frantic 61 dogfood receipt
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - codex/frantic-ci-failure-triage
+    paths:
+      - ".github/workflows/frantic-61-dogfood.yml"
+      - "skills/ci-failure-triage/**"
+
+permissions:
+  contents: write
+
+jobs:
+  dogfood:
+    runs-on: ubuntu-latest
+    env:
+      RUNX_RECEIPT_SIGN_KID: ${{ secrets.RUNX_RECEIPT_SIGN_KID }}
+      RUNX_RECEIPT_SIGN_ED25519_SEED_BASE64: ${{ secrets.RUNX_RECEIPT_SIGN_ED25519_SEED_BASE64 }}
+      RUNX_RECEIPT_SIGN_ISSUER_TYPE: ${{ secrets.RUNX_RECEIPT_SIGN_ISSUER_TYPE }}
+      RUNX_RECEIPTS: ${{ github.workspace }}/.runx/frantic-61-dogfood
+      EVIDENCE_DIR: ${{ github.workspace }}/skills/ci-failure-triage/harness-evidence
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install runx
+        run: npm install -g @runxhq/cli
+
+      - name: Run direct dogfood
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNX_RECEIPTS" "$EVIDENCE_DIR"
+          runx --version | tee "$EVIDENCE_DIR/dogfood-runx-version.txt"
+          runx add liomilet4-png/ci-failure-triage@sha-92622cb44366 \
+            --registry https://api.runx.ai \
+            --to "$RUNNER_TEMP/ci-failure-triage-install" \
+            --json | tee "$EVIDENCE_DIR/dogfood-install.json"
+          runx skill liomilet4-png/ci-failure-triage@sha-92622cb44366 \
+            --registry https://api.runx.ai \
+            --input-json ci_failure="$(jq -c . "$EVIDENCE_DIR/dogfood-input-ci-failure.json")" \
+            --input-json repo_config="$(jq -c . "$EVIDENCE_DIR/dogfood-input-repo-config.json")" \
+            --input-json escalation_policy="$(jq -c . "$EVIDENCE_DIR/dogfood-input-escalation-policy.json")" \
+            -R "$RUNX_RECEIPTS" \
+            --json | tee "$EVIDENCE_DIR/dogfood-initial-run.json"
+          run_id="$(jq -r '.run_id' "$EVIDENCE_DIR/dogfood-initial-run.json")"
+          test "$run_id" != "null"
+          runx resume "$run_id" "$EVIDENCE_DIR/dogfood-answers.json" \
+            -R "$RUNX_RECEIPTS" \
+            --json | tee "$EVIDENCE_DIR/dogfood-resume-run.json"
+          receipt_path="$(find "$RUNX_RECEIPTS" -maxdepth 1 -name 'sha256:*.json' -type f | head -n 1)"
+          test -n "$receipt_path"
+          cp "$receipt_path" "$EVIDENCE_DIR/dogfood-receipt.json"
+          runx verify --receipt "$EVIDENCE_DIR/dogfood-receipt.json" --json | tee "$EVIDENCE_DIR/dogfood-verify.json"
+
+      - name: Update dogfood summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/frantic-61-update-dogfood-evidence.py
+
+      - name: Commit generated evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "liomilet4-png"
+          git config user.email "290201513+liomilet4-png@users.noreply.github.com"
+          git add skills/ci-failure-triage/harness-evidence
+          if git diff --cached --quiet; then
+            echo "No generated evidence changes"
+            exit 0
+          fi
+          git commit -m "Update Frantic 61 dogfood evidence"
+          git push

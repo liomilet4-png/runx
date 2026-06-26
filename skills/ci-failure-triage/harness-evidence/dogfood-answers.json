@@ -1,0 +1,30 @@
+{
+  "answers": {
+    "agent_task.ci-failure-triage-classify.output": {
+      "classification": {
+        "verdict": "real-break",
+        "confidence": 0.91,
+        "evidence_refs": [
+          {
+            "logs": "AssertionError: expected 104.00 to equal 108.16"
+          },
+          {
+            "commit": "8a912f2 changed src/cart/totals.ts"
+          },
+          {
+            "repo_state": "previous_main_status: passing"
+          }
+        ]
+      },
+      "triage_packet": {
+        "recommended_lane": "issue-to-pr",
+        "rationale": "The failing assertion is deterministic after retry and points to a source change in the commit under test.",
+        "downstream_step": "issue-intake"
+      },
+      "operator_note": {
+        "action": "route",
+        "reason": "Create an issue-to-pr task with the failing test and suspect file."
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "logs": "npm test\n> app@1.4.0 test\n> vitest run\n\nFAIL packages/api/cart.test.ts > cart total includes tax\nAssertionError: expected 104.00 to equal 108.16\nsrc/cart/totals.ts:42:17\n\nCommit 8a912f2 changed src/cart/totals.ts and removed taxRate from line-item totals.\nRetried once on a fresh runner; the same assertion failed.",
+  "commit": {
+    "sha": "8a912f2",
+    "changed_files": [
+      "src/cart/totals.ts",
+      "packages/api/cart.test.ts"
+    ],
+    "message": "refactor cart totals"
+  },
+  "repo_state": {
+    "default_branch": "main",
+    "ci_provider": "github-actions",
+    "workflow": "test",
+    "previous_main_status": "passing"
+  }
+}
