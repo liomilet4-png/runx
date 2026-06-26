@@ -44,6 +44,7 @@ jobs:
             --registry https://api.runx.ai \
             --to "$RUNNER_TEMP/ci-failure-triage-install" \
             --json | tee "$EVIDENCE_DIR/dogfood-install.json"
+          set +e
           runx skill liomilet4-png/ci-failure-triage@sha-92622cb44366 \
             --registry https://api.runx.ai \
             --input-json ci_failure="$(jq -c . "$EVIDENCE_DIR/dogfood-input-ci-failure.json")" \
@@ -51,6 +52,12 @@ jobs:
             --input-json escalation_policy="$(jq -c . "$EVIDENCE_DIR/dogfood-input-escalation-policy.json")" \
             -R "$RUNX_RECEIPTS" \
             --json | tee "$EVIDENCE_DIR/dogfood-initial-run.json"
+          skill_status="${PIPESTATUS[0]}"
+          set -e
+          if [ "$skill_status" -ne 0 ] && [ "$skill_status" -ne 2 ]; then
+            exit "$skill_status"
+          fi
+          jq -e '.status == "needs_agent"' "$EVIDENCE_DIR/dogfood-initial-run.json" >/dev/null
           run_id="$(jq -r '.run_id' "$EVIDENCE_DIR/dogfood-initial-run.json")"
           test "$run_id" != "null"
           runx resume "$run_id" "$EVIDENCE_DIR/dogfood-answers.json" \
