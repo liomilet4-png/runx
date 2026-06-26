@@ -1,0 +1,42 @@
+{
+  "status": "success",
+  "registry": {
+    "action": "install",
+    "source": "remote",
+    "ref": "liomilet4-png/ci-failure-triage@sha-92622cb44366",
+    "install": {
+      "status": "installed",
+      "destination": "/home/runner/work/_temp/ci-failure-triage-install/liomilet4-png/ci-failure-triage/sha-92622cb44366/SKILL.md",
+      "skill_name": "ci-failure-triage",
+      "source": "runx-registry",
+      "source_label": "runx registry",
+      "skill_id": "liomilet4-png/ci-failure-triage",
+      "version": "sha-92622cb44366",
+      "digest": "sha256:a9f97237063cc739e37f43300e07f44c15aba3bde95fa5eb30aaf4cc53a840b7",
+      "profile_digest": "sha256:d82692aa65cfa75ef9de37c187f52ba3140ab4abf521e65e7099a1f61b20dfb1",
+      "profile_state_path": "/home/runner/work/_temp/ci-failure-triage-install/liomilet4-png/ci-failure-triage/sha-92622cb44366/.runx/profile.json",
+      "runner_names": [
+        "classify"
+      ],
+      "trust_tier": "community"
+    },
+    "receipt_metadata": {
+      "destination": "/home/runner/work/_temp/ci-failure-triage-install/liomilet4-png/ci-failure-triage/sha-92622cb44366/SKILL.md",
+      "digest": "sha256:a9f97237063cc739e37f43300e07f44c15aba3bde95fa5eb30aaf4cc53a840b7",
+      "install_count": 10,
+      "profile_digest": "sha256:d82692aa65cfa75ef9de37c187f52ba3140ab4abf521e65e7099a1f61b20dfb1",
+      "publisher": {
+        "display_name": "liomilet4-png",
+        "handle": "liomilet4-png",
+        "id": "user_97d92f1a533b82bc1b357635",
+        "kind": "user"
+      },
+      "ref": "liomilet4-png/ci-failure-triage@sha-92622cb44366",
+      "skill_id": "liomilet4-png/ci-failure-triage",
+      "source_label": "runx registry",
+      "status": "installed",
+      "trust_tier": "community",
+      "version": "sha-92622cb44366"
+    }
+  }
+}

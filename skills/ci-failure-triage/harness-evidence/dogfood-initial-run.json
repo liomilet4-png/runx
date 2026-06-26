@@ -1,0 +1,72 @@
+{
+  "registry_provenance": {
+    "digest": "sha256:a9f97237063cc739e37f43300e07f44c15aba3bde95fa5eb30aaf4cc53a840b7",
+    "profile_digest": "sha256:d82692aa65cfa75ef9de37c187f52ba3140ab4abf521e65e7099a1f61b20dfb1",
+    "registry_key_id": "runx-registry-ed25519-v1",
+    "registry_source": "remote https://api.runx.ai",
+    "registry_source_fingerprint": "ba1ac16b631195fd",
+    "skill_id": "liomilet4-png/ci-failure-triage",
+    "trust_state": "trusted",
+    "trust_tier": "community",
+    "version": "sha-92622cb44366"
+  },
+  "requests": [
+    {
+      "id": "agent_task.ci-failure-triage-classify.output",
+      "invocation": {
+        "agent": "researcher",
+        "envelope": {
+          "allowed_tools": [],
+          "current_context": [],
+          "execution_location": {
+            "skill_directory": "/home/runner/.runx/registry-skills/ba1ac16b631195fd/liomilet4-png/ci-failure-triage/sha-92622cb44366/ed1221d437cf245e/liomilet4-png/ci-failure-triage/sha-92622cb44366"
+          },
+          "historical_context": [],
+          "inputs": {
+            "ci_failure": {
+              "commit": {
+                "changed_files": [
+                  "src/cart/totals.ts",
+                  "packages/api/cart.test.ts"
+                ],
+                "message": "refactor cart totals",
+                "sha": "8a912f2"
+              },
+              "logs": "npm test\n> app@1.4.0 test\n> vitest run\n\nFAIL packages/api/cart.test.ts > cart total includes tax\nAssertionError: expected 104.00 to equal 108.16\nsrc/cart/totals.ts:42:17\n\nCommit 8a912f2 changed src/cart/totals.ts and removed taxRate from line-item totals.\nRetried once on a fresh runner; the same assertion failed.",
+              "repo_state": {
+                "ci_provider": "github-actions",
+                "default_branch": "main",
+                "previous_main_status": "passing",
+                "workflow": "test"
+              }
+            },
+            "escalation_policy": {
+              "min_confidence": 0.75
+            },
+            "repo_config": {
+              "issue_to_pr_lane": "enabled",
+              "protected_branch": "main"
+            }
+          },
+          "instructions": "Resolve the runx agent act using the supplied inputs and context.",
+          "output": {
+            "classification": "object",
+            "operator_note": "object",
+            "triage_packet": "object"
+          },
+          "provenance": [],
+          "run_id": "rx_pending",
+          "skill": "classify",
+          "trust_boundary": "native-managed: runx executes the model and tool loop directly, receipts the result, and only yields to a surface for explicit human resolution outside this path"
+        },
+        "id": "agent_task.ci-failure-triage-classify.output",
+        "source_type": "agent-task",
+        "task": "ci-failure-triage-classify"
+      },
+      "kind": "agent_act"
+    }
+  ],
+  "run_id": "run_agent_task-ci-failure-triage-classify-output",
+  "schema": "runx.skill_run.v1",
+  "status": "needs_agent"
+}

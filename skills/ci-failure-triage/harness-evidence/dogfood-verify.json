@@ -1,0 +1,25 @@
+{
+  "schema": "runx.verify_verdict.v1",
+  "receipt_id": "sha256:37dba05f1eb4985b4d6dacb536e3df96e6ced983452e5d45eacd6ce00c6783ac",
+  "valid": true,
+  "digest": {
+    "status": "valid",
+    "expected": "sha256:16abad272eeaa012c5e3674dbc8df136d5ad3f5336598f6df4744c97bed044de",
+    "actual": "sha256:16abad272eeaa012c5e3674dbc8df136d5ad3f5336598f6df4744c97bed044de"
+  },
+  "content_address": {
+    "status": "valid",
+    "expected": "sha256:37dba05f1eb4985b4d6dacb536e3df96e6ced983452e5d45eacd6ce00c6783ac",
+    "actual": "sha256:37dba05f1eb4985b4d6dacb536e3df96e6ced983452e5d45eacd6ce00c6783ac"
+  },
+  "signature": {
+    "mode": "production",
+    "status": "valid",
+    "kid": "frantic-61-ci-dogfood-key"
+  },
+  "lineage": {
+    "status": "unverified",
+    "message": "single receipt verification cannot prove receipt-tree lineage"
+  },
+  "findings": []
+}

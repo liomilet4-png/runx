@@ -1,0 +1,231 @@
+{
+  "closure": {
+    "closed_at": "2026-06-26T05:30:05.433Z",
+    "disposition": "closed",
+    "reason_code": "agent_act_closed",
+    "summary": "agent act closed with closed"
+  },
+  "execution": {
+    "exit_code": 0,
+    "skill_claim": {
+      "classification": {
+        "confidence": 0.91,
+        "evidence_refs": [
+          {
+            "logs": "AssertionError: expected 104.00 to equal 108.16"
+          },
+          {
+            "commit": "8a912f2 changed src/cart/totals.ts"
+          },
+          {
+            "repo_state": "previous_main_status: passing"
+          }
+        ],
+        "verdict": "real-break"
+      },
+      "operator_note": {
+        "action": "route",
+        "reason": "Create an issue-to-pr task with the failing test and suspect file."
+      },
+      "triage_packet": {
+        "downstream_step": "issue-intake",
+        "rationale": "The failing assertion is deterministic after retry and points to a source change in the commit under test.",
+        "recommended_lane": "issue-to-pr"
+      }
+    },
+    "stderr": "",
+    "stdout": "{\"classification\":{\"confidence\":0.91,\"evidence_refs\":[{\"logs\":\"AssertionError: expected 104.00 to equal 108.16\"},{\"commit\":\"8a912f2 changed src/cart/totals.ts\"},{\"repo_state\":\"previous_main_status: passing\"}],\"verdict\":\"real-break\"},\"operator_note\":{\"action\":\"route\",\"reason\":\"Create an issue-to-pr task with the failing test and suspect file.\"},\"triage_packet\":{\"downstream_step\":\"issue-intake\",\"rationale\":\"The failing assertion is deterministic after retry and points to a source change in the commit under test.\",\"recommended_lane\":\"issue-to-pr\"}}",
+    "structured_output": {
+      "classification": {
+        "confidence": 0.91,
+        "evidence_refs": [
+          {
+            "logs": "AssertionError: expected 104.00 to equal 108.16"
+          },
+          {
+            "commit": "8a912f2 changed src/cart/totals.ts"
+          },
+          {
+            "repo_state": "previous_main_status: passing"
+          }
+        ],
+        "verdict": "real-break"
+      },
+      "operator_note": {
+        "action": "route",
+        "reason": "Create an issue-to-pr task with the failing test and suspect file."
+      },
+      "triage_packet": {
+        "downstream_step": "issue-intake",
+        "rationale": "The failing assertion is deterministic after retry and points to a source change in the commit under test.",
+        "recommended_lane": "issue-to-pr"
+      }
+    }
+  },
+  "payload": {
+    "classification": {
+      "confidence": 0.91,
+      "evidence_refs": [
+        {
+          "logs": "AssertionError: expected 104.00 to equal 108.16"
+        },
+        {
+          "commit": "8a912f2 changed src/cart/totals.ts"
+        },
+        {
+          "repo_state": "previous_main_status: passing"
+        }
+      ],
+      "verdict": "real-break"
+    },
+    "operator_note": {
+      "action": "route",
+      "reason": "Create an issue-to-pr task with the failing test and suspect file."
+    },
+    "triage_packet": {
+      "downstream_step": "issue-intake",
+      "rationale": "The failing assertion is deterministic after retry and points to a source change in the commit under test.",
+      "recommended_lane": "issue-to-pr"
+    }
+  },
+  "receipt": {
+    "acts": [
+      {
+        "artifact_refs": [],
+        "closure": {
+          "closed_at": "2026-06-26T05:30:05.433Z",
+          "disposition": "closed",
+          "reason_code": "process_exit",
+          "summary": "cli-tool exited successfully"
+        },
+        "criterion_bindings": [
+          {
+            "criterion_id": "process_exit",
+            "evidence_refs": [],
+            "status": "verified",
+            "summary": "cli-tool exited successfully",
+            "verification_refs": []
+          }
+        ],
+        "form": "observation",
+        "id": "act_classify",
+        "intent": {
+          "constraints": [],
+          "derived_from": [],
+          "legitimacy": "Runtime graph execution was admitted by the local harness",
+          "purpose": "Run graph step classify",
+          "success_criteria": [
+            {
+              "criterion_id": "process_exit",
+              "required": true,
+              "statement": "cli-tool exits successfully"
+            }
+          ]
+        },
+        "source_refs": [],
+        "summary": "Executed graph step classify",
+        "target_refs": []
+      }
+    ],
+    "authority": {
+      "actor_ref": {
+        "type": "principal",
+        "uri": "runx:principal:local_runtime"
+      },
+      "attenuation": {
+        "parent_authority_ref": null,
+        "subset_proof": null
+      },
+      "authority_proof_refs": [],
+      "enforcement": {
+        "profile_hash": "sha256:runtime-skeleton-enforcement",
+        "redaction_refs": [],
+        "setup_refs": [],
+        "teardown_refs": []
+      },
+      "grant_refs": [],
+      "scope_refs": [],
+      "terms": []
+    },
+    "canonicalization": "runx.receipt.c14n.v1",
+    "created_at": "2026-06-26T05:30:05.433Z",
+    "decisions": [
+      {
+        "artifact_refs": [],
+        "choice": "open",
+        "closure": null,
+        "decision_id": "dec_classify",
+        "inputs": {
+          "opportunity_refs": [],
+          "selection_ref": null,
+          "signal_refs": [],
+          "target_ref": null
+        },
+        "justification": {
+          "evidence_refs": [],
+          "summary": "runtime graph planner selected this node"
+        },
+        "proposed_intent": {
+          "constraints": [],
+          "derived_from": [],
+          "legitimacy": "Local graph execution requested this node",
+          "purpose": "Open runtime node classify",
+          "success_criteria": []
+        },
+        "selected_act_id": "act_classify",
+        "selected_harness_ref": null
+      }
+    ],
+    "digest": "sha256:16abad272eeaa012c5e3674dbc8df136d5ad3f5336598f6df4744c97bed044de",
+    "id": "sha256:37dba05f1eb4985b4d6dacb536e3df96e6ced983452e5d45eacd6ce00c6783ac",
+    "idempotency": {
+      "content_hash": "sha256:run_agent_task-ci-failure-triage-classify-output-classify-content",
+      "intent_key": "sha256:run_agent_task-ci-failure-triage-classify-output-classify-intent",
+      "trigger_fingerprint": "sha256:run_agent_task-ci-failure-triage-classify-output-classify-trigger"
+    },
+    "issuer": {
+      "kid": "frantic-61-ci-dogfood-key",
+      "public_key_sha256": "sha256:3097e2dee2cb4a34b53840cdb705aed71067c36f68db0e0f559c3f3fa043315f",
+      "type": "hosted"
+    },
+    "lineage": {
+      "children": [],
+      "sync": []
+    },
+    "schema": "runx.receipt.v1",
+    "seal": {
+      "closed_at": "2026-06-26T05:30:05.433Z",
+      "criteria": [
+        {
+          "criterion_id": "process_exit",
+          "evidence_refs": [],
+          "status": "verified",
+          "summary": "cli-tool exited successfully",
+          "verification_refs": []
+        }
+      ],
+      "disposition": "closed",
+      "last_observed_at": "2026-06-26T05:30:05.433Z",
+      "reason_code": "agent_act_closed",
+      "summary": "agent act closed with closed"
+    },
+    "signals": [],
+    "signature": {
+      "alg": "Ed25519",
+      "value": "base64:N9vUDxCVbSFYiAGm8k7bdHRBbmEytcBBYfylB10S3M5Z16q1ryT6dVPH_tJTE4g72QFHdBw0PiL92BOv7aAGBQ"
+    },
+    "subject": {
+      "commitments": [],
+      "kind": "skill",
+      "ref": {
+        "type": "harness",
+        "uri": "hrn_run_agent_task-ci-failure-triage-classify-output_classify"
+      }
+    }
+  },
+  "receipt_id": "sha256:37dba05f1eb4985b4d6dacb536e3df96e6ced983452e5d45eacd6ce00c6783ac",
+  "run_id": "run_agent_task-ci-failure-triage-classify-output",
+  "schema": "runx.skill_run.v1",
+  "skill_name": "ci-failure-triage",
+  "status": "sealed"
+}

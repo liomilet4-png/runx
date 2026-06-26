@@ -1,6 +1,6 @@
 {
   "schema": "frantic.delivery.evidence.v1",
-  "summary": "ci-failure-triage was published to the hosted runx registry with a purpose-scoped publish credential, proposed upstream in runxhq/runx#153, clean-installed from the hosted registry, and validated with hosted harness status passed.",
+  "summary": "ci-failure-triage was published to the hosted runx registry, proposed upstream in runxhq/runx#153, clean-installed from the hosted registry, validated with hosted harness status passed, and dogfooded with a direct runx skill invocation that produced a verifiable sealed receipt.",
   "bounty": {
     "frantic_bounty_number": 61,
     "package": "ci-failure-triage",
@@ -15,10 +15,15 @@
   },
   "dogfood": {
     "package": "liomilet4-png/ci-failure-triage@sha-92622cb44366",
-    "input": "Hosted registry harness cases real_break_clear_logs and ambiguous_truncated_logs",
-    "command": "POST /v1/skills hosted publish followed by GET /v1/skills/liomilet4-png/ci-failure-triage@sha-92622cb44366/harness",
-    "receipt_ref": "runx:receipt:sha256:e7c373b1e7bb676d1d8b28429ed8a24b4f1259eb64aba36e080d8f8ee1cd11b6",
-    "verify_verdict": "hosted_harness_passed",
+    "input": {
+      "ci_failure": "dogfood-input-ci-failure.json",
+      "repo_config": "dogfood-input-repo-config.json",
+      "escalation_policy": "dogfood-input-escalation-policy.json"
+    },
+    "command": "runx skill liomilet4-png/ci-failure-triage@sha-92622cb44366 --registry https://api.runx.ai --json, then runx resume <run_id> dogfood-answers.json --json",
+    "initial_run_id": "run_agent_task-ci-failure-triage-classify-output",
+    "receipt_ref": "runx:receipt:sha256:37dba05f1eb4985b4d6dacb536e3df96e6ced983452e5d45eacd6ce00c6783ac",
+    "verify_verdict": "unknown",
     "harness_cases": [
       {
         "name": "real_break_clear_logs",
@@ -28,8 +33,7 @@
         "name": "ambiguous_truncated_logs",
         "status": "needs_agent"
       }
-    ],
-    "note": "The direct local dogfood command returns needs_agent because classify is an agent-task runner without seeded answers. The hosted registry harness is the governed post-publish run that sealed the happy case and refused the stop case."
+    ]
   },
   "observations": [
     {
@@ -103,12 +107,35 @@
       "receipt_id": "sha256:dd03fbdf6a08ca324821ea13862490979c00258d4fbaffc1dabda8dc5ba2e59f"
     },
     {
-      "name": "direct_dogfood",
-      "status": "needs_agent",
-      "reason": "The runner is an agent-task. Direct run without seeded harness answers produces a governed needs_agent packet; the seeded harness covers the required sealed happy and stop cases."
+      "name": "dogfood_output",
+      "status": "sealed",
+      "receipt_id": "sha256:37dba05f1eb4985b4d6dacb536e3df96e6ced983452e5d45eacd6ce00c6783ac",
+      "classification": {
+        "verdict": "real-break",
+        "confidence": 0.91,
+        "evidence_refs": [
+          {
+            "logs": "AssertionError: expected 104.00 to equal 108.16"
+          },
+          {
+            "commit": "8a912f2 changed src/cart/totals.ts"
+          },
+          {
+            "repo_state": "previous_main_status: passing"
+          }
+        ]
+      },
+      "triage_packet": {
+        "recommended_lane": "issue-to-pr",
+        "rationale": "The failing assertion is deterministic after retry and points to a source change in the commit under test.",
+        "downstream_step": "issue-intake"
+      },
+      "operator_note": {
+        "action": "route",
+        "reason": "Create an issue-to-pr task with the failing test and suspect file."
+      }
     }
   ],
-  "known_gaps": [
-    "Windows local registry publish is blocked by the runx receipt-store filename issue with sha256: receipt ids, so the same hosted publish endpoint used by the CLI was called directly after runx login issued a purpose-scoped publish credential."
-  ]
+  "known_gaps": [],
+  "updated_at": "2026-06-26T05:30:05.553520+00:00"
 }
