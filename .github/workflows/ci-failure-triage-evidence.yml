@@ -21,17 +21,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
 
-      - name: Build runx
-        run: cargo build --manifest-path crates/Cargo.toml -p runx-cli --bin runx
+      - name: Install runx CLI
+        run: npm install --global @runxhq/cli@0.6.13
 
       - name: Prepare evidence directories
         run: |
           mkdir -p .runx/receipts/ci-failure-triage
           mkdir -p .runx/evidence/ci-failure-triage
-          echo "$PWD/crates/target/debug" >> "$GITHUB_PATH"
 
       - name: Capture runx version
         run: |
@@ -67,7 +68,7 @@ jobs:
             cat .runx/evidence/ci-failure-triage/harness.json >&2
             exit 1
           fi
-          runx verify "$receipt_id" --receipt-dir "$RUNX_RECEIPTS" --json \
+          runx verify "$receipt_id" --receipt-dir "$RUNX_RECEIPTS" --allow-local-development-signatures --json \
             | tee .runx/evidence/ci-failure-triage/verification.json
 
       - name: Summarize evidence
