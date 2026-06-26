@@ -1,22 +1,35 @@
 {
   "schema": "frantic.delivery.evidence.v1",
-  "summary": "ci-failure-triage was published through the runx public repository URL path, proposed upstream in runxhq/runx#153, clean-installed from the hosted registry, and validated with runx-cli 0.6.13 on Ubuntu GitHub Actions.",
+  "summary": "ci-failure-triage was published to the hosted runx registry with a purpose-scoped publish credential, proposed upstream in runxhq/runx#153, clean-installed from the hosted registry, and validated with hosted harness status passed.",
   "bounty": {
     "frantic_bounty_number": 61,
     "package": "ci-failure-triage",
     "reward_usd": 8
   },
   "artifacts": {
-    "public_url": "https://runx.ai/x/liomilet4-png/ci-failure-triage@sha-44476c32d790",
+    "public_url": "https://runx.ai/x/liomilet4-png/ci-failure-triage@sha-92622cb44366",
     "registry_permalink": "https://runx.ai/x/liomilet4-png/ci-failure-triage",
     "source_url": "https://github.com/liomilet4-png/ci-failure-triage-runx-skill/tree/44476c32d79002b38b08ef2cc3e61cd9d0d855f9",
     "pr_url": "https://github.com/runxhq/runx/pull/153",
     "workflow_url": "https://github.com/liomilet4-png/runx/actions/runs/28214060410"
   },
   "dogfood": {
-    "status": "needs_agent",
-    "evidence_file": "skills/ci-failure-triage/harness-evidence/dogfood.json",
-    "reason": "The runner is an agent-task. Direct run without seeded harness answers produces a governed needs_agent packet; the seeded harness covers the required sealed happy and stop cases."
+    "package": "liomilet4-png/ci-failure-triage@sha-92622cb44366",
+    "input": "Hosted registry harness cases real_break_clear_logs and ambiguous_truncated_logs",
+    "command": "POST /v1/skills hosted publish followed by GET /v1/skills/liomilet4-png/ci-failure-triage@sha-92622cb44366/harness",
+    "receipt_ref": "runx:receipt:sha256:e7c373b1e7bb676d1d8b28429ed8a24b4f1259eb64aba36e080d8f8ee1cd11b6",
+    "verify_verdict": "hosted_harness_passed",
+    "harness_cases": [
+      {
+        "name": "real_break_clear_logs",
+        "status": "sealed"
+      },
+      {
+        "name": "ambiguous_truncated_logs",
+        "status": "needs_agent"
+      }
+    ],
+    "note": "The direct local dogfood command returns needs_agent because classify is an agent-task runner without seeded answers. The hosted registry harness is the governed post-publish run that sealed the happy case and refused the stop case."
   },
   "observations": [
     {
@@ -35,14 +48,37 @@
     {
       "name": "registry_read",
       "status": "success",
-      "command": "runx registry read liomilet4-png/ci-failure-triage@sha-44476c32d790 --registry https://api.runx.ai --json",
+      "command": "runx registry read liomilet4-png/ci-failure-triage@sha-92622cb44366 --registry https://api.runx.ai --json",
       "trust_tier": "community",
-      "source_attestation": "verified"
+      "source_attestation": "not_declared"
+    },
+    {
+      "name": "hosted_registry_publish",
+      "status": "published",
+      "method": "POST /v1/skills with a purpose-scoped runx publish credential",
+      "skill_id": "liomilet4-png/ci-failure-triage",
+      "version": "sha-92622cb44366",
+      "public_url": "https://runx.ai/x/liomilet4-png/ci-failure-triage@sha-92622cb44366"
+    },
+    {
+      "name": "hosted_harness",
+      "status": "passed",
+      "case_count": 2,
+      "checks_passed": 2,
+      "checks_failed": 0,
+      "case_names": [
+        "real_break_clear_logs",
+        "ambiguous_truncated_logs"
+      ],
+      "receipt_ids": [
+        "sha256:e7c373b1e7bb676d1d8b28429ed8a24b4f1259eb64aba36e080d8f8ee1cd11b6"
+      ],
+      "evidence_url": "https://runx.ai/x/liomilet4-png/ci-failure-triage@sha-92622cb44366#harness"
     },
     {
       "name": "clean_install",
       "status": "success",
-      "command": "runx add liomilet4-png/ci-failure-triage@sha-44476c32d790 --registry https://api.runx.ai --to C:\\runx_work\\clean_install_ci_failure_triage --json"
+      "command": "runx add liomilet4-png/ci-failure-triage@sha-92622cb44366 --registry https://api.runx.ai --to C:\\runx_work\\clean_install_ci_failure_triage_92622 --json"
     },
     {
       "name": "skill_inspect",
@@ -73,6 +109,6 @@
     }
   ],
   "known_gaps": [
-    "Authenticated CLI publish was unavailable because runx login timed out before a publish token was issued; the documented public repository URL publish path was used instead."
+    "Windows local registry publish is blocked by the runx receipt-store filename issue with sha256: receipt ids, so the same hosted publish endpoint used by the CLI was called directly after runx login issued a purpose-scoped publish credential."
   ]
 }
