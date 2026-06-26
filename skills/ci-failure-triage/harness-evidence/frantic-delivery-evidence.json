@@ -13,6 +13,11 @@
     "pr_url": "https://github.com/runxhq/runx/pull/153",
     "workflow_url": "https://github.com/liomilet4-png/runx/actions/runs/28214060410"
   },
+  "dogfood": {
+    "status": "needs_agent",
+    "evidence_file": "skills/ci-failure-triage/harness-evidence/dogfood.json",
+    "reason": "The runner is an agent-task. Direct run without seeded harness answers produces a governed needs_agent packet; the seeded harness covers the required sealed happy and stop cases."
+  },
   "observations": [
     {
       "name": "runx_version",
