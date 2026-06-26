@@ -1,0 +1,23 @@
+{
+  "ci_failure": {
+    "logs": "job failed\noutput truncated after 2000 lines\nError: process exited with code 1",
+    "commit": {
+      "sha": "2bf82c1",
+      "changed_files": [],
+      "message": "update deps"
+    },
+    "repo_state": {
+      "default_branch": "main",
+      "ci_provider": "github-actions",
+      "workflow": "test",
+      "previous_main_status": "unknown"
+    }
+  },
+  "repo_config": {
+    "protected_branch": "main",
+    "issue_to_pr_lane": "enabled"
+  },
+  "escalation_policy": {
+    "min_confidence": 0.75
+  }
+}

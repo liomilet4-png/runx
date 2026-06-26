@@ -1,0 +1,116 @@
+skill: ci-failure-triage
+version: "0.1.0"
+
+catalog:
+  kind: skill
+  audience: public
+  visibility: public
+  role: context
+
+harness:
+  cases:
+    - name: real_break_clear_logs
+      runner: classify
+      inputs:
+        ci_failure:
+          logs: |
+            npm test
+            > app@1.4.0 test
+            > vitest run
+
+            FAIL packages/api/cart.test.ts > cart total includes tax
+            AssertionError: expected 104.00 to equal 108.16
+            src/cart/totals.ts:42:17
+
+            Commit 8a912f2 changed src/cart/totals.ts and removed taxRate from line-item totals.
+            Retried once on a fresh runner; the same assertion failed.
+          commit:
+            sha: 8a912f2
+            changed_files:
+              - src/cart/totals.ts
+              - packages/api/cart.test.ts
+            message: "refactor cart totals"
+          repo_state:
+            default_branch: main
+            ci_provider: github-actions
+            workflow: test
+            previous_main_status: passing
+        repo_config:
+          protected_branch: main
+          issue_to_pr_lane: enabled
+        escalation_policy:
+          min_confidence: 0.75
+      caller:
+        answers:
+          agent_task.ci-failure-triage-classify.output:
+            classification:
+              verdict: real-break
+              confidence: 0.91
+              evidence_refs:
+                - logs: "AssertionError: expected 104.00 to equal 108.16"
+                - commit: "8a912f2 changed src/cart/totals.ts"
+                - repo_state: "previous_main_status: passing"
+            triage_packet:
+              routing_decision:
+                recommended_lane: issue-to-pr
+                rationale: The failing assertion is deterministic after retry and points to a source change in the commit under test.
+                downstream_step: issue-intake
+            operator_note:
+              action: route
+              reason: Create an issue-to-pr task with the failing test and suspect file.
+      expect:
+        status: sealed
+        receipt:
+          schema: runx.receipt.v1
+
+    - name: ambiguous_truncated_logs
+      runner: classify
+      inputs:
+        ci_failure:
+          logs: |
+            job failed
+            output truncated after 2000 lines
+            Error: process exited with code 1
+          commit:
+            sha: 2bf82c1
+            changed_files: []
+            message: "update deps"
+          repo_state:
+            default_branch: main
+            ci_provider: github-actions
+            workflow: test
+            previous_main_status: unknown
+        repo_config:
+          protected_branch: main
+          issue_to_pr_lane: enabled
+        escalation_policy:
+          min_confidence: 0.75
+      expect:
+        status: needs_agent
+
+runners:
+  classify:
+    default: true
+    type: agent-task
+    agent: researcher
+    task: ci-failure-triage-classify
+    outputs:
+      classification: object
+      triage_packet: object
+      operator_note: object
+    artifacts:
+      wrap_as: ci_failure_triage_packet
+      packet: runx.ci.triage.v1
+    inputs:
+      ci_failure:
+        type: json
+        required: true
+        description: CI failure evidence containing logs, commit, and repo_state.
+      repo_config:
+        type: json
+        required: false
+        description: Repository routing policy and protected-branch context.
+      escalation_policy:
+        type: json
+        required: true
+        description: Minimum confidence and escalation requirements for routing decisions.

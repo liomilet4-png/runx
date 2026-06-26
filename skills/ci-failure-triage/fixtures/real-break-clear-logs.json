@@ -1,0 +1,26 @@
+{
+  "ci_failure": {
+    "logs": "FAIL packages/api/cart.test.ts > cart total includes tax\nAssertionError: expected 104.00 to equal 108.16\nsrc/cart/totals.ts:42:17\nRetried once on a fresh runner; the same assertion failed.",
+    "commit": {
+      "sha": "8a912f2",
+      "changed_files": [
+        "src/cart/totals.ts",
+        "packages/api/cart.test.ts"
+      ],
+      "message": "refactor cart totals"
+    },
+    "repo_state": {
+      "default_branch": "main",
+      "ci_provider": "github-actions",
+      "workflow": "test",
+      "previous_main_status": "passing"
+    }
+  },
+  "repo_config": {
+    "protected_branch": "main",
+    "issue_to_pr_lane": "enabled"
+  },
+  "escalation_policy": {
+    "min_confidence": 0.75
+  }
+}
