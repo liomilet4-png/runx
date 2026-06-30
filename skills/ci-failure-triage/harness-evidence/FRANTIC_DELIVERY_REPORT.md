@@ -5,7 +5,7 @@
 - Package: `ci-failure-triage`
 - Public registry URL: <https://runx.ai/x/liomilet4-png/ci-failure-triage@sha-92622cb44366>
 - Upstream PR: <https://github.com/runxhq/runx/pull/153>
-- Direct dogfood receipt: `runx:receipt:sha256:221e4d741c64374e622fa4defa9dcd1c332f5966b2d33b181267051db3bbc87b`
+- Direct dogfood receipt: `runx:receipt:sha256:abc25f1cc54fde5ae6a88fe4f1e59133e181c557374334e4df764bb0b68389a1`
 
 ## Validation
 
@@ -15,14 +15,13 @@
 - `runx resume run_agent_task-ci-failure-triage-classify-output dogfood-answers.json --json`: sealed
 - `runx verify --receipt dogfood-receipt.json --json`: `valid=true`
 - Hosted registry harness: status passed, 2 checks passed, 0 failed
-- This report is attached from PR head evidence so reviewers can fetch the raw package files and evidence from the same public commit.
 
 ## Dogfood Output
 
 - Verdict: `real-break`
 - Confidence: `0.91`
 - Recommended lane: `issue-to-pr`
-- Receipt id: `sha256:221e4d741c64374e622fa4defa9dcd1c332f5966b2d33b181267051db3bbc87b`
+- Receipt id: `sha256:abc25f1cc54fde5ae6a88fe4f1e59133e181c557374334e4df764bb0b68389a1`
 
 ## Boundary
 

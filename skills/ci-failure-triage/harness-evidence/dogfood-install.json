@@ -23,7 +23,7 @@
     "receipt_metadata": {
       "destination": "/home/runner/work/_temp/ci-failure-triage-install/liomilet4-png/ci-failure-triage/sha-92622cb44366/SKILL.md",
       "digest": "sha256:a9f97237063cc739e37f43300e07f44c15aba3bde95fa5eb30aaf4cc53a840b7",
-      "install_count": 11,
+      "install_count": 12,
       "profile_digest": "sha256:d82692aa65cfa75ef9de37c187f52ba3140ab4abf521e65e7099a1f61b20dfb1",
       "publisher": {
         "display_name": "liomilet4-png",

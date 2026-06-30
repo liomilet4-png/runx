@@ -1,6 +1,6 @@
 {
   "closure": {
-    "closed_at": "2026-06-26T05:32:35.335Z",
+    "closed_at": "2026-06-30T07:50:53.723Z",
     "disposition": "closed",
     "reason_code": "agent_act_closed",
     "summary": "agent act closed with closed"
@@ -93,7 +93,7 @@
       {
         "artifact_refs": [],
         "closure": {
-          "closed_at": "2026-06-26T05:32:35.335Z",
+          "closed_at": "2026-06-30T07:50:53.723Z",
           "disposition": "closed",
           "reason_code": "process_exit",
           "summary": "cli-tool exited successfully"
@@ -138,7 +138,7 @@
       },
       "authority_proof_refs": [],
       "enforcement": {
-        "profile_hash": "sha256:runtime-skeleton-enforcement",
+        "profile_hash": "sha256:635fdb0a7eef93911e3c6bd0b25b5e635edba32e0259133042b3a5f1fb19394e",
         "redaction_refs": [],
         "setup_refs": [],
         "teardown_refs": []
@@ -148,7 +148,7 @@
       "terms": []
     },
     "canonicalization": "runx.receipt.c14n.v1",
-    "created_at": "2026-06-26T05:32:35.335Z",
+    "created_at": "2026-06-30T07:50:53.723Z",
     "decisions": [
       {
         "artifact_refs": [],
@@ -176,8 +176,8 @@
         "selected_harness_ref": null
       }
     ],
-    "digest": "sha256:fed9ee9913a5cfb5915c281eca715f99fb32a3882a3e178e338498d318859395",
-    "id": "sha256:221e4d741c64374e622fa4defa9dcd1c332f5966b2d33b181267051db3bbc87b",
+    "digest": "sha256:d8acbaa09eb7a6e3fd8227546b88a594296a96b323036876b4554e05e1ca11ff",
+    "id": "sha256:abc25f1cc54fde5ae6a88fe4f1e59133e181c557374334e4df764bb0b68389a1",
     "idempotency": {
       "content_hash": "sha256:run_agent_task-ci-failure-triage-classify-output-classify-content",
       "intent_key": "sha256:run_agent_task-ci-failure-triage-classify-output-classify-intent",
@@ -194,7 +194,7 @@
     },
     "schema": "runx.receipt.v1",
     "seal": {
-      "closed_at": "2026-06-26T05:32:35.335Z",
+      "closed_at": "2026-06-30T07:50:53.723Z",
       "criteria": [
         {
           "criterion_id": "process_exit",
@@ -205,14 +205,14 @@
         }
       ],
       "disposition": "closed",
-      "last_observed_at": "2026-06-26T05:32:35.335Z",
+      "last_observed_at": "2026-06-30T07:50:53.723Z",
       "reason_code": "agent_act_closed",
       "summary": "agent act closed with closed"
     },
     "signals": [],
     "signature": {
       "alg": "Ed25519",
-      "value": "base64:UFJvMqX4kwOnDoDEBR20Dm9tPQcZLspoWIJUhzWrpgLUBN6r6M6f_feGLdkogXHhpLC72ZGiybRRsxl2BPvqDg"
+      "value": "base64:vhx1fvj7dFGnua26maAJ_HuW94yicKjo0SvoIHT6imh0CLCJhn-4ur3qPTzI-SHq428SkWkGl-10_WuJlrB-Cg"
     },
     "subject": {
       "commitments": [],
@@ -223,7 +223,7 @@
       }
     }
   },
-  "receipt_id": "sha256:221e4d741c64374e622fa4defa9dcd1c332f5966b2d33b181267051db3bbc87b",
+  "receipt_id": "sha256:abc25f1cc54fde5ae6a88fe4f1e59133e181c557374334e4df764bb0b68389a1",
   "run_id": "run_agent_task-ci-failure-triage-classify-output",
   "schema": "runx.skill_run.v1",
   "skill_name": "ci-failure-triage",

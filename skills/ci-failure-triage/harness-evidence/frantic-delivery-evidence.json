@@ -22,7 +22,7 @@
     },
     "command": "runx skill liomilet4-png/ci-failure-triage@sha-92622cb44366 --registry https://api.runx.ai --json, then runx resume <run_id> dogfood-answers.json --json",
     "initial_run_id": "run_agent_task-ci-failure-triage-classify-output",
-    "receipt_ref": "runx:receipt:sha256:221e4d741c64374e622fa4defa9dcd1c332f5966b2d33b181267051db3bbc87b",
+    "receipt_ref": "runx:receipt:sha256:abc25f1cc54fde5ae6a88fe4f1e59133e181c557374334e4df764bb0b68389a1",
     "verify_verdict": "valid=true",
     "harness_cases": [
       {
@@ -109,7 +109,7 @@
     {
       "name": "dogfood_output",
       "status": "sealed",
-      "receipt_id": "sha256:221e4d741c64374e622fa4defa9dcd1c332f5966b2d33b181267051db3bbc87b",
+      "receipt_id": "sha256:abc25f1cc54fde5ae6a88fe4f1e59133e181c557374334e4df764bb0b68389a1",
       "classification": {
         "verdict": "real-break",
         "confidence": 0.91,
@@ -137,5 +137,5 @@
     }
   ],
   "known_gaps": [],
-  "updated_at": "2026-06-26T05:32:35.453719+00:00"
+  "updated_at": "2026-06-30T07:50:53.841758+00:00"
 }
