@@ -1,0 +1,46 @@
+{
+  "answers": {
+    "agent_task.qualify-renewal-risk.output": {
+      "qualification_status": "ready",
+      "reason": "Usage trend, support history, and payment snapshot are present and non-contradictory.",
+      "missing": [],
+      "contradictions": [],
+      "normalized_inputs": {
+        "usage_mau_pct_change": -32,
+        "support_volume": 9,
+        "ticket_severity_avg": 4.2,
+        "days_late": 8,
+        "churn_flag": true
+      }
+    },
+    "agent_task.score-renewal-risk.output": {
+      "decision": {
+        "risk_level": "high",
+        "justification": "Usage dropped by 32 percent, support volume is high with severe tickets, and payment is 8 days late with churn_flag true."
+      },
+      "fused_score": {
+        "total": 86,
+        "weights": {
+          "usage_trend": 40,
+          "support": 25,
+          "payment": 21
+        }
+      },
+      "escalation": {
+        "lane": "human_approval",
+        "reason": "High-risk renewal save plans require operator approval before any downstream send-as run."
+      },
+      "save_plan": {
+        "channel": "email",
+        "audience": "account_owner",
+        "content_ref": "renewal-save-high-risk-acct_renewal_042"
+      },
+      "receipt_notes": {
+        "recommendation_only": true,
+        "sends_message": false,
+        "touches_money": false,
+        "dispatch_by_naming": "downstream send-as run must be separately approved"
+      }
+    }
+  }
+}

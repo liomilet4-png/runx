@@ -1,0 +1,16 @@
+{
+  "account_ref": "acct_renewal_042",
+  "usage_signals": {
+    "trend": "declining",
+    "mau_pct_change": -32
+  },
+  "support_history": {
+    "volume": 9,
+    "ticket_severity_avg": 4.2
+  },
+  "payment_snapshot": {
+    "days_late": 8,
+    "churn_flag": true
+  },
+  "operator_context": "Renewal is due this week; recommend a bounded save message only if the evidence supports high risk."
+}
