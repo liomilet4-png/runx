@@ -15,6 +15,7 @@
 - `runx resume run_agent_task-ci-failure-triage-classify-output dogfood-answers.json --json`: sealed
 - `runx verify --receipt dogfood-receipt.json --json`: `valid=true`
 - Hosted registry harness: status passed, 2 checks passed, 0 failed
+- This report is attached from PR head evidence so reviewers can fetch the raw package files and evidence from the same public commit.
 
 ## Dogfood Output
 
