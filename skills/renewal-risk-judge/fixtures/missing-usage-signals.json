@@ -1,0 +1,21 @@
+{
+  "name": "missing_usage_signals_stop",
+  "input": {
+    "account_ref": "acct_renewal_099",
+    "support_history": {
+      "volume": 3,
+      "ticket_severity_avg": 2.1
+    },
+    "payment_snapshot": {
+      "days_late": 0,
+      "churn_flag": false
+    }
+  },
+  "expected": {
+    "status": "needs_agent",
+    "missing": [
+      "usage_signals"
+    ],
+    "save_plan_emitted": false
+  }
+}

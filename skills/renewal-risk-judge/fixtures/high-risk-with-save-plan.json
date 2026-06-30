@@ -1,0 +1,33 @@
+{
+  "name": "high_risk_with_save_play",
+  "input": {
+    "account_ref": "acct_renewal_042",
+    "usage_signals": {
+      "trend": "declining",
+      "mau_pct_change": -32
+    },
+    "support_history": {
+      "volume": 9,
+      "ticket_severity_avg": 4.2
+    },
+    "payment_snapshot": {
+      "days_late": 8,
+      "churn_flag": true
+    },
+    "operator_context": "Renewal is due this week; recommend a bounded save message only if the evidence supports high risk."
+  },
+  "expected": {
+    "status": "sealed",
+    "risk_level": "high",
+    "save_plan": {
+      "channel": "email",
+      "audience": "account_owner",
+      "content_ref": "renewal-save-high-risk-acct_renewal_042"
+    },
+    "receipt_notes": {
+      "recommendation_only": true,
+      "sends_message": false,
+      "touches_money": false
+    }
+  }
+}

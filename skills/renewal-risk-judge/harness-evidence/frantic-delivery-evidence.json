@@ -1,0 +1,74 @@
+{
+  "schema": "runx.renewal_risk_judge.evidence.v1",
+  "summary": "renewal-risk-judge is a read-only runx skill for fusing renewal risk signals into a bounded human-approval recommendation.",
+  "runx_version": "runx-cli 0.6.13",
+  "package": {
+    "name": "renewal-risk-judge",
+    "version": "0.1.0",
+    "publisher_owner": "liomilet4-png",
+    "registry_ref": "pending",
+    "public_url": "pending",
+    "source_url": "pending",
+    "pr_url": "pending"
+  },
+  "observations": [
+    {
+      "name": "skill_inspect",
+      "status": "ok",
+      "runners": [
+        "judge"
+      ]
+    },
+    {
+      "name": "high_risk_with_save_play",
+      "status": "declared",
+      "risk_level": "high",
+      "fused_score": {
+        "total": 86,
+        "weights": {
+          "usage_trend": 40,
+          "support": 25,
+          "payment": 21
+        }
+      },
+      "save_plan": {
+        "channel": "email",
+        "audience": "account_owner",
+        "content_ref": "renewal-save-high-risk-acct_renewal_042"
+      }
+    },
+    {
+      "name": "missing_usage_signals_stop",
+      "status": "declared",
+      "refused_reason": "Missing usage_signals.trend and usage_signals.mau_pct_change; renewal risk cannot be grounded.",
+      "save_plan_emitted": false
+    },
+    {
+      "name": "boundary",
+      "recommendation_only": true,
+      "sends_message": false,
+      "touches_money": false,
+      "dispatch_by_naming": "downstream send-as run must be separately approved"
+    }
+  ],
+  "dogfood": {
+    "package": "pending",
+    "input": "fixtures/high-risk-with-save-plan.json",
+    "command": "pending",
+    "receipt_ref": "pending",
+    "verify_verdict": "pending",
+    "harness_cases": [
+      {
+        "name": "high_risk_with_save_play",
+        "status": "declared"
+      },
+      {
+        "name": "missing_usage_signals_stop",
+        "status": "declared"
+      }
+    ]
+  },
+  "known_gaps": [
+    "Registry publish, hosted harness, dogfood receipt, and verification_json are pending runx publish login."
+  ]
+}
