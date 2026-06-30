@@ -53,8 +53,8 @@ jobs:
             --input-json "usage_signals=$(jq -c '.usage_signals' "$EVIDENCE_DIR/dogfood-input.json")" \
             --input-json "support_history=$(jq -c '.support_history' "$EVIDENCE_DIR/dogfood-input.json")" \
             --input-json "payment_snapshot=$(jq -c '.payment_snapshot' "$EVIDENCE_DIR/dogfood-input.json")" \
-            --input-json "account_ref=$(jq -r '.account_ref' "$EVIDENCE_DIR/dogfood-input.json")" \
-            --input-json "operator_context=$(jq -r '.operator_context' "$EVIDENCE_DIR/dogfood-input.json")" \
+            --input-json "account_ref=$(jq -c '.account_ref' "$EVIDENCE_DIR/dogfood-input.json")" \
+            --input-json "operator_context=$(jq -c '.operator_context' "$EVIDENCE_DIR/dogfood-input.json")" \
             -R "$RUNX_RECEIPTS" \
             --json | tee "$EVIDENCE_DIR/dogfood-initial-run.json"
           skill_status="${PIPESTATUS[0]}"
