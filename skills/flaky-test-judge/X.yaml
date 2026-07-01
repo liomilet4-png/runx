@@ -86,26 +86,8 @@ harness:
           flake_threshold_pct: 70
           min_sample_size: 20
           max_quarantine_days: 14
-      caller:
-        answers:
-          agent_task.flaky-test-judge-triage.output:
-            disposition:
-              decision: "refuse"
-              confidence: 1.0
-              reason: "missing-evidence stop: no run history was supplied, sample_size is 0, and policy requires at least 20 runs before quarantine can be considered."
-            quarantine_packet:
-              present: false
-              reason: "missing_run_history"
-            dispatch_target:
-              present: false
-              reason: "missing_run_history"
-            escalation:
-              lane: "collect_more_evidence"
-              reason: "Run the test enough times to meet release_policy.min_sample_size before asking for a quarantine decision."
       expect:
-        status: sealed
-        receipt:
-          schema: runx.receipt.v1
+        status: needs_agent
 
 runners:
   triage:

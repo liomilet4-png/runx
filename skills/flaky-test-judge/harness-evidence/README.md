@@ -7,7 +7,7 @@ Latest local source harness result: passed.
 Command:
 
 ```powershell
-cargo run --manifest-path crates\Cargo.toml -p runx-cli -- harness .\skills\flaky-test-judge --receipt-dir receipts_66_final_verify --json
+cargo run --manifest-path crates\Cargo.toml -p runx-cli -- harness .\skills\flaky-test-judge --receipt-dir receipts_66_after_needs_agent_signed --json
 ```
 
 Result summary:
@@ -16,6 +16,7 @@ Result summary:
 - case_count: 2
 - assertion_error_count: 0
 - case_names: quarantine_justified, missing_run_history
+- stop/error coverage: missing_run_history returns needs_agent
 
 Notes:
 
