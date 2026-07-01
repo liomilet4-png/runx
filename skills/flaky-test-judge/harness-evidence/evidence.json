@@ -1,0 +1,91 @@
+{
+    "schema":  "frantic.runx_bounty_66.evidence.v1",
+    "bounty_id":  66,
+    "bounty":  "runx skill: flaky test judge",
+    "pr_url":  "https://github.com/runxhq/runx/pull/201",
+    "published_source_commit":  "d9cd53adcfaed2fcb0646ee0bbda62e671b32586",
+    "package":  {
+                    "skill_id":  "liomilet4-png/flaky-test-judge",
+                    "version":  "sha-d9cd53adcfae",
+                    "public_url":  "https://runx.ai/x/liomilet4-png/flaky-test-judge",
+                    "install_command":  "runx add liomilet4-png/flaky-test-judge@sha-d9cd53adcfae --registry https://api.runx.ai",
+                    "run_command":  "runx skill liomilet4-png/flaky-test-judge@sha-d9cd53adcfae --registry https://api.runx.ai",
+                    "registry_digest":  "sha256:8d1fab2a5d073501e0804b021fb19a8c0d5bde3d77fbddb80a8208b8e5abdb07",
+                    "profile_digest":  "sha256:d369683ba8b8992966ebec943dfc38bad4c11a82105745907fdc5a009767d087",
+                    "trust_tier":  "community",
+                    "maturity":  "beta"
+                },
+    "hosted_publish":  {
+                           "http_status":  201,
+                           "status":  "published",
+                           "hosted_harness_status":  "passed",
+                           "hosted_harness_case_count":  2,
+                           "hosted_harness_assertion_error_count":  0,
+                           "hosted_harness_case_names":  [
+                                                             "quarantine_justified",
+                                                             "missing_run_history"
+                                                         ],
+                           "hosted_harness_receipt_ids":  [
+                                                              "sha256:f7bfaf490987778937062710e05df7687ccad0ec07d84616c097fb2f9b607e09"
+                                                          ],
+                           "hosted_harness_evidence_id":  "runx-harness:liomilet4-png/flaky-test-judge:sha-d9cd53adcfae",
+                           "hosted_harness_evidence_url":  "https://runx.ai/x/liomilet4-png/flaky-test-judge#harness"
+                       },
+    "local_source_harness":  {
+                                 "status":  "passed",
+                                 "case_count":  2,
+                                 "assertion_error_count":  0,
+                                 "cases":  [
+                                               "quarantine_justified",
+                                               "missing_run_history"
+                                           ],
+                                 "stop_case":  "missing_run_history returns needs_agent instead of fabricating an answer",
+                                 "receipt_id":  "sha256:800aefcfb1fe5f90397aea03a7142c0f04c5a95ad810e386ea3d910c02ebfede"
+                             },
+    "clean_registry_inspect":  {
+                                   "status":  "ok",
+                                   "trust_state":  "trusted",
+                                   "registry_source":  "remote https://api.runx.ai",
+                                   "registry_key_id":  "runx-registry-ed25519-v1",
+                                   "digest":  "sha256:8d1fab2a5d073501e0804b021fb19a8c0d5bde3d77fbddb80a8208b8e5abdb07",
+                                   "profile_digest":  "sha256:d369683ba8b8992966ebec943dfc38bad4c11a82105745907fdc5a009767d087",
+                                   "runners":  [
+                                                   "triage"
+                                               ]
+                               },
+    "post_publish_dogfood":  {
+                                 "run_id":  "run_agent_task-flaky-test-judge-triage-output",
+                                 "status":  "sealed",
+                                 "receipt_id":  "sha256:284ea73e089fe945831a426060ba0338da5fcfbfaf8cc50fe3fa411152219ed0",
+                                 "closure_disposition":  "closed",
+                                 "decision":  "quarantine",
+                                 "confidence":  0.91,
+                                 "dispatch_skill":  "issue-to-pr",
+                                 "escalation_lane":  "human_merge_gate"
+                             },
+    "receipt_verification":  {
+                                 "schema":  "runx.verify_verdict.v1",
+                                 "receipt_id":  "sha256:284ea73e089fe945831a426060ba0338da5fcfbfaf8cc50fe3fa411152219ed0",
+                                 "valid":  true,
+                                 "digest_status":  "valid",
+                                 "content_address_status":  "valid",
+                                 "signature_mode":  "production",
+                                 "signature_status":  "valid",
+                                 "signature_kid":  "runx-publish-harness-local",
+                                 "lineage_status":  "unverified",
+                                 "findings":  [
+
+                                              ]
+                             },
+    "artifact_refs":  {
+                          "source_tree":  "https://github.com/liomilet4-png/runx/tree/d9cd53adcfaed2fcb0646ee0bbda62e671b32586/skills/flaky-test-judge",
+                          "skill_md":  "https://raw.githubusercontent.com/liomilet4-png/runx/d9cd53adcfaed2fcb0646ee0bbda62e671b32586/skills/flaky-test-judge/SKILL.md",
+                          "x_yaml":  "https://raw.githubusercontent.com/liomilet4-png/runx/d9cd53adcfaed2fcb0646ee0bbda62e671b32586/skills/flaky-test-judge/X.yaml",
+                          "pr":  "https://github.com/runxhq/runx/pull/201"
+                      },
+    "privacy":  {
+                    "secrets_committed":  false,
+                    "receipt_json_committed":  false,
+                    "notes":  "Public evidence contains only package metadata, hashes, receipt ids, and verification summaries. Tokens, cookies, private keys, and raw local receipt files are excluded."
+                }
+}

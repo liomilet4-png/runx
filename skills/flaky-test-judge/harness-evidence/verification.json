@@ -1,0 +1,40 @@
+{
+    "schema":  "frantic.runx_bounty_66.verification.v1",
+    "receipt_id":  "sha256:284ea73e089fe945831a426060ba0338da5fcfbfaf8cc50fe3fa411152219ed0",
+    "valid":  true,
+    "verified_at":  "2026-07-01T13:21:00Z",
+    "command":  "runx verify --receipt \u003cdogfood receipt json\u003e --json",
+    "verifier":  {
+                     "kid":  "runx-publish-harness-local",
+                     "mode":  "production",
+                     "public_key_sha256":  "sha256:3097e2dee2cb4a34b53840cdb705aed71067c36f68db0e0f559c3f3fa043315f",
+                     "note":  "Verifier public key was derived from the same non-secret runx publish harness fixture key used for local dogfood signing; no private signing material is included."
+                 },
+    "verdict":  {
+                    "schema":  "runx.verify_verdict.v1",
+                    "receipt_id":  "sha256:284ea73e089fe945831a426060ba0338da5fcfbfaf8cc50fe3fa411152219ed0",
+                    "valid":  true,
+                    "digest":  {
+                                   "status":  "valid",
+                                   "expected":  "sha256:0eb948aa0e75d71fe7561ca1f8dd5ca3ed65b150ea52a9980d2c722648ba82c2",
+                                   "actual":  "sha256:0eb948aa0e75d71fe7561ca1f8dd5ca3ed65b150ea52a9980d2c722648ba82c2"
+                               },
+                    "content_address":  {
+                                            "status":  "valid",
+                                            "expected":  "sha256:284ea73e089fe945831a426060ba0338da5fcfbfaf8cc50fe3fa411152219ed0",
+                                            "actual":  "sha256:284ea73e089fe945831a426060ba0338da5fcfbfaf8cc50fe3fa411152219ed0"
+                                        },
+                    "signature":  {
+                                      "mode":  "production",
+                                      "status":  "valid",
+                                      "kid":  "runx-publish-harness-local"
+                                  },
+                    "lineage":  {
+                                    "status":  "unverified",
+                                    "message":  "single receipt verification cannot prove receipt-tree lineage"
+                                },
+                    "findings":  [
+
+                                 ]
+                }
+}

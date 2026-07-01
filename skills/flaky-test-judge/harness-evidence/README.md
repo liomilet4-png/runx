@@ -24,3 +24,9 @@ Notes:
 - On Windows the receipt store writes safe filenames as `sha256-<digest>.json`.
 - This folder intentionally excludes receipt JSON files and signing material.
 - Do not place secrets, agent tokens, cookies, private keys, or payment data here.
+
+## Post-publish evidence
+
+- `evidence.json`: public package, harness, clean inspect, dogfood, and verification summary.
+- `verification.json`: machine-readable verification verdict summary.
+- `report.md`: human-readable evidence report for Frantic bounty #66.
