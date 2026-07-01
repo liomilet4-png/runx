@@ -1,0 +1,11 @@
+{
+  "description": "Classify on-call alerts against a sealed runbook and policy, then emit a bounded escalation packet only when evidence supports it.",
+  "name": "oncall-alert-triage",
+  "runners": [
+    "triage"
+  ],
+  "schema": "runx.skill.inspect.v1",
+  "skill_path": "./skills/oncall-alert-triage",
+  "status": "ok",
+  "version": "0.1.0"
+}

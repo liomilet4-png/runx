@@ -1,0 +1,225 @@
+{
+  "closure": {
+    "closed_at": "2026-07-01T07:09:51.589Z",
+    "disposition": "closed",
+    "reason_code": "agent_act_closed",
+    "summary": "agent act closed with closed"
+  },
+  "execution": {
+    "exit_code": 0,
+    "skill_claim": {
+      "decision": {
+        "action": "escalate",
+        "reason": "The checkout-api sev2 alert is declared in policy; the sealed runbook binds both page and incident PR targets, and 8.2% 5xx for 16 minutes exceeds the 2% for 10 minutes threshold."
+      },
+      "escalation": {
+        "lane": "human_approval",
+        "reason": "This skill only emits a bounded packet; paging and incident PR creation require separate governed dispatch."
+      },
+      "packet": {
+        "fix_bundle": {
+          "human_merge_gate": true,
+          "rollback_allowed": false,
+          "suggested_first_check": "compare checkout-api 4f21c9e with previous healthy deploy"
+        },
+        "incident_pr_target": {
+          "base_branch": "main",
+          "branch": "incident/checkout-5xx-alert-checkout-2026-06-30-dogfood",
+          "repo": "example/checkout-api"
+        },
+        "page_target": "team-checkout-primary",
+        "pr_review_note_body": "Include error-rate graph, deploy sha 4f21c9e, rollback candidate, and customer-impact note."
+      }
+    },
+    "stderr": "",
+    "stdout": "{\"decision\":{\"action\":\"escalate\",\"reason\":\"The checkout-api sev2 alert is declared in policy; the sealed runbook binds both page and incident PR targets, and 8.2% 5xx for 16 minutes exceeds the 2% for 10 minutes threshold.\"},\"escalation\":{\"lane\":\"human_approval\",\"reason\":\"This skill only emits a bounded packet; paging and incident PR creation require separate governed dispatch.\"},\"packet\":{\"fix_bundle\":{\"human_merge_gate\":true,\"rollback_allowed\":false,\"suggested_first_check\":\"compare checkout-api 4f21c9e with previous healthy deploy\"},\"incident_pr_target\":{\"base_branch\":\"main\",\"branch\":\"incident/checkout-5xx-alert-checkout-2026-06-30-dogfood\",\"repo\":\"example/checkout-api\"},\"page_target\":\"team-checkout-primary\",\"pr_review_note_body\":\"Include error-rate graph, deploy sha 4f21c9e, rollback candidate, and customer-impact note.\"}}",
+    "structured_output": {
+      "decision": {
+        "action": "escalate",
+        "reason": "The checkout-api sev2 alert is declared in policy; the sealed runbook binds both page and incident PR targets, and 8.2% 5xx for 16 minutes exceeds the 2% for 10 minutes threshold."
+      },
+      "escalation": {
+        "lane": "human_approval",
+        "reason": "This skill only emits a bounded packet; paging and incident PR creation require separate governed dispatch."
+      },
+      "packet": {
+        "fix_bundle": {
+          "human_merge_gate": true,
+          "rollback_allowed": false,
+          "suggested_first_check": "compare checkout-api 4f21c9e with previous healthy deploy"
+        },
+        "incident_pr_target": {
+          "base_branch": "main",
+          "branch": "incident/checkout-5xx-alert-checkout-2026-06-30-dogfood",
+          "repo": "example/checkout-api"
+        },
+        "page_target": "team-checkout-primary",
+        "pr_review_note_body": "Include error-rate graph, deploy sha 4f21c9e, rollback candidate, and customer-impact note."
+      }
+    }
+  },
+  "payload": {
+    "decision": {
+      "action": "escalate",
+      "reason": "The checkout-api sev2 alert is declared in policy; the sealed runbook binds both page and incident PR targets, and 8.2% 5xx for 16 minutes exceeds the 2% for 10 minutes threshold."
+    },
+    "escalation": {
+      "lane": "human_approval",
+      "reason": "This skill only emits a bounded packet; paging and incident PR creation require separate governed dispatch."
+    },
+    "packet": {
+      "fix_bundle": {
+        "human_merge_gate": true,
+        "rollback_allowed": false,
+        "suggested_first_check": "compare checkout-api 4f21c9e with previous healthy deploy"
+      },
+      "incident_pr_target": {
+        "base_branch": "main",
+        "branch": "incident/checkout-5xx-alert-checkout-2026-06-30-dogfood",
+        "repo": "example/checkout-api"
+      },
+      "page_target": "team-checkout-primary",
+      "pr_review_note_body": "Include error-rate graph, deploy sha 4f21c9e, rollback candidate, and customer-impact note."
+    }
+  },
+  "receipt": {
+    "acts": [
+      {
+        "artifact_refs": [],
+        "closure": {
+          "closed_at": "2026-07-01T07:09:51.589Z",
+          "disposition": "closed",
+          "reason_code": "process_exit",
+          "summary": "cli-tool exited successfully"
+        },
+        "criterion_bindings": [
+          {
+            "criterion_id": "process_exit",
+            "evidence_refs": [],
+            "status": "verified",
+            "summary": "cli-tool exited successfully",
+            "verification_refs": []
+          }
+        ],
+        "form": "observation",
+        "id": "act_triage",
+        "intent": {
+          "constraints": [],
+          "derived_from": [],
+          "legitimacy": "Runtime graph execution was admitted by the local harness",
+          "purpose": "Run graph step triage",
+          "success_criteria": [
+            {
+              "criterion_id": "process_exit",
+              "required": true,
+              "statement": "cli-tool exits successfully"
+            }
+          ]
+        },
+        "source_refs": [],
+        "summary": "Executed graph step triage",
+        "target_refs": []
+      }
+    ],
+    "authority": {
+      "actor_ref": {
+        "type": "principal",
+        "uri": "runx:principal:local_runtime"
+      },
+      "attenuation": {
+        "parent_authority_ref": null,
+        "subset_proof": null
+      },
+      "authority_proof_refs": [],
+      "enforcement": {
+        "profile_hash": "sha256:runtime-skeleton-enforcement",
+        "redaction_refs": [],
+        "setup_refs": [],
+        "teardown_refs": []
+      },
+      "grant_refs": [],
+      "scope_refs": [],
+      "terms": []
+    },
+    "canonicalization": "runx.receipt.c14n.v1",
+    "created_at": "2026-07-01T07:09:51.589Z",
+    "decisions": [
+      {
+        "artifact_refs": [],
+        "choice": "open",
+        "closure": null,
+        "decision_id": "dec_triage",
+        "inputs": {
+          "opportunity_refs": [],
+          "selection_ref": null,
+          "signal_refs": [],
+          "target_ref": null
+        },
+        "justification": {
+          "evidence_refs": [],
+          "summary": "runtime graph planner selected this node"
+        },
+        "proposed_intent": {
+          "constraints": [],
+          "derived_from": [],
+          "legitimacy": "Local graph execution requested this node",
+          "purpose": "Open runtime node triage",
+          "success_criteria": []
+        },
+        "selected_act_id": "act_triage",
+        "selected_harness_ref": null
+      }
+    ],
+    "digest": "sha256:efa11c784b4d40d4c335a99ca7e2be7fed666edf2c932a4422799a76c37b0353",
+    "id": "sha256:dd2e65e6bd67dab2a5fa8a99a93c82af87f55ef1df9d7987ca5c73678d3b3639",
+    "idempotency": {
+      "content_hash": "sha256:run_agent_task-oncall-alert-triage-decide-output-triage-content",
+      "intent_key": "sha256:run_agent_task-oncall-alert-triage-decide-output-triage-intent",
+      "trigger_fingerprint": "sha256:run_agent_task-oncall-alert-triage-decide-output-triage-trigger"
+    },
+    "issuer": {
+      "kid": "frantic-64-evidence-key",
+      "public_key_sha256": "sha256:3097e2dee2cb4a34b53840cdb705aed71067c36f68db0e0f559c3f3fa043315f",
+      "type": "hosted"
+    },
+    "lineage": {
+      "children": [],
+      "sync": []
+    },
+    "schema": "runx.receipt.v1",
+    "seal": {
+      "closed_at": "2026-07-01T07:09:51.589Z",
+      "criteria": [
+        {
+          "criterion_id": "process_exit",
+          "evidence_refs": [],
+          "status": "verified",
+          "summary": "cli-tool exited successfully",
+          "verification_refs": []
+        }
+      ],
+      "disposition": "closed",
+      "last_observed_at": "2026-07-01T07:09:51.589Z",
+      "reason_code": "agent_act_closed",
+      "summary": "agent act closed with closed"
+    },
+    "signals": [],
+    "signature": {
+      "alg": "Ed25519",
+      "value": "base64:Vpr3G7ctnMzzOcZOwKliproUfRVcN6nQ5d60hfOvTYtFV08ow0FlLNkgAB4LJUutuOvOj_m8cy0txKE2N2hcAw"
+    },
+    "subject": {
+      "commitments": [],
+      "kind": "skill",
+      "ref": {
+        "type": "harness",
+        "uri": "hrn_run_agent_task-oncall-alert-triage-decide-output_triage"
+      }
+    }
+  },
+  "receipt_id": "sha256:dd2e65e6bd67dab2a5fa8a99a93c82af87f55ef1df9d7987ca5c73678d3b3639",
+  "run_id": "run_agent_task-oncall-alert-triage-decide-output",
+  "schema": "runx.skill_run.v1",
+  "skill_name": "oncall-alert-triage",
+  "status": "sealed"
+}

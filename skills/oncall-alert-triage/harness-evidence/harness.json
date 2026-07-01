@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "case_count": 2,
+  "assertion_error_count": 0,
+  "assertion_errors": [],
+  "case_names": [
+    "sealed_escalate_eligible_alert",
+    "missing_runbook_stop"
+  ],
+  "receipt_ids": [
+    "sha256:d7d4ad17311b9d1daa72aab64f9807fc4fd6acf6f3ea7015cbdd20104a9696dd"
+  ],
+  "graph_case_count": 0
+}

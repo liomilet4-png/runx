@@ -1,0 +1,81 @@
+{
+  "requests": [
+    {
+      "id": "agent_task.oncall-alert-triage-decide.output",
+      "invocation": {
+        "agent": "operator",
+        "envelope": {
+          "allowed_tools": [],
+          "current_context": [],
+          "execution_location": {
+            "skill_directory": "./skills/oncall-alert-triage"
+          },
+          "historical_context": [],
+          "inputs": {
+            "alert": {
+              "id": "alert-checkout-2026-06-30-dogfood",
+              "service": "checkout-api",
+              "severity": "sev2",
+              "signal": {
+                "duration_minutes": 16,
+                "metric": "http_5xx_rate",
+                "observed": "8.2% for 16m",
+                "recent_change": "deploy checkout-api 4f21c9e at 09:42Z",
+                "threshold": "2% for 10m"
+              }
+            },
+            "oncall_policy": {
+              "escalation_rules": {
+                "sev2": {
+                  "checkout-api": {
+                    "allowed_action": "escalate",
+                    "min_duration_minutes": 10,
+                    "require_incident_pr_target": true,
+                    "require_page_target": true
+                  }
+                }
+              },
+              "services": [
+                "checkout-api",
+                "payments-worker"
+              ]
+            },
+            "runbook_ref": {
+              "allowed_actions": [
+                "escalate",
+                "acknowledge"
+              ],
+              "digest": "sha256:1e721d89cdddb8b128c11a03f3c86ec9734a2c0bd14f2e9dc733929cd5e80951",
+              "id": "rb-checkout-api-sev2",
+              "incident_pr_target": {
+                "base_branch": "main",
+                "branch_prefix": "incident/checkout-5xx",
+                "repo": "example/checkout-api"
+              },
+              "page_target": "team-checkout-primary",
+              "pr_review_note_body": "Include error-rate graph, deploy sha, rollback candidate, and customer-impact note.",
+              "sealed": true
+            }
+          },
+          "instructions": "Resolve the runx agent act using the supplied inputs and context.",
+          "output": {
+            "decision": "object",
+            "escalation": "object",
+            "packet": "object"
+          },
+          "provenance": [],
+          "run_id": "rx_pending",
+          "skill": "triage",
+          "trust_boundary": "native-managed: runx executes the model and tool loop directly, receipts the result, and only yields to a surface for explicit human resolution outside this path"
+        },
+        "id": "agent_task.oncall-alert-triage-decide.output",
+        "source_type": "agent-task",
+        "task": "oncall-alert-triage-decide"
+      },
+      "kind": "agent_act"
+    }
+  ],
+  "run_id": "run_agent_task-oncall-alert-triage-decide-output",
+  "schema": "runx.skill_run.v1",
+  "status": "needs_agent"
+}

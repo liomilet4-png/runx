@@ -1,0 +1,29 @@
+{
+  "answers": {
+    "agent_task.oncall-alert-triage-decide.output": {
+      "decision": {
+        "action": "escalate",
+        "reason": "The checkout-api sev2 alert is declared in policy; the sealed runbook binds both page and incident PR targets, and 8.2% 5xx for 16 minutes exceeds the 2% for 10 minutes threshold."
+      },
+      "packet": {
+        "page_target": "team-checkout-primary",
+        "incident_pr_target": {
+          "repo": "example/checkout-api",
+          "base_branch": "main",
+          "branch": "incident/checkout-5xx-alert-checkout-2026-06-30-dogfood"
+        },
+        "pr_review_note_body": "Include error-rate graph, deploy sha 4f21c9e, rollback candidate, and customer-impact note.",
+        "fix_bundle": {
+          "suggested_first_check": "compare checkout-api 4f21c9e with previous healthy deploy",
+          "rollback_allowed": false,
+          "human_merge_gate": true
+        }
+      },
+      "escalation": {
+        "lane": "human_approval",
+        "reason": "This skill only emits a bounded packet; paging and incident PR creation require separate governed dispatch."
+      }
+    }
+  }
+}
+

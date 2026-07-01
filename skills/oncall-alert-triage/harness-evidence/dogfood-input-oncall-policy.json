@@ -1,0 +1,17 @@
+{
+  "services": [
+    "checkout-api",
+    "payments-worker"
+  ],
+  "escalation_rules": {
+    "sev2": {
+      "checkout-api": {
+        "min_duration_minutes": 10,
+        "allowed_action": "escalate",
+        "require_page_target": true,
+        "require_incident_pr_target": true
+      }
+    }
+  }
+}
+

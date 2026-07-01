@@ -1,0 +1,128 @@
+skill: oncall-alert-triage
+version: "0.1.0"
+
+catalog:
+  kind: skill
+  audience: public
+  visibility: public
+  role: context
+
+harness:
+  cases:
+    - name: sealed_escalate_eligible_alert
+      runner: triage
+      inputs:
+        alert:
+          id: alert-checkout-2026-06-30-001
+          service: checkout-api
+          severity: sev2
+          signal:
+            metric: http_5xx_rate
+            threshold: "2% for 10m"
+            observed: "7.8% for 14m"
+            duration_minutes: 14
+            recent_change: deploy checkout-api 4f21c9e at 09:42Z
+        runbook_ref:
+          id: rb-checkout-api-sev2
+          digest: sha256:1e721d89cdddb8b128c11a03f3c86ec9734a2c0bd14f2e9dc733929cd5e80951
+          sealed: true
+          page_target: team-checkout-primary
+          incident_pr_target:
+            repo: example/checkout-api
+            base_branch: main
+            branch_prefix: incident/checkout-5xx
+          pr_review_note_body: Include error-rate graph, deploy sha, rollback candidate, and customer-impact note.
+          allowed_actions:
+            - escalate
+            - acknowledge
+        oncall_policy:
+          services:
+            - checkout-api
+            - payments-worker
+          escalation_rules:
+            sev2:
+              checkout-api:
+                min_duration_minutes: 10
+                allowed_action: escalate
+                require_page_target: true
+                require_incident_pr_target: true
+      caller:
+        answers:
+          agent_task.oncall-alert-triage-decide.output:
+            decision:
+              action: escalate
+              reason: Alert checkout-api is declared in policy; sev2 5xx rate exceeded 2% for 14 minutes, meeting the sealed runbook threshold and escalation rule.
+            packet:
+              page_target: team-checkout-primary
+              incident_pr_target:
+                repo: example/checkout-api
+                base_branch: main
+                branch: incident/checkout-5xx-alert-checkout-2026-06-30-001
+              pr_review_note_body: Include error-rate graph, deploy sha 4f21c9e, rollback candidate, and customer-impact note.
+              fix_bundle:
+                suggested_first_check: compare checkout-api 4f21c9e with previous healthy deploy
+                rollback_allowed: false
+                human_merge_gate: true
+            escalation:
+              lane: human_approval
+              reason: The skill only names downstream governed runs; page send and incident PR require operator dispatch.
+      expect:
+        status: sealed
+        receipt:
+          schema: runx.receipt.v1
+
+    - name: missing_runbook_stop
+      runner: triage
+      inputs:
+        alert:
+          id: alert-checkout-2026-06-30-002
+          service: checkout-api
+          severity: sev2
+          signal:
+            metric: http_5xx_rate
+            threshold: "2% for 10m"
+            observed: "6.1% for 11m"
+            duration_minutes: 11
+        runbook_ref:
+          id: rb-checkout-api-sev2
+          sealed: false
+        oncall_policy:
+          services:
+            - checkout-api
+          escalation_rules:
+            sev2:
+              checkout-api:
+                min_duration_minutes: 10
+                allowed_action: escalate
+                require_page_target: true
+                require_incident_pr_target: true
+      expect:
+        status: needs_agent
+
+runners:
+  triage:
+    default: true
+    type: agent-task
+    agent: operator
+    task: oncall-alert-triage-decide
+    outputs:
+      decision: object
+      packet: object
+      escalation: object
+    artifacts:
+      wrap_as: oncall_triage_packet
+      packet: runx.oncall.triage.v1
+    inputs:
+      alert:
+        type: json
+        required: true
+        description: Alert packet with id, service, severity, and signal evidence.
+      runbook_ref:
+        type: json
+        required: true
+        description: Sealed runbook reference with page, incident PR, and review-note targets.
+      oncall_policy:
+        type: json
+        required: true
+        description: Declared services and escalation rules that bound the decision.
+

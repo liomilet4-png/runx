@@ -1,0 +1,17 @@
+{
+  "id": "rb-checkout-api-sev2",
+  "digest": "sha256:1e721d89cdddb8b128c11a03f3c86ec9734a2c0bd14f2e9dc733929cd5e80951",
+  "sealed": true,
+  "page_target": "team-checkout-primary",
+  "incident_pr_target": {
+    "repo": "example/checkout-api",
+    "base_branch": "main",
+    "branch_prefix": "incident/checkout-5xx"
+  },
+  "pr_review_note_body": "Include error-rate graph, deploy sha, rollback candidate, and customer-impact note.",
+  "allowed_actions": [
+    "escalate",
+    "acknowledge"
+  ]
+}
+
