@@ -1,7 +1,72 @@
 {
   "schema": "runx.oncall_alert_triage.evidence.v1",
-  "summary": "oncall-alert-triage package inspected, harnessed, dogfooded, and receipt-verified on Ubuntu GitHub Actions.",
+  "summary": "oncall-alert-triage was inspected, harnessed, published, dogfooded, and receipt-verified for Frantic bounty 64.",
+  "package": {
+    "owner": "liomilet4-png",
+    "name": "oncall-alert-triage",
+    "version": "sha-0c991037ca07",
+    "registry_ref": "liomilet4-png/oncall-alert-triage@sha-0c991037ca07",
+    "public_url": "https://runx.ai/x/liomilet4-png/oncall-alert-triage@sha-0c991037ca07",
+    "install_command": "runx add liomilet4-png/oncall-alert-triage@sha-0c991037ca07 --registry https://api.runx.ai",
+    "run_command": "runx skill liomilet4-png/oncall-alert-triage@sha-0c991037ca07 --registry https://api.runx.ai"
+  },
+  "source": {
+    "pr_url": "https://github.com/runxhq/runx/pull/199",
+    "source_url": "https://github.com/liomilet4-png/runx/tree/codex/frantic-oncall-alert-triage/skills/oncall-alert-triage",
+    "raw_x_yaml_path": "skills/oncall-alert-triage/X.yaml",
+    "raw_skill_md_path": "skills/oncall-alert-triage/SKILL.md",
+    "publish_method": "purpose-scoped runx registry publish API using public SKILL.md and X.yaml content; no token or secret is present in artifacts"
+  },
   "runx_version": "runx-cli 0.6.13",
+  "commands": {
+    "inspect": "runx skill inspect ./skills/oncall-alert-triage/SKILL.md --json",
+    "local_harness": "runx harness ./skills/oncall-alert-triage -R $RUNX_RECEIPTS --json",
+    "dogfood_initial": "runx skill ./skills/oncall-alert-triage triage --input-json alert=<dogfood alert> --input-json runbook_ref=<sealed runbook> --input-json oncall_policy=<policy> -R $RUNX_RECEIPTS --json",
+    "dogfood_resume": "runx resume run_agent_task-oncall-alert-triage-decide-output ./skills/oncall-alert-triage/harness-evidence/dogfood-answers.json -R $RUNX_RECEIPTS --json",
+    "verify": "runx verify --receipt ./skills/oncall-alert-triage/harness-evidence/dogfood-receipt.json --json"
+  },
+  "hosted_harness": {
+    "status": "passed",
+    "case_count": 2,
+    "checks_passed": 2,
+    "checks_failed": 0,
+    "case_names": [
+      "sealed_escalate_eligible_alert",
+      "missing_runbook_stop"
+    ],
+    "receipt_ids": [
+      "sha256:b52233b84a1b96b0fc0b4130c737158091cb7b6dd3fcc135ca9785617e635a63"
+    ],
+    "evidence_url": "https://runx.ai/x/liomilet4-png/oncall-alert-triage@sha-0c991037ca07#harness"
+  },
+  "dogfood": {
+    "package": "liomilet4-png/oncall-alert-triage@sha-0c991037ca07",
+    "input": {
+      "alert_id": "alert-checkout-2026-06-30-dogfood",
+      "service": "checkout-api",
+      "severity": "sev2",
+      "signal": "http_5xx_rate observed 8.2% for 16m against threshold 2% for 10m",
+      "runbook_digest": "sha256:1e721d89cdddb8b128c11a03f3c86ec9734a2c0bd14f2e9dc733929cd5e80951",
+      "policy_clause": "sev2.checkout-api min_duration_minutes=10 allowed_action=escalate require_page_target=true require_incident_pr_target=true"
+    },
+    "command": "runx skill ./skills/oncall-alert-triage triage --input-json alert=<dogfood alert> --input-json runbook_ref=<sealed runbook> --input-json oncall_policy=<policy> -R $RUNX_RECEIPTS --json, then runx resume with dogfood-answers.json",
+    "receipt_ref": "runx:receipt:sha256:dd2e65e6bd67dab2a5fa8a99a93c82af87f55ef1df9d7987ca5c73678d3b3639",
+    "verify_verdict": {
+      "valid": true,
+      "signature_mode": "production",
+      "signature_kid": "frantic-64-evidence-key"
+    },
+    "harness_cases": [
+      {
+        "name": "sealed_escalate_eligible_alert",
+        "expected_status": "sealed"
+      },
+      {
+        "name": "missing_runbook_stop",
+        "expected_status": "needs_agent"
+      }
+    ]
+  },
   "observations": [
     {
       "name": "skill_inspect",
@@ -11,7 +76,7 @@
       ]
     },
     {
-      "name": "harness",
+      "name": "local_harness",
       "status": "passed",
       "case_count": 2,
       "assertion_error_count": 0,
@@ -20,14 +85,55 @@
       ]
     },
     {
-      "name": "dogfood_initial",
-      "status": "needs_agent",
-      "run_id": "run_agent_task-oncall-alert-triage-decide-output"
+      "name": "hosted_harness",
+      "status": "passed",
+      "case_count": 2,
+      "checks_passed": 2,
+      "checks_failed": 0,
+      "receipt_id": "sha256:b52233b84a1b96b0fc0b4130c737158091cb7b6dd3fcc135ca9785617e635a63"
     },
     {
-      "name": "dogfood_resume",
+      "name": "dogfood_initial",
+      "status": "needs_agent",
+      "stop_reason": "agent-task output requested explicit bounded answer before sealing"
+    },
+    {
+      "name": "dogfood_output",
       "status": "sealed",
+      "decision_action": "escalate",
+      "decision_reason": "The checkout-api sev2 alert is declared in policy; the sealed runbook binds both page and incident PR targets, and 8.2% 5xx for 16 minutes exceeds the 2% for 10 minutes threshold.",
+      "sealed_runbook_digest": "sha256:1e721d89cdddb8b128c11a03f3c86ec9734a2c0bd14f2e9dc733929cd5e80951",
+      "policy_clauses_applied": [
+        "service checkout-api is declared in oncall_policy.services",
+        "sev2.checkout-api requires min_duration_minutes=10",
+        "sev2.checkout-api allowed_action=escalate",
+        "page target and incident PR target are both required and present"
+      ],
+      "packet": {
+        "page_target": "team-checkout-primary",
+        "incident_pr_target": {
+          "repo": "example/checkout-api",
+          "base_branch": "main",
+          "branch": "incident/checkout-5xx-alert-checkout-2026-06-30-dogfood"
+        },
+        "pr_review_note_body": "Include error-rate graph, deploy sha 4f21c9e, rollback candidate, and customer-impact note.",
+        "fix_bundle": {
+          "suggested_first_check": "compare checkout-api 4f21c9e with previous healthy deploy",
+          "rollback_allowed": false,
+          "human_merge_gate": true
+        }
+      },
+      "escalation": {
+        "lane": "human_approval",
+        "reason": "This skill only emits a bounded packet; paging and incident PR creation require separate governed dispatch."
+      },
       "receipt_id": "sha256:dd2e65e6bd67dab2a5fa8a99a93c82af87f55ef1df9d7987ca5c73678d3b3639"
+    },
+    {
+      "name": "stop_case",
+      "case_name": "missing_runbook_stop",
+      "status": "needs_agent",
+      "refusal_reason": "runbook_ref.sealed=false, so no oncall packet is emitted"
     },
     {
       "name": "dogfood_verify",

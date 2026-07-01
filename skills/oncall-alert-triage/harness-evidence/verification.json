@@ -1,0 +1,53 @@
+{
+  "schema": "runx.oncall_alert_triage.verification.v1",
+  "package": "liomilet4-png/oncall-alert-triage@sha-0c991037ca07",
+  "public_url": "https://runx.ai/x/liomilet4-png/oncall-alert-triage@sha-0c991037ca07",
+  "source_pr": "https://github.com/runxhq/runx/pull/199",
+  "runx_version": "runx-cli 0.6.13",
+  "checks": [
+    {
+      "name": "skill_inspect",
+      "status": "passed",
+      "command": "runx skill inspect ./skills/oncall-alert-triage/SKILL.md --json"
+    },
+    {
+      "name": "local_harness",
+      "status": "passed",
+      "case_count": 2,
+      "case_names": [
+        "sealed_escalate_eligible_alert",
+        "missing_runbook_stop"
+      ]
+    },
+    {
+      "name": "hosted_registry_harness",
+      "status": "passed",
+      "case_count": 2,
+      "checks_passed": 2,
+      "checks_failed": 0,
+      "receipt_id": "sha256:b52233b84a1b96b0fc0b4130c737158091cb7b6dd3fcc135ca9785617e635a63",
+      "evidence_url": "https://runx.ai/x/liomilet4-png/oncall-alert-triage@sha-0c991037ca07#harness"
+    },
+    {
+      "name": "dogfood_run",
+      "status": "sealed",
+      "receipt_ref": "runx:receipt:sha256:dd2e65e6bd67dab2a5fa8a99a93c82af87f55ef1df9d7987ca5c73678d3b3639"
+    },
+    {
+      "name": "dogfood_receipt_verify",
+      "status": "passed",
+      "valid": true,
+      "signature_mode": "production",
+      "signature_kid": "frantic-64-evidence-key",
+      "digest_status": "valid",
+      "content_address_status": "valid"
+    }
+  ],
+  "artifacts": {
+    "evidence_json": "skills/oncall-alert-triage/harness-evidence/evidence.json",
+    "verification_json": "skills/oncall-alert-triage/harness-evidence/verification.json",
+    "report": "skills/oncall-alert-triage/harness-evidence/report.md",
+    "dogfood_receipt": "skills/oncall-alert-triage/harness-evidence/dogfood-receipt.json",
+    "dogfood_verify": "skills/oncall-alert-triage/harness-evidence/dogfood-verify.json"
+  }
+}
