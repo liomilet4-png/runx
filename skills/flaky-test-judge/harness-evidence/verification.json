@@ -36,5 +36,6 @@
                     "findings":  [
 
                                  ]
-                }
+                },
+    "runx_cli_version":  "runx-cli 0.6.13"
 }

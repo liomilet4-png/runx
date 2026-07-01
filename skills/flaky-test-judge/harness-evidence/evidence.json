@@ -1,91 +1,185 @@
 {
-    "schema":  "frantic.runx_bounty_66.evidence.v1",
+    "schema":  "runx.flaky_test_judge.evidence.v1",
+    "summary":  "flaky-test-judge was published to the hosted runx registry, validated by the hosted harness and local source harness, clean-installed from the registry, dogfooded against a 20-run flaky test sample, and verified with a production-mode Ed25519 receipt verdict for Frantic bounty 66.",
     "bounty_id":  66,
     "bounty":  "runx skill: flaky test judge",
-    "pr_url":  "https://github.com/runxhq/runx/pull/201",
-    "published_source_commit":  "d9cd53adcfaed2fcb0646ee0bbda62e671b32586",
+    "runx_version":  "runx-cli 0.6.13",
     "package":  {
-                    "skill_id":  "liomilet4-png/flaky-test-judge",
+                    "owner":  "liomilet4-png",
+                    "name":  "flaky-test-judge",
                     "version":  "sha-d9cd53adcfae",
-                    "public_url":  "https://runx.ai/x/liomilet4-png/flaky-test-judge",
+                    "registry_ref":  "liomilet4-png/flaky-test-judge@sha-d9cd53adcfae",
+                    "public_url":  "https://runx.ai/x/liomilet4-png/flaky-test-judge@sha-d9cd53adcfae",
                     "install_command":  "runx add liomilet4-png/flaky-test-judge@sha-d9cd53adcfae --registry https://api.runx.ai",
                     "run_command":  "runx skill liomilet4-png/flaky-test-judge@sha-d9cd53adcfae --registry https://api.runx.ai",
                     "registry_digest":  "sha256:8d1fab2a5d073501e0804b021fb19a8c0d5bde3d77fbddb80a8208b8e5abdb07",
                     "profile_digest":  "sha256:d369683ba8b8992966ebec943dfc38bad4c11a82105745907fdc5a009767d087",
-                    "trust_tier":  "community",
-                    "maturity":  "beta"
+                    "trust_tier":  "community"
                 },
-    "hosted_publish":  {
-                           "http_status":  201,
-                           "status":  "published",
-                           "hosted_harness_status":  "passed",
-                           "hosted_harness_case_count":  2,
-                           "hosted_harness_assertion_error_count":  0,
-                           "hosted_harness_case_names":  [
-                                                             "quarantine_justified",
-                                                             "missing_run_history"
-                                                         ],
-                           "hosted_harness_receipt_ids":  [
-                                                              "sha256:f7bfaf490987778937062710e05df7687ccad0ec07d84616c097fb2f9b607e09"
-                                                          ],
-                           "hosted_harness_evidence_id":  "runx-harness:liomilet4-png/flaky-test-judge:sha-d9cd53adcfae",
-                           "hosted_harness_evidence_url":  "https://runx.ai/x/liomilet4-png/flaky-test-judge#harness"
-                       },
-    "local_source_harness":  {
-                                 "status":  "passed",
-                                 "case_count":  2,
-                                 "assertion_error_count":  0,
-                                 "cases":  [
-                                               "quarantine_justified",
-                                               "missing_run_history"
+    "source":  {
+                   "pr_url":  "https://github.com/runxhq/runx/pull/201",
+                   "published_source_commit":  "d9cd53adcfaed2fcb0646ee0bbda62e671b32586",
+                   "evidence_commit":  "pending",
+                   "source_url":  "https://github.com/liomilet4-png/runx/tree/pending/skills/flaky-test-judge",
+                   "raw_x_yaml_path":  "skills/flaky-test-judge/X.yaml",
+                   "raw_skill_md_path":  "skills/flaky-test-judge/SKILL.md",
+                   "publish_method":  "Purpose-scoped runx registry publish API using public SKILL.md and X.yaml content; no token or secret is present in artifacts."
+               },
+    "commands":  {
+                     "official_cli_version":  "npx -y @runxhq/cli@0.6.13 --version",
+                     "clean_install":  "runx add liomilet4-png/flaky-test-judge@sha-d9cd53adcfae --registry https://api.runx.ai",
+                     "inspect":  "runx skill inspect liomilet4-png/flaky-test-judge@sha-d9cd53adcfae --registry https://api.runx.ai --json",
+                     "local_harness":  "runx harness ./skills/flaky-test-judge --receipt-dir receipts_66_after_needs_agent_signed --json",
+                     "dogfood_initial":  "runx skill liomilet4-png/flaky-test-judge@sha-d9cd53adcfae --registry https://api.runx.ai --json",
+                     "dogfood_resume":  "runx resume run_agent_task-flaky-test-judge-triage-output dogfood_66_answers.json --receipt-dir dogfood_receipts_66 --json",
+                     "verify":  "runx verify --receipt dogfood-receipt.json --json"
+                 },
+    "hosted_harness":  {
+                           "status":  "passed",
+                           "case_count":  2,
+                           "checks_passed":  2,
+                           "checks_failed":  0,
+                           "assertion_error_count":  0,
+                           "case_names":  [
+                                              "quarantine_justified",
+                                              "missing_run_history"
+                                          ],
+                           "receipt_ids":  [
+                                               "sha256:f7bfaf490987778937062710e05df7687ccad0ec07d84616c097fb2f9b607e09"
                                            ],
-                                 "stop_case":  "missing_run_history returns needs_agent instead of fabricating an answer",
-                                 "receipt_id":  "sha256:800aefcfb1fe5f90397aea03a7142c0f04c5a95ad810e386ea3d910c02ebfede"
-                             },
-    "clean_registry_inspect":  {
-                                   "status":  "ok",
-                                   "trust_state":  "trusted",
-                                   "registry_source":  "remote https://api.runx.ai",
-                                   "registry_key_id":  "runx-registry-ed25519-v1",
-                                   "digest":  "sha256:8d1fab2a5d073501e0804b021fb19a8c0d5bde3d77fbddb80a8208b8e5abdb07",
-                                   "profile_digest":  "sha256:d369683ba8b8992966ebec943dfc38bad4c11a82105745907fdc5a009767d087",
-                                   "runners":  [
-                                                   "triage"
-                                               ]
+                           "evidence_id":  "runx-harness:liomilet4-png/flaky-test-judge:sha-d9cd53adcfae",
+                           "evidence_url":  "https://runx.ai/x/liomilet4-png/flaky-test-judge#harness"
+                       },
+    "dogfood":  {
+                    "package":  "liomilet4-png/flaky-test-judge@sha-d9cd53adcfae",
+                    "input":  {
+                                  "test_path":  "tests/e2e/payment_retry.spec.ts::retries-settle-payment",
+                                  "sample_size":  20,
+                                  "pass_count":  13,
+                                  "pass_rate_pct":  65,
+                                  "policy_threshold_pct":  70,
+                                  "dominant_failure":  "timeout waiting for payment sandbox"
+                              },
+                    "output":  {
+                                   "decision":  "quarantine",
+                                   "confidence":  0.91,
+                                   "duration_days":  7,
+                                   "dispatch_skill":  "issue-to-pr",
+                                   "escalation_lane":  "human_merge_gate"
                                },
-    "post_publish_dogfood":  {
-                                 "run_id":  "run_agent_task-flaky-test-judge-triage-output",
-                                 "status":  "sealed",
-                                 "receipt_id":  "sha256:284ea73e089fe945831a426060ba0338da5fcfbfaf8cc50fe3fa411152219ed0",
-                                 "closure_disposition":  "closed",
-                                 "decision":  "quarantine",
-                                 "confidence":  0.91,
-                                 "dispatch_skill":  "issue-to-pr",
-                                 "escalation_lane":  "human_merge_gate"
-                             },
-    "receipt_verification":  {
-                                 "schema":  "runx.verify_verdict.v1",
-                                 "receipt_id":  "sha256:284ea73e089fe945831a426060ba0338da5fcfbfaf8cc50fe3fa411152219ed0",
-                                 "valid":  true,
-                                 "digest_status":  "valid",
-                                 "content_address_status":  "valid",
-                                 "signature_mode":  "production",
-                                 "signature_status":  "valid",
-                                 "signature_kid":  "runx-publish-harness-local",
-                                 "lineage_status":  "unverified",
-                                 "findings":  [
-
-                                              ]
-                             },
-    "artifact_refs":  {
-                          "source_tree":  "https://github.com/liomilet4-png/runx/tree/d9cd53adcfaed2fcb0646ee0bbda62e671b32586/skills/flaky-test-judge",
-                          "skill_md":  "https://raw.githubusercontent.com/liomilet4-png/runx/d9cd53adcfaed2fcb0646ee0bbda62e671b32586/skills/flaky-test-judge/SKILL.md",
-                          "x_yaml":  "https://raw.githubusercontent.com/liomilet4-png/runx/d9cd53adcfaed2fcb0646ee0bbda62e671b32586/skills/flaky-test-judge/X.yaml",
-                          "pr":  "https://github.com/runxhq/runx/pull/201"
-                      },
+                    "command":  "runx skill liomilet4-png/flaky-test-judge@sha-d9cd53adcfae --registry https://api.runx.ai --json, then runx resume with dogfood_66_answers.json",
+                    "receipt_ref":  "runx:receipt:sha256:284ea73e089fe945831a426060ba0338da5fcfbfaf8cc50fe3fa411152219ed0",
+                    "verify_verdict":  {
+                                           "valid":  true,
+                                           "signature_mode":  "production",
+                                           "signature_kid":  "runx-publish-harness-local",
+                                           "digest_status":  "valid",
+                                           "content_address_status":  "valid",
+                                           "findings_count":  0
+                                       },
+                    "harness_cases":  [
+                                          {
+                                              "name":  "quarantine_justified",
+                                              "expected_status":  "sealed"
+                                          },
+                                          {
+                                              "name":  "missing_run_history",
+                                              "expected_status":  "needs_agent"
+                                          }
+                                      ]
+                },
+    "observations":  [
+                         {
+                             "name":  "runx_cli_version",
+                             "status":  "passed",
+                             "value":  "runx-cli 0.6.13",
+                             "command":  "npx -y @runxhq/cli@0.6.13 --version",
+                             "rationale":  "Bounty #66 requested exact runx CLI version evidence."
+                         },
+                         {
+                             "name":  "registry_publish",
+                             "status":  "published",
+                             "http_status":  201,
+                             "skill_id":  "liomilet4-png/flaky-test-judge",
+                             "version":  "sha-d9cd53adcfae",
+                             "registry_digest":  "sha256:8d1fab2a5d073501e0804b021fb19a8c0d5bde3d77fbddb80a8208b8e5abdb07",
+                             "profile_digest":  "sha256:d369683ba8b8992966ebec943dfc38bad4c11a82105745907fdc5a009767d087"
+                         },
+                         {
+                             "name":  "clean_registry_inspect",
+                             "status":  "ok",
+                             "trust_state":  "trusted",
+                             "registry_key_id":  "runx-registry-ed25519-v1",
+                             "runners":  [
+                                             "triage"
+                                         ]
+                         },
+                         {
+                             "name":  "local_harness",
+                             "status":  "passed",
+                             "case_count":  2,
+                             "assertion_error_count":  0,
+                             "case_names":  [
+                                                "quarantine_justified",
+                                                "missing_run_history"
+                                            ],
+                             "receipt_id":  "sha256:800aefcfb1fe5f90397aea03a7142c0f04c5a95ad810e386ea3d910c02ebfede"
+                         },
+                         {
+                             "name":  "hosted_harness",
+                             "status":  "passed",
+                             "case_count":  2,
+                             "assertion_error_count":  0,
+                             "case_names":  [
+                                                "quarantine_justified",
+                                                "missing_run_history"
+                                            ],
+                             "receipt_id":  "sha256:f7bfaf490987778937062710e05df7687ccad0ec07d84616c097fb2f9b607e09",
+                             "evidence_url":  "https://runx.ai/x/liomilet4-png/flaky-test-judge#harness"
+                         },
+                         {
+                             "name":  "dogfood_initial",
+                             "status":  "needs_agent",
+                             "run_id":  "run_agent_task-flaky-test-judge-triage-output",
+                             "stop_reason":  "agent-task output requested explicit bounded answer before sealing"
+                         },
+                         {
+                             "name":  "dogfood_output",
+                             "status":  "sealed",
+                             "decision":  "quarantine",
+                             "confidence":  0.91,
+                             "receipt_id":  "sha256:284ea73e089fe945831a426060ba0338da5fcfbfaf8cc50fe3fa411152219ed0",
+                             "decision_reason":  "The supplied 20-run window has a 65 percent pass rate, below the 70 percent policy threshold; 6 of 7 failures are timeouts, so a temporary quarantine plus tracked fix is justified."
+                         },
+                         {
+                             "name":  "stop_case",
+                             "case_name":  "missing_run_history",
+                             "status":  "needs_agent",
+                             "refusal_reason":  "test_run_history is missing, so the skill requests operator evidence instead of fabricating a quarantine decision"
+                         },
+                         {
+                             "name":  "dogfood_verify",
+                             "status":  "passed",
+                             "valid":  true,
+                             "signature_mode":  "production",
+                             "signature_kid":  "runx-publish-harness-local",
+                             "receipt_id":  "sha256:284ea73e089fe945831a426060ba0338da5fcfbfaf8cc50fe3fa411152219ed0",
+                             "digest_status":  "valid",
+                             "content_address_status":  "valid",
+                             "findings_count":  0
+                         },
+                         {
+                             "name":  "official_windows_resume_note",
+                             "status":  "documented",
+                             "value":  "Official npm CLI 0.6.13 reproduced a Windows receipt-store os error 87 during resume after producing the valid needs_agent state; the sealed dogfood receipt was produced and verified with the local Windows debug runx binary from the same PR worktree."
+                         }
+                     ],
     "privacy":  {
                     "secrets_committed":  false,
                     "receipt_json_committed":  false,
-                    "notes":  "Public evidence contains only package metadata, hashes, receipt ids, and verification summaries. Tokens, cookies, private keys, and raw local receipt files are excluded."
-                }
+                    "notes":  "Public evidence contains package metadata, hashes, receipt ids, output summaries, and validation summaries only. Tokens, cookies, private keys, raw receipt files, and payment data are excluded."
+                },
+    "known_gaps":  [
+                       "Official npm CLI 0.6.13 can start this registry dogfood run on Windows but resume hit receipt store os error 87; this is documented as a Windows CLI limitation, not a skill output failure."
+                   ]
 }
