@@ -1,18 +1,20 @@
 {
-  "status": "passed",
-  "case_count": 2,
-  "assertion_error_count": 0,
-  "assertion_errors": [],
-  "case_names": [
-    "quarantine_justified",
-    "missing_run_history"
-  ],
-  "receipt_ids": [
-    "sha256:f5d6e16175cb390e9df20cc26e3b5a739b8a5bb2c291971f04ef2cf52b048d18",
-    "sha256:c5916b89b44ae03617e5472e511a665edf4d2cf4ed691694cff6623d96f29f08"
-  ],
-  "graph_case_count": 0,
-  "command": "cargo run --manifest-path crates\\Cargo.toml -p runx-cli -- harness .\\skills\\flaky-test-judge --receipt-dir receipts_66_final_verify --json",
-  "receipt_dir": "receipts_66_final_verify",
-  "recorded_at": "2026-07-01T12:05:00Z"
+    "status":  "passed",
+    "case_count":  2,
+    "assertion_error_count":  0,
+    "assertion_errors":  [
+
+                         ],
+    "case_names":  [
+                       "quarantine_justified",
+                       "missing_run_history"
+                   ],
+    "receipt_ids":  [
+                        "sha256:7b38e4780ea6991f62b8c561aa00351dad7e45c4cb16c79ffa45ba9160785957",
+                        "sha256:090f287708c41269734552cdae47ef418bbc3e22d87c80a31e6ce91a83e35c8e"
+                    ],
+    "graph_case_count":  0,
+    "command":  "cargo run --manifest-path crates\\Cargo.toml -p runx-cli -- harness .\\skills\\flaky-test-judge --receipt-dir receipts_66_verify_after_fix2 --json",
+    "receipt_dir":  "receipts_66_verify_after_fix2",
+    "recorded_at":  "2026-07-01T12:22:20Z"
 }

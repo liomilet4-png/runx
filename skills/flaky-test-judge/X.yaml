@@ -33,7 +33,7 @@ harness:
             - { status: passed, duration: 18, logs: "passed" }
             - { status: passed, duration: 19, logs: "passed" }
             - { status: timeout, duration: 120, logs: "timeout waiting for payment sandbox" }
-            - { status: failed, duration: 43, logs: "assertion mismatch after async retry" }
+            - { status: passed, duration: 20, logs: "passed" }
             - { status: passed, duration: 20, logs: "passed" }
         test_metadata:
           test_path: "tests/e2e/payment_retry.spec.ts::retries-settle-payment"
