@@ -1,0 +1,13 @@
+{
+  "test_run_history": { "sample_size": 0, "runs": [] },
+  "test_metadata": {
+    "test_path": "tests/e2e/cart_checkout.spec.ts::checkout-happy-path",
+    "suite": "checkout-e2e",
+    "tags": ["e2e", "checkout"]
+  },
+  "release_policy": {
+    "flake_threshold_pct": 70,
+    "min_sample_size": 20,
+    "max_quarantine_days": 14
+  }
+}

@@ -15,6 +15,15 @@ pub(crate) const TEST_SIGNING_KID: &str = "runx-runtime-prod-fixture-key";
 pub(crate) const TEST_SIGNING_SEED_BASE64: &str = "QkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkI=";
 pub(crate) const TEST_SIGNING_ISSUER_TYPE: &str = "hosted";
 
+pub(crate) fn receipt_file_name(receipt_id: &str) -> String {
+    if let Some(digest) = receipt_id.strip_prefix("sha256:") {
+        if digest.len() == 64 && digest.bytes().all(|byte| byte.is_ascii_hexdigit()) {
+            return format!("sha256-{digest}.json");
+        }
+    }
+    format!("{receipt_id}.json")
+}
+
 pub(crate) fn test_signing_env() -> BTreeMap<String, String> {
     [
         (

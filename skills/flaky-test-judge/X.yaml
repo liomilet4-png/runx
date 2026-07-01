@@ -1,0 +1,136 @@
+skill: flaky-test-judge
+version: "0.1.0"
+
+catalog:
+  kind: skill
+  audience: public
+  visibility: public
+  role: context
+
+harness:
+  cases:
+    - name: quarantine_justified
+      runner: triage
+      inputs:
+        test_run_history:
+          sample_size: 20
+          runs:
+            - { status: passed, duration: 18, logs: "passed" }
+            - { status: passed, duration: 19, logs: "passed" }
+            - { status: passed, duration: 17, logs: "passed" }
+            - { status: timeout, duration: 120, logs: "timeout waiting for payment sandbox" }
+            - { status: passed, duration: 21, logs: "passed" }
+            - { status: passed, duration: 18, logs: "passed" }
+            - { status: timeout, duration: 120, logs: "timeout waiting for payment sandbox" }
+            - { status: failed, duration: 44, logs: "assertion mismatch after async retry" }
+            - { status: passed, duration: 20, logs: "passed" }
+            - { status: passed, duration: 18, logs: "passed" }
+            - { status: timeout, duration: 120, logs: "timeout waiting for payment sandbox" }
+            - { status: passed, duration: 19, logs: "passed" }
+            - { status: timeout, duration: 120, logs: "timeout waiting for payment sandbox" }
+            - { status: passed, duration: 22, logs: "passed" }
+            - { status: timeout, duration: 120, logs: "timeout waiting for payment sandbox" }
+            - { status: passed, duration: 18, logs: "passed" }
+            - { status: passed, duration: 19, logs: "passed" }
+            - { status: timeout, duration: 120, logs: "timeout waiting for payment sandbox" }
+            - { status: failed, duration: 43, logs: "assertion mismatch after async retry" }
+            - { status: passed, duration: 20, logs: "passed" }
+        test_metadata:
+          test_path: "tests/e2e/payment_retry.spec.ts::retries-settle-payment"
+          suite: payments-e2e
+          tags: [e2e, payment, quarantine-candidate]
+        release_policy:
+          flake_threshold_pct: 70
+          min_sample_size: 20
+          max_quarantine_days: 14
+      caller:
+        answers:
+          agent_task.flaky-test-judge-triage.output:
+            disposition:
+              decision: "quarantine"
+              confidence: 0.91
+              reason: "The supplied 20-run window has a 65% pass-rate, below the 70% policy threshold; 6 of 7 failures are timeouts, so a temporary quarantine plus tracked fix is justified."
+            quarantine_packet:
+              test_path: "tests/e2e/payment_retry.spec.ts::retries-settle-payment"
+              duration_days: 7
+              fix_template:
+                title: "Investigate flaky payment retry timeout"
+                body: "Review tests/e2e/payment_retry.spec.ts::retries-settle-payment. Evidence: 13/20 pass-rate, 6 timeout failures, one assertion mismatch. Remove the quarantine when the retry timing is deterministic."
+              exclusion_marker: "@quarantine(until=7d, reason=payment_retry_timeout_flake)"
+            dispatch_target:
+              skill: "issue-to-pr"
+              typed_inputs:
+                thread_title: "Quarantine flaky payment retry test and track fix"
+                thread_body: "Temporarily disable tests/e2e/payment_retry.spec.ts::retries-settle-payment for 7 days and create the fix issue body from the flaky-test-judge packet. Human merge gate required."
+                target_repo: "example/payments"
+                base: "main"
+            escalation:
+              lane: "human_merge_gate"
+              reason: "The judge only emits a quarantine packet; issue-to-pr drafts the change and a human merge gate controls any live disable."
+      expect:
+        status: sealed
+        receipt:
+          schema: runx.receipt.v1
+
+    - name: missing_run_history
+      runner: triage
+      inputs:
+        test_run_history:
+          sample_size: 0
+          runs: []
+        test_metadata:
+          test_path: "tests/e2e/cart_checkout.spec.ts::checkout-happy-path"
+          suite: checkout-e2e
+          tags: [e2e, checkout]
+        release_policy:
+          flake_threshold_pct: 70
+          min_sample_size: 20
+          max_quarantine_days: 14
+      caller:
+        answers:
+          agent_task.flaky-test-judge-triage.output:
+            disposition:
+              decision: "refuse"
+              confidence: 1.0
+              reason: "missing-evidence stop: no run history was supplied, sample_size is 0, and policy requires at least 20 runs before quarantine can be considered."
+            quarantine_packet:
+              present: false
+              reason: "missing_run_history"
+            dispatch_target:
+              present: false
+              reason: "missing_run_history"
+            escalation:
+              lane: "collect_more_evidence"
+              reason: "Run the test enough times to meet release_policy.min_sample_size before asking for a quarantine decision."
+      expect:
+        status: sealed
+        receipt:
+          schema: runx.receipt.v1
+
+runners:
+  triage:
+    default: true
+    type: agent-task
+    agent: operator
+    task: "flaky-test-judge-triage"
+    outputs:
+      disposition: object
+      quarantine_packet: object
+      dispatch_target: object
+      escalation: object
+    artifacts:
+      wrap_as: flaky_test_triage_packet
+      packet: "runx.flaky.test_triage.v1"
+    inputs:
+      test_run_history:
+        type: json
+        required: true
+        description: "Runs with status, duration, logs, and sample_size for one test."
+      test_metadata:
+        type: json
+        required: true
+        description: "Test path, suite, and tags for the candidate flaky test."
+      release_policy:
+        type: json
+        required: true
+        description: "Policy thresholds: flake_threshold_pct, min_sample_size, and max_quarantine_days."

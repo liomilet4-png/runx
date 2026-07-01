@@ -104,7 +104,7 @@ fn receipt_id_must_match_content_address() -> Result<(), Box<dyn std::error::Err
     receipt.id = "sha256:0000000000000000000000000000000000000000000000000000000000000000"
         .to_owned()
         .into();
-    write_json(temp.path(), &receipt_file_name(&receipt.id), &receipt)?;
+    write_json(temp.path(), &crate::support::receipt_file_name(&receipt.id), &receipt)?;
     let store = LocalReceiptStore::new(temp.path());
 
     let result = store.read_exact(&receipt.id);
@@ -121,7 +121,7 @@ fn exact_read_does_not_use_partial_or_suffix_lookup() -> Result<(), Box<dyn std:
     let temp = TestDir::new()?;
     write_json(
         temp.path(),
-        &receipt_file_name(&success_receipt_id()),
+        &crate::support::receipt_file_name(&success_receipt_id()),
         &success_receipt()?,
     )?;
     let store = LocalReceiptStore::new(temp.path());
@@ -135,13 +135,26 @@ fn exact_read_does_not_use_partial_or_suffix_lookup() -> Result<(), Box<dyn std:
     Ok(())
 }
 
+#[cfg(not(windows))]
+#[test]
+fn exact_read_accepts_legacy_colon_sha256_file_name() -> Result<(), Box<dyn std::error::Error>> {
+    let temp = TestDir::new()?;
+    let receipt = success_receipt()?;
+    write_json(temp.path(), &format!("{}.json", receipt.id), &receipt)?;
+    let store = LocalReceiptStore::new(temp.path());
+
+    assert_eq!(store.read_exact(&receipt.id)?.id, receipt.id);
+    assert_eq!(store.list()?.len(), 1);
+    Ok(())
+}
+
 #[test]
 fn exact_read_list_and_rebuild_index_succeed() -> Result<(), Box<dyn std::error::Error>> {
     let temp = TestDir::new()?;
     let success = success_receipt()?;
     let abnormal = abnormal_receipt()?;
-    write_json(temp.path(), &receipt_file_name(&success.id), &success)?;
-    write_json(temp.path(), &receipt_file_name(&abnormal.id), &abnormal)?;
+    write_json(temp.path(), &crate::support::receipt_file_name(&success.id), &success)?;
+    write_json(temp.path(), &crate::support::receipt_file_name(&abnormal.id), &abnormal)?;
     fs::write(temp.path().join("notes.txt"), "ignored")?;
     write_json(
         temp.path(),
@@ -179,7 +192,7 @@ fn exact_read_list_and_rebuild_index_succeed() -> Result<(), Box<dyn std::error:
     );
     assert_eq!(
         index.entries[0].file_name,
-        receipt_file_name(&expected_ids[0])
+        crate::support::receipt_file_name(&expected_ids[0])
     );
     assert_eq!(loaded_index.entries, index.entries);
     assert!(temp.path().join("index.json").exists());
@@ -190,7 +203,7 @@ fn exact_read_list_and_rebuild_index_succeed() -> Result<(), Box<dyn std::error:
 fn list_and_index_ignore_non_receipt_json_files() -> Result<(), Box<dyn std::error::Error>> {
     let temp = TestDir::new()?;
     let receipt = success_receipt()?;
-    write_json(temp.path(), &receipt_file_name(&receipt.id), &receipt)?;
+    write_json(temp.path(), &crate::support::receipt_file_name(&receipt.id), &receipt)?;
     fs::write(temp.path().join("sealed.json"), "")?;
     write_json(
         temp.path(),
@@ -201,7 +214,7 @@ fn list_and_index_ignore_non_receipt_json_files() -> Result<(), Box<dyn std::err
     )?;
     write_json(
         temp.path(),
-        "sha256:not-a-digest.json",
+        "sha256-not-a-digest.json",
         &json!({
             "schema": "runx.receipt.v1",
             "id": "sha256:not-a-digest"
@@ -224,7 +237,7 @@ fn valid_runtime_generated_receipt_is_accepted_by_read_list_and_index()
 -> Result<(), Box<dyn std::error::Error>> {
     let temp = TestDir::new()?;
     let receipt = success_receipt()?;
-    write_json(temp.path(), &receipt_file_name(&receipt.id), &receipt)?;
+    write_json(temp.path(), &crate::support::receipt_file_name(&receipt.id), &receipt)?;
     let store = LocalReceiptStore::new(temp.path());
 
     assert_eq!(store.read_exact(&receipt.id)?.id, receipt.id);
@@ -239,7 +252,7 @@ fn production_read_policy_without_verifier_rejects_local_pseudo_receipt()
 -> Result<(), Box<dyn std::error::Error>> {
     let temp = TestDir::new()?;
     let receipt = success_receipt()?;
-    write_json(temp.path(), &receipt_file_name(&receipt.id), &receipt)?;
+    write_json(temp.path(), &crate::support::receipt_file_name(&receipt.id), &receipt)?;
     let store = LocalReceiptStore::new(temp.path());
 
     let result = store.read_exact_with_policy(
@@ -266,7 +279,7 @@ fn exact_read_rejects_structural_receipt_with_tampered_signature()
     let temp = TestDir::new()?;
     let mut receipt = success_receipt()?;
     receipt.signature.value = "sig:tampered".into();
-    write_json(temp.path(), &receipt_file_name(&receipt.id), &receipt)?;
+    write_json(temp.path(), &crate::support::receipt_file_name(&receipt.id), &receipt)?;
     let store = LocalReceiptStore::new(temp.path());
 
     let result = store.read_exact(&receipt.id);
@@ -284,7 +297,7 @@ fn list_rejects_structural_receipt_with_tampered_digest() -> Result<(), Box<dyn 
     let temp = TestDir::new()?;
     let mut receipt = success_receipt()?;
     receipt.digest = "sha256:tampered".into();
-    write_json(temp.path(), &receipt_file_name(&receipt.id), &receipt)?;
+    write_json(temp.path(), &crate::support::receipt_file_name(&receipt.id), &receipt)?;
     let store = LocalReceiptStore::new(temp.path());
 
     let result = store.list();
@@ -302,7 +315,7 @@ fn load_index_rejects_indexed_structural_receipt_with_invalid_proof()
     let temp = TestDir::new()?;
     let mut receipt = success_receipt()?;
     receipt.signature.value = "sig:tampered".into();
-    write_json(temp.path(), &receipt_file_name(&receipt.id), &receipt)?;
+    write_json(temp.path(), &crate::support::receipt_file_name(&receipt.id), &receipt)?;
     write_json(
         temp.path(),
         "index.json",
@@ -311,7 +324,7 @@ fn load_index_rejects_indexed_structural_receipt_with_invalid_proof()
             "generated_at": "1",
             "entries": [{
                 "receipt_id": receipt.id,
-                "file_name": receipt_file_name(&receipt.id),
+                "file_name": crate::support::receipt_file_name(&receipt.id),
                 "created_at": receipt.created_at
             }]
         }),
@@ -340,7 +353,7 @@ fn write_receipt_commits_readable_receipt_and_index() -> Result<(), Box<dyn std:
     assert_eq!(stored.id, receipt.id);
     assert_eq!(index.entries.len(), 1);
     assert_eq!(index.entries[0].receipt_id, receipt.id);
-    assert!(store.root().join(format!("{}.json", receipt.id)).exists());
+    assert!(store.root().join(crate::support::receipt_file_name(&receipt.id)).exists());
     assert!(store.root().join("index.json").exists());
     Ok(())
 }
@@ -358,7 +371,7 @@ fn write_receipt_rejects_invalid_proof_without_writing() -> Result<(), Box<dyn s
         result,
         Err(ReceiptStoreError::ReceiptProofInvalid { .. })
     ));
-    assert!(!store.root().join(format!("{}.json", receipt.id)).exists());
+    assert!(!store.root().join(crate::support::receipt_file_name(&receipt.id)).exists());
     Ok(())
 }
 
@@ -420,7 +433,7 @@ fn stale_index_is_typed_error() -> Result<(), Box<dyn std::error::Error>> {
     let temp = TestDir::new()?;
     write_json(
         temp.path(),
-        &receipt_file_name(&success_receipt_id()),
+        &crate::support::receipt_file_name(&success_receipt_id()),
         &success_receipt()?,
     )?;
     write_json(
@@ -573,10 +586,6 @@ fn skill_output(status: InvocationStatus) -> SkillOutput {
         duration_ms: 1,
         metadata: JsonObject::new(),
     }
-}
-
-fn receipt_file_name(receipt_id: &str) -> String {
-    format!("{receipt_id}.json")
 }
 
 fn write_json<T: serde::Serialize>(

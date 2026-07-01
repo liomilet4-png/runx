@@ -10,6 +10,15 @@ use serde_norway::{Mapping, Value};
 
 const FIXTURE_SIGNING_SEED: &str = "QkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkI=";
 
+pub fn receipt_file_name(receipt_id: &str) -> String {
+    if let Some(digest) = receipt_id.strip_prefix("sha256:") {
+        if digest.len() == 64 && digest.bytes().all(|byte| byte.is_ascii_hexdigit()) {
+            return format!("sha256-{digest}.json");
+        }
+    }
+    format!("{receipt_id}.json")
+}
+
 pub fn repo_root() -> Result<PathBuf, Box<dyn std::error::Error>> {
     Ok(Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../..")

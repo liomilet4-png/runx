@@ -1,0 +1,37 @@
+{
+  "test_run_history": {
+    "sample_size": 20,
+    "runs": [
+      {"status":"passed","duration":18,"logs":"passed"},
+      {"status":"passed","duration":19,"logs":"passed"},
+      {"status":"passed","duration":17,"logs":"passed"},
+      {"status":"timeout","duration":120,"logs":"timeout waiting for payment sandbox"},
+      {"status":"passed","duration":21,"logs":"passed"},
+      {"status":"passed","duration":18,"logs":"passed"},
+      {"status":"timeout","duration":120,"logs":"timeout waiting for payment sandbox"},
+      {"status":"failed","duration":44,"logs":"assertion mismatch after async retry"},
+      {"status":"passed","duration":20,"logs":"passed"},
+      {"status":"passed","duration":18,"logs":"passed"},
+      {"status":"timeout","duration":120,"logs":"timeout waiting for payment sandbox"},
+      {"status":"passed","duration":19,"logs":"passed"},
+      {"status":"timeout","duration":120,"logs":"timeout waiting for payment sandbox"},
+      {"status":"passed","duration":22,"logs":"passed"},
+      {"status":"timeout","duration":120,"logs":"timeout waiting for payment sandbox"},
+      {"status":"passed","duration":18,"logs":"passed"},
+      {"status":"passed","duration":19,"logs":"passed"},
+      {"status":"timeout","duration":120,"logs":"timeout waiting for payment sandbox"},
+      {"status":"failed","duration":43,"logs":"assertion mismatch after async retry"},
+      {"status":"passed","duration":20,"logs":"passed"}
+    ]
+  },
+  "test_metadata": {
+    "test_path": "tests/e2e/payment_retry.spec.ts::retries-settle-payment",
+    "suite": "payments-e2e",
+    "tags": ["e2e", "payment", "quarantine-candidate"]
+  },
+  "release_policy": {
+    "flake_threshold_pct": 70,
+    "min_sample_size": 20,
+    "max_quarantine_days": 14
+  }
+}

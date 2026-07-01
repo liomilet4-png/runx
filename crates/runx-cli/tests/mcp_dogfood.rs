@@ -89,7 +89,7 @@ fn mcp_native_binary_dogfoods_streaming_skill_calls_and_receipts()
 
     assert_eq!(receipt_ids.len(), 6);
     for receipt_id in receipt_ids {
-        let receipt_path = receipt_dir.path().join(format!("{receipt_id}.json"));
+        let receipt_path = receipt_dir.path().join(crate::support::receipt_file_name(&receipt_id));
         let receipt = read_json_file(&receipt_path)?;
         assert_eq!(
             path_text(&receipt, &["schema"])?,
@@ -366,6 +366,7 @@ fn write_unenforced_mcp_echo_skill() -> Result<TestTempDir, Box<dyn std::error::
     let skill_dir = TestTempDir::new("runx-mcp-dogfood-skill")?;
     let server_path = repo_root()?.join("fixtures/runtime/adapters/mcp/stdio-server.py");
     let server_arg = serde_json::to_string(&server_path.display().to_string())?;
+    let python_command = if cfg!(windows) { "python" } else { "python3" };
     fs::write(
         skill_dir.path().join("SKILL.md"),
         format!(
@@ -375,7 +376,7 @@ description: Echo a message through a local MCP stdio fixture server.
 source:
   type: mcp
   server:
-    command: python3
+    command: {python_command}
     args:
       - {server_arg}
   tool: echo

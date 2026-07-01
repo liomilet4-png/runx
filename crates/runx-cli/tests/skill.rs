@@ -68,7 +68,7 @@ fn native_skill_pauses_and_resumes_with_run_id() -> Result<(), Box<dyn std::erro
     let receipt_id = resume_json["receipt_id"]
         .as_str()
         .ok_or("missing receipt_id")?;
-    assert!(receipt_dir.join(format!("{receipt_id}.json")).exists());
+    assert!(receipt_dir.join(crate::support::receipt_file_name(receipt_id)).exists());
 
     Ok(())
 }
