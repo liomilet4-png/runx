@@ -1,0 +1,19 @@
+{
+  "campaign_draft": {
+    "from": "unknown@example.invalid",
+    "subject": "Quick update",
+    "content_digest": "Campaign draft is present, but consent and sender identity are not grounded."
+  },
+  "list_metadata": {
+    "size": 5000,
+    "bounce_rate": null,
+    "complaint_rate": null,
+    "freshness": "unknown"
+  },
+  "sender_auth_posture": {
+    "spf_pass": null,
+    "dkim_pass": null,
+    "dmarc_pass": null,
+    "warm_up_days": null
+  }
+}

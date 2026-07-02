@@ -1,0 +1,19 @@
+{
+  "campaign_draft": {
+    "from": "newsletter@example.org",
+    "subject": "June product update for workspace admins",
+    "content_digest": "Opt-in product update for existing admins, includes sender identity, preference link, and unsubscribe footer."
+  },
+  "list_metadata": {
+    "size": 1250,
+    "bounce_rate": 0.004,
+    "complaint_rate": 0.0001,
+    "freshness": "active_opt_in_last_45_days"
+  },
+  "sender_auth_posture": {
+    "spf_pass": true,
+    "dkim_pass": true,
+    "dmarc_pass": true,
+    "warm_up_days": 45
+  }
+}
