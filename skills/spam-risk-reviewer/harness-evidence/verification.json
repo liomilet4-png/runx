@@ -2,6 +2,54 @@
   "schema": "runx.skill_delivery_verification.v1",
   "bounty_id": 62,
   "package": "spam-risk-reviewer",
+  "summary": "Verification covers registry publication, registry read, clean install, harness coverage, synthetic dogfood execution, and receipt verification behavior for the spam-risk-reviewer package.",
+  "registry_ref": "liomilet4-png/spam-risk-reviewer@sha-659d3bb2acbd",
+  "receipt_ref": "runx:receipt:sha256:3fa99e0f7d51a886cac4e6611763d44e12e55a7d36500d766fcc17a01e5e53a7",
+  "runx_cli_version": "runx-cli 0.6.15",
+  "observations": [
+    {
+      "name": "runx cli version",
+      "command": "npx -y @runxhq/cli@0.6.15 --version",
+      "status": "passed",
+      "observed": "runx-cli 0.6.15"
+    },
+    {
+      "name": "registry publish harness",
+      "command": "POST https://api.runx.ai/v1/skills using skills/spam-risk-reviewer package payload",
+      "status": "passed",
+      "observed": "HTTP 201, status=published, harness_status=passed, case_count=3, assertion_error_count=0"
+    },
+    {
+      "name": "registry read",
+      "command": "runx registry read liomilet4-png/spam-risk-reviewer@sha-659d3bb2acbd --registry https://api.runx.ai --json",
+      "status": "passed",
+      "observed": "trusted community package with digest sha256:04af3daac9439b5761cbf735a56f9bda4d94f4a19336819962445cec22a9dd89"
+    },
+    {
+      "name": "clean install",
+      "command": "runx add liomilet4-png/spam-risk-reviewer@sha-659d3bb2acbd --registry https://api.runx.ai",
+      "status": "passed",
+      "observed": "signed install completed"
+    },
+    {
+      "name": "dogfood run",
+      "command": "runx skill liomilet4-png/spam-risk-reviewer@sha-659d3bb2acbd triage with synthetic low-risk fixture input",
+      "status": "passed",
+      "observed": "agent answer collection was requested without a send side effect"
+    },
+    {
+      "name": "dogfood resume",
+      "command": "runx resume run_agent_task-spam-risk-reviewer-output answers_low_risk.json --receipt-dir receipts_patched --json",
+      "status": "passed",
+      "observed": "sealed receipt sha256:3fa99e0f7d51a886cac4e6611763d44e12e55a7d36500d766fcc17a01e5e53a7"
+    },
+    {
+      "name": "receipt verify",
+      "command": "npx -y @runxhq/cli@0.6.15 verify --receipt C:\\runx62_dogfood\\receipts_patched\\sha256-3fa99e0f7d51a886cac4e6611763d44e12e55a7d36500d766fcc17a01e5e53a7.json --json --allow-local-development-signatures",
+      "status": "partial",
+      "observed": "digest and content_address valid; local-development signature reported signature_malformed by released verifier"
+    }
+  ],
   "checks": [
     {
       "name": "published registry read",
@@ -18,7 +66,7 @@
     },
     {
       "name": "published harness",
-      "command": "registry publish response from https://api.runx.ai/v1/skills",
+      "command": "POST https://api.runx.ai/v1/skills using skills/spam-risk-reviewer package payload",
       "tooling": "runx registry API",
       "status": "passed",
       "observed": {
@@ -41,7 +89,7 @@
     },
     {
       "name": "dogfood run with synthetic low-risk input",
-      "command": "runx skill ... then runx resume run_agent_task-spam-risk-reviewer-output answers_low_risk.json --receipt-dir receipts_patched --json",
+      "command": "runx skill liomilet4-png/spam-risk-reviewer@sha-659d3bb2acbd triage with synthetic low-risk fixture input; runx resume run_agent_task-spam-risk-reviewer-output answers_low_risk.json --receipt-dir receipts_patched --json",
       "tooling": "patched Windows CLI from PR branch",
       "status": "passed",
       "observed": {
@@ -50,6 +98,20 @@
         "risk_level": "pass",
         "preflight_clear": true,
         "blocker_count": 0
+      }
+    },
+    {
+      "name": "dogfood receipt verify",
+      "command": "npx -y @runxhq/cli@0.6.15 verify --receipt C:\\runx62_dogfood\\receipts_patched\\sha256-3fa99e0f7d51a886cac4e6611763d44e12e55a7d36500d766fcc17a01e5e53a7.json --json --allow-local-development-signatures",
+      "tooling": "@runxhq/cli@0.6.15",
+      "status": "partial",
+      "observed": {
+        "digest_status": "valid",
+        "content_address_status": "valid",
+        "receipt_id": "sha256:3fa99e0f7d51a886cac4e6611763d44e12e55a7d36500d766fcc17a01e5e53a7",
+        "signature_status": "invalid",
+        "signature_finding": "signature_malformed",
+        "note": "This is a local audit receipt from the PR-patched Windows dogfood run, not a trusted registry signature."
       }
     },
     {

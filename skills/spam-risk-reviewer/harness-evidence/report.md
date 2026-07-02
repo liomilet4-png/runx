@@ -14,6 +14,7 @@ does not mint authority, and does not emit an operational proposal.
 - Registry ref: `liomilet4-png/spam-risk-reviewer@sha-659d3bb2acbd`
 - Registry page: <https://runx.ai/x/liomilet4-png/spam-risk-reviewer>
 - PR: <https://github.com/runxhq/runx/pull/213>
+- Delivery receipt ref: `runx:receipt:sha256:3fa99e0f7d51a886cac4e6611763d44e12e55a7d36500d766fcc17a01e5e53a7`
 - Source commit: `659d3bb2acbd8c7ba970fad8fb616086bd127d20`
 - Skill source: <https://github.com/liomilet4-png/runx/tree/659d3bb2acbd8c7ba970fad8fb616086bd127d20/skills/spam-risk-reviewer>
 
@@ -35,6 +36,10 @@ hygiene inputs are missing instead of inventing signals.
 - Registry publish harness: passed, `case_count=3`, `assertion_error_count=0`.
 - Dogfood with synthetic low-risk input: sealed with receipt
   `sha256:3fa99e0f7d51a886cac4e6611763d44e12e55a7d36500d766fcc17a01e5e53a7`.
+- Receipt verification using `@runxhq/cli@0.6.15`: digest and content-address
+  checks are valid. The released verifier reports `signature_malformed` for the
+  local-development audit signature, so this report does not claim the dogfood
+  receipt has a trusted registry signature.
 
 ## Windows note
 

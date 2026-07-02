@@ -3,13 +3,66 @@
   "bounty_id": 62,
   "package": "spam-risk-reviewer",
   "owner": "liomilet4-png",
+  "summary": "spam-risk-reviewer is a bounded read-only runx skill for reviewing supplied campaign draft, list hygiene, and sender authentication posture before a separate send-as workflow continues. The public package was published, installed from the registry, exercised on synthetic inputs, and checked with a local dogfood receipt; it never sends email, reads live DNS, mints authority, or uses customer data.",
   "registry_ref": "liomilet4-png/spam-risk-reviewer@sha-659d3bb2acbd",
+  "receipt_ref": "runx:receipt:sha256:3fa99e0f7d51a886cac4e6611763d44e12e55a7d36500d766fcc17a01e5e53a7",
+  "runx_cli_version": "runx-cli 0.6.15",
   "public_url": "https://runx.ai/x/liomilet4-png/spam-risk-reviewer",
   "source_url": "https://github.com/liomilet4-png/runx/tree/659d3bb2acbd8c7ba970fad8fb616086bd127d20/skills/spam-risk-reviewer",
   "pull_request_url": "https://github.com/runxhq/runx/pull/213",
   "source_commit": "659d3bb2acbd8c7ba970fad8fb616086bd127d20",
   "skill_md": "https://raw.githubusercontent.com/liomilet4-png/runx/659d3bb2acbd8c7ba970fad8fb616086bd127d20/skills/spam-risk-reviewer/SKILL.md",
   "x_yaml": "https://raw.githubusercontent.com/liomilet4-png/runx/659d3bb2acbd8c7ba970fad8fb616086bd127d20/skills/spam-risk-reviewer/X.yaml",
+  "observations": [
+    {
+      "name": "runx cli version",
+      "command": "npx -y @runxhq/cli@0.6.15 --version",
+      "status": "passed",
+      "evidence": "runx-cli 0.6.15"
+    },
+    {
+      "name": "registry publish",
+      "command": "POST https://api.runx.ai/v1/skills using the spam-risk-reviewer package and harness",
+      "status": "passed",
+      "evidence": "HTTP 201, status=published, harness_status=passed, case_count=3, assertion_error_count=0"
+    },
+    {
+      "name": "registry read",
+      "command": "runx registry read liomilet4-png/spam-risk-reviewer@sha-659d3bb2acbd --registry https://api.runx.ai --json",
+      "status": "passed",
+      "evidence": "skill_id=liomilet4-png/spam-risk-reviewer, version=sha-659d3bb2acbd, digest=sha256:04af3daac9439b5761cbf735a56f9bda4d94f4a19336819962445cec22a9dd89"
+    },
+    {
+      "name": "clean install",
+      "command": "runx add liomilet4-png/spam-risk-reviewer@sha-659d3bb2acbd --registry https://api.runx.ai",
+      "status": "passed",
+      "evidence": "signed install succeeded with runx-registry-ed25519-v1 and digest sha256:04af3daac9439b5761cbf735a56f9bda4d94f4a19336819962445cec22a9dd89"
+    },
+    {
+      "name": "dogfood triage",
+      "command": "runx skill liomilet4-png/spam-risk-reviewer@sha-659d3bb2acbd triage using synthetic low-risk campaign/list/auth inputs",
+      "status": "passed",
+      "evidence": "the skill requested structured agent answers without sending email or touching customer data"
+    },
+    {
+      "name": "dogfood resume",
+      "command": "runx resume run_agent_task-spam-risk-reviewer-output answers_low_risk.json --receipt-dir receipts_patched --json",
+      "status": "passed",
+      "evidence": "sealed with receipt sha256:3fa99e0f7d51a886cac4e6611763d44e12e55a7d36500d766fcc17a01e5e53a7 and pass/preflight_clear=true"
+    },
+    {
+      "name": "receipt verify check",
+      "command": "npx -y @runxhq/cli@0.6.15 verify --receipt C:\\runx62_dogfood\\receipts_patched\\sha256-3fa99e0f7d51a886cac4e6611763d44e12e55a7d36500d766fcc17a01e5e53a7.json --json --allow-local-development-signatures",
+      "status": "partial",
+      "evidence": "digest and content address are valid; released verifier reports local-development signature_malformed for the local audit signature, so this evidence does not claim a trusted registry signature"
+    },
+    {
+      "name": "scope safety",
+      "command": "manual artifact review",
+      "status": "passed",
+      "evidence": "fixtures are synthetic; the skill does not call public_send, live DNS, private services, wallet, payment, or customer data"
+    }
+  ],
   "registry_publish": {
     "http_status": 201,
     "status": "published",
