@@ -1,0 +1,84 @@
+{
+  "schema": "runx.skill_delivery_verification.v1",
+  "bounty_id": 62,
+  "package": "spam-risk-reviewer",
+  "checks": [
+    {
+      "name": "published registry read",
+      "command": "runx registry read liomilet4-png/spam-risk-reviewer@sha-659d3bb2acbd --registry https://api.runx.ai --json",
+      "tooling": "@runxhq/cli@0.6.15",
+      "status": "passed",
+      "observed": {
+        "skill_id": "liomilet4-png/spam-risk-reviewer",
+        "version": "sha-659d3bb2acbd",
+        "digest": "sha256:04af3daac9439b5761cbf735a56f9bda4d94f4a19336819962445cec22a9dd89",
+        "trust_state": "trusted",
+        "trust_tier": "community"
+      }
+    },
+    {
+      "name": "published harness",
+      "command": "registry publish response from https://api.runx.ai/v1/skills",
+      "tooling": "runx registry API",
+      "status": "passed",
+      "observed": {
+        "http_status": 201,
+        "harness_status": "passed",
+        "case_count": 3,
+        "assertion_error_count": 0
+      }
+    },
+    {
+      "name": "clean install",
+      "command": "runx add liomilet4-png/spam-risk-reviewer@sha-659d3bb2acbd --registry https://api.runx.ai",
+      "tooling": "@runxhq/cli@0.6.15",
+      "status": "passed",
+      "observed": {
+        "status": "installed",
+        "signed": "yes (runx-registry-ed25519-v1)",
+        "digest": "sha256:04af3daac9439b5761cbf735a56f9bda4d94f4a19336819962445cec22a9dd89"
+      }
+    },
+    {
+      "name": "dogfood run with synthetic low-risk input",
+      "command": "runx skill ... then runx resume run_agent_task-spam-risk-reviewer-output answers_low_risk.json --receipt-dir receipts_patched --json",
+      "tooling": "patched Windows CLI from PR branch",
+      "status": "passed",
+      "observed": {
+        "final_status": "sealed",
+        "receipt_id": "sha256:3fa99e0f7d51a886cac4e6611763d44e12e55a7d36500d766fcc17a01e5e53a7",
+        "risk_level": "pass",
+        "preflight_clear": true,
+        "blocker_count": 0
+      }
+    },
+    {
+      "name": "official Windows resume limitation",
+      "command": "runx resume run_agent_task-spam-risk-reviewer-output answers_low_risk.json --receipt-dir receipts_ci --json",
+      "tooling": "@runxhq/cli@0.6.15 on Windows",
+      "status": "known_blocked",
+      "observed": {
+        "error": "receipt store is unreadable: access denied (os error 5)",
+        "mitigation": "the PR includes the Windows receipt-store directory sync fix used by the patched CLI dogfood run"
+      }
+    }
+  ],
+  "fixtures": [
+    "fixtures/low-risk-verified-sender.json",
+    "fixtures/high-risk-incomplete-auth-poor-list.json",
+    "fixtures/missing-authentication-stop.json"
+  ],
+  "requirements_coverage": {
+    "typed_inputs": [
+      "campaign_draft",
+      "list_metadata",
+      "sender_auth_posture"
+    ],
+    "bounded_output": "send_risk_verdict",
+    "has_stop_case": true,
+    "no_send_effect": true,
+    "public_pr": true,
+    "published_registry_package": true,
+    "clean_install_verified": true
+  }
+}

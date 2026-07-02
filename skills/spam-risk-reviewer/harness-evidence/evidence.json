@@ -1,0 +1,83 @@
+{
+  "schema": "runx.skill_delivery_evidence.v1",
+  "bounty_id": 62,
+  "package": "spam-risk-reviewer",
+  "owner": "liomilet4-png",
+  "registry_ref": "liomilet4-png/spam-risk-reviewer@sha-659d3bb2acbd",
+  "public_url": "https://runx.ai/x/liomilet4-png/spam-risk-reviewer",
+  "source_url": "https://github.com/liomilet4-png/runx/tree/659d3bb2acbd8c7ba970fad8fb616086bd127d20/skills/spam-risk-reviewer",
+  "pull_request_url": "https://github.com/runxhq/runx/pull/213",
+  "source_commit": "659d3bb2acbd8c7ba970fad8fb616086bd127d20",
+  "skill_md": "https://raw.githubusercontent.com/liomilet4-png/runx/659d3bb2acbd8c7ba970fad8fb616086bd127d20/skills/spam-risk-reviewer/SKILL.md",
+  "x_yaml": "https://raw.githubusercontent.com/liomilet4-png/runx/659d3bb2acbd8c7ba970fad8fb616086bd127d20/skills/spam-risk-reviewer/X.yaml",
+  "registry_publish": {
+    "http_status": 201,
+    "status": "published",
+    "digest": "04af3daac9439b5761cbf735a56f9bda4d94f4a19336819962445cec22a9dd89",
+    "profile_digest": "30a7923a40027c20218cdd7b078095a27ff49581cee14265e61274576fafd517",
+    "trust_tier": "community",
+    "maturity": "beta"
+  },
+  "published_harness": {
+    "status": "passed",
+    "case_count": 3,
+    "assertion_error_count": 0,
+    "case_names": [
+      "low-risk-verified-sender",
+      "high-risk-incomplete-auth-poor-list",
+      "missing-authentication-stop"
+    ],
+    "receipt_ids": [
+      "sha256:9ff08d52779c25f36211296f0248cda44b8fd6fc9150bca849355d2e0c8e77e5",
+      "sha256:d822ce2f381571fb2a3535f3bcdbde6f57e7e408c96fe0131bab5edbe30488cc"
+    ],
+    "evidence_id": "runx-harness:liomilet4-png/spam-risk-reviewer:sha-659d3bb2acbd",
+    "evidence_url": "https://runx.ai/x/liomilet4-png/spam-risk-reviewer#harness"
+  },
+  "clean_install": {
+    "cli": "@runxhq/cli@0.6.15",
+    "command": "runx add liomilet4-png/spam-risk-reviewer@sha-659d3bb2acbd --registry https://api.runx.ai",
+    "status": "installed",
+    "signed": "yes (runx-registry-ed25519-v1)",
+    "digest": "sha256:04af3daac9439b5761cbf735a56f9bda4d94f4a19336819962445cec22a9dd89"
+  },
+  "dogfood": {
+    "scenario": "low-risk-verified-sender",
+    "input_scope": "synthetic campaign draft, synthetic list metadata, and synthetic sender authentication posture",
+    "send_effect": "none",
+    "status": "sealed",
+    "receipt_id": "sha256:3fa99e0f7d51a886cac4e6611763d44e12e55a7d36500d766fcc17a01e5e53a7",
+    "receipt_digest": "sha256:a9672b0ecb647b2873eb14fa90decc7599bd1b8846c05d83fc93e1e3f8cdf57a",
+    "structured_output": {
+      "send_risk_verdict": {
+        "risk_level": "pass",
+        "preflight_clear": true,
+        "blockers": [],
+        "evidence_summary": {
+          "authentication": "SPF, DKIM, and DMARC all pass.",
+          "list_hygiene": "bounce_rate 0.004 <= 0.02, complaint_rate 0.0001 <= 0.001, freshness active_opt_in_last_45_days.",
+          "content_flags": [],
+          "routing": "send-as preflight may continue; public_send remains owned by the separate send-as run."
+        }
+      },
+      "escalation": {
+        "lane": "none",
+        "reason": "Low-risk supplied signals clear the reviewer gate only; no send action is performed."
+      }
+    }
+  },
+  "windows_note": {
+    "official_cli": "@runxhq/cli@0.6.15",
+    "official_cli_registry_read": "success",
+    "official_cli_clean_install": "success",
+    "official_cli_resume_on_windows": "blocked by existing Windows receipt-store directory sync error: os error 5",
+    "pr_fix_scope": "crates/runx-runtime/src/receipts/store.rs skips directory fsync on Windows while preserving file fsync and index rebuild"
+  },
+  "safety": {
+    "uses_real_customer_data": false,
+    "sends_email_or_public_send": false,
+    "reads_live_dns_or_private_domain_state": false,
+    "mints_authority": false,
+    "emits_operational_proposal": false
+  }
+}
