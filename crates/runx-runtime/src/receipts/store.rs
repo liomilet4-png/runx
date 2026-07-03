@@ -1,7 +1,9 @@
 // rust-style-allow: large-file -- local store read/write/index semantics stay
 // together until the receipt-store API finishes the hard-cutover review.
 use std::ffi::OsStr;
-use std::fs::{self, File, OpenOptions};
+#[cfg(not(windows))]
+use std::fs::File;
+use std::fs::{self, OpenOptions};
 use std::io::{ErrorKind, Write};
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -753,12 +755,27 @@ fn write_temp_file(path: &Path, contents: &[u8], durable: bool) -> Result<(), st
     file.write_all(contents)?;
     file.flush()?;
     if durable {
-        file.sync_all()?;
+        sync_temp_file(&file)?;
     }
     Ok(())
 }
 
+fn sync_temp_file(file: &fs::File) -> Result<(), std::io::Error> {
+    match file.sync_all() {
+        Ok(()) => Ok(()),
+        #[cfg(windows)]
+        Err(error) if error.raw_os_error() == Some(87) => Ok(()),
+        Err(error) => Err(error),
+    }
+}
+
 fn sync_directory(path: &Path) -> Result<(), std::io::Error> {
+    #[cfg(windows)]
+    {
+        let _ = path;
+        return Ok(());
+    }
+    #[cfg(not(windows))]
     File::open(path)?.sync_all()
 }
 
