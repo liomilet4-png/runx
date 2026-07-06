@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "case_count": 2,
+  "assertion_error_count": 0,
+  "assertion_errors": [],
+  "case_names": [
+    "product_sync_followup",
+    "missing_transcript_stop"
+  ],
+  "receipt_ids": [
+    "sha256:e51962ed0e2d20b4c28cf38515cc3b3282c87ffdc2b589c07ebcc3d867c24d8e"
+  ],
+  "graph_case_count": 0
+}

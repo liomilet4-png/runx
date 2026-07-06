@@ -1,0 +1,50 @@
+{
+  "status": "success",
+  "registry": {
+    "action": "read",
+    "source": "remote",
+    "ref": "liomilet4-png/meeting-followup@sha-408dfab19c54",
+    "skill": {
+      "skill_id": "liomilet4-png/meeting-followup",
+      "owner": "liomilet4-png",
+      "name": "meeting-followup",
+      "description": "Turn a bounded meeting transcript and attendee list into decisions, owners, dates, and gated n8n task proposals without inventing missing facts.",
+      "category": "ops",
+      "version": "sha-408dfab19c54",
+      "digest": "acd3fecdf444f0e05c6d742fc77df2e9187b478620ba07dfc91535e8fb3ed45c",
+      "markdown": "---\nname: meeting-followup\ndescription: Turn a bounded meeting transcript and attendee list into decisions, owners, dates, and gated n8n task proposals without inventing missing facts.\nrunx:\n  category: ops\n---\n\n# Meeting Followup\n\nUse this skill when an operator has a meeting transcript plus an attendee list\nand needs a read-only follow-up packet. The skill extracts a concise summary,\ndecisions, owned action items, and optional gated `task_proposals` that a\nseparate `n8n-handoff` run may dispatch after approval.\n\nThe skill never creates tasks, sends messages, edits calendars, opens tickets,\nor calls n8n. It only emits a bounded `runx.meeting.followup.v1` packet that\nnames the downstream handoff lane when the transcript contains enough evidence.\n\n## Inputs\n\n- `meeting.id`: stable meeting identifier.\n- `meeting.title`: human-readable meeting title.\n- `meeting.date`: ISO date for the meeting.\n- `transcript.source_path`: fixture path or source label for the transcript.\n- `transcript.text`: bounded transcript text.\n- `attendees[]`: supplied people with `name`, `role`, and optional `email`.\n- `followup_policy.allowed_task_targets[]`: downstream targets the packet may\n  name, such as `n8n-handoff`.\n- `followup_policy.default_timezone`: timezone used only when dates are already\n  present in the transcript or meeting metadata.\n\n## Output\n\nThe default runner returns:\n\n- `summary`: concise factual summary of what was discussed.\n- `decisions[]`: decisions explicitly stated in the transcript, with evidence.\n- `action_items[]`: owned follow-up items with owner, due date or null, and\n  evidence. Missing owners or dates stay null; the skill does not guess.\n- `task_proposals[]`: gated proposals for downstream `n8n-handoff`. Each\n  proposal includes target, title, owner, due date, evidence, and\n  `requires_approval: true`.\n- `escalation`: stop or review lane when transcript evidence is missing.\n\n## Decision Rules\n\n- Refuse when the transcript text is missing or empty.\n- Refuse when the attendee list is missing.\n- Never invent an owner, decision, due date, or task from context alone.\n- Do not emit a `task_proposal` unless the owner and action are both explicit.\n- Do not emit any proposal for a target absent from\n  `followup_policy.allowed_task_targets`.\n- Treat ambiguous dates as null and explain the ambiguity in the item evidence.\n- Keep all task proposals approval-gated; this skill is not allowed to create or\n  send tasks directly.\n\n## Harness Cases\n\n- `product_sync_followup`: a fixture transcript for a product sync contains two\n  decisions and three action items. Expected status is sealed, with three\n  approval-gated task proposals for `n8n-handoff`.\n- `missing_transcript_stop`: the attendee list is supplied but transcript text is\n  empty. Expected status is `needs_agent`, with no decisions, action items, or\n  task proposals.\n\n## Quality Profile\n\n- Purpose: produce a source-grounded, read-only meeting follow-up packet.\n- Audience: operators and teams that need auditable follow-up extraction before\n  a separate automation step.\n- Evidence bar: every decision and action item cites transcript wording or line\n  evidence supplied in the input.\n- Safety bar: no external calls, no task creation, no email, no calendar edits,\n  no n8n webhook send, and no inferred commitments.\n- Stop conditions: missing transcript, missing attendees, unsupported target, or\n  transcript evidence that does not bind action and owner.",
+      "profile_digest": "bec397b61b579d46a32df0ec7343fc6fb214e4d5d16cb5790b8c9cc972c63ded",
+      "runner_names": [
+        "summarize"
+      ],
+      "source_type": "agent",
+      "trust_tier": "community",
+      "required_scopes": [],
+      "tags": [],
+      "publisher": {
+        "kind": "user",
+        "id": "user_97d92f1a533b82bc1b357635",
+        "handle": "liomilet4-png",
+        "display_name": "liomilet4-png"
+      },
+      "attestations": [
+        {
+          "kind": "publisher",
+          "id": "publisher:user_97d92f1a533b82bc1b357635",
+          "status": "declared",
+          "summary": "liomilet4-png",
+          "issued_at": "2026-07-06T01:27:08.179Z",
+          "metadata": {
+            "publisher_display_name": "liomilet4-png",
+            "publisher_handle": "liomilet4-png",
+            "publisher_id": "user_97d92f1a533b82bc1b357635",
+            "publisher_kind": "user",
+            "trust_tier": "community"
+          }
+        }
+      ],
+      "install_command": "runx add liomilet4-png/meeting-followup@sha-408dfab19c54 --registry https://api.runx.ai",
+      "run_command": "runx skill liomilet4-png/meeting-followup@sha-408dfab19c54 --registry https://api.runx.ai"
+    }
+  }
+}

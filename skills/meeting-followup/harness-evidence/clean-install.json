@@ -1,0 +1,42 @@
+{
+  "status": "success",
+  "registry": {
+    "action": "install",
+    "source": "remote",
+    "ref": "liomilet4-png/meeting-followup@sha-408dfab19c54",
+    "install": {
+      "status": "installed",
+      "destination": "/home/runner/work/runx/runx/artifacts/clean-install/liomilet4-png/meeting-followup/sha-408dfab19c54/SKILL.md",
+      "skill_name": "meeting-followup",
+      "source": "runx-registry",
+      "source_label": "runx registry",
+      "skill_id": "liomilet4-png/meeting-followup",
+      "version": "sha-408dfab19c54",
+      "digest": "sha256:acd3fecdf444f0e05c6d742fc77df2e9187b478620ba07dfc91535e8fb3ed45c",
+      "profile_digest": "sha256:bec397b61b579d46a32df0ec7343fc6fb214e4d5d16cb5790b8c9cc972c63ded",
+      "profile_state_path": "/home/runner/work/runx/runx/artifacts/clean-install/liomilet4-png/meeting-followup/sha-408dfab19c54/.runx/profile.json",
+      "runner_names": [
+        "summarize"
+      ],
+      "trust_tier": "community"
+    },
+    "receipt_metadata": {
+      "destination": "/home/runner/work/runx/runx/artifacts/clean-install/liomilet4-png/meeting-followup/sha-408dfab19c54/SKILL.md",
+      "digest": "sha256:acd3fecdf444f0e05c6d742fc77df2e9187b478620ba07dfc91535e8fb3ed45c",
+      "install_count": 3,
+      "profile_digest": "sha256:bec397b61b579d46a32df0ec7343fc6fb214e4d5d16cb5790b8c9cc972c63ded",
+      "publisher": {
+        "display_name": "liomilet4-png",
+        "handle": "liomilet4-png",
+        "id": "user_97d92f1a533b82bc1b357635",
+        "kind": "user"
+      },
+      "ref": "liomilet4-png/meeting-followup@sha-408dfab19c54",
+      "skill_id": "liomilet4-png/meeting-followup",
+      "source_label": "runx registry",
+      "status": "installed",
+      "trust_tier": "community",
+      "version": "sha-408dfab19c54"
+    }
+  }
+}
