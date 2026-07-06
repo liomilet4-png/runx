@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Maya Chen",
+    "role": "PM",
+    "email": "maya@example.invalid"
+  },
+  {
+    "name": "Omar Patel",
+    "role": "Engineering",
+    "email": "omar@example.invalid"
+  },
+  {
+    "name": "Lina Gomez",
+    "role": "Support",
+    "email": "lina@example.invalid"
+  }
+]

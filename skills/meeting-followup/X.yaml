@@ -1,0 +1,136 @@
+skill: meeting-followup
+version: "0.1.0"
+
+catalog:
+  kind: skill
+  audience: public
+  visibility: public
+  role: context
+
+harness:
+  cases:
+    - name: product_sync_followup
+      runner: summarize
+      inputs:
+        meeting:
+          id: "mtg-2026-07-05-product-sync"
+          title: "Product Sync: Checkout Follow-up"
+          date: "2026-07-05"
+        transcript:
+          source_path: "fixtures/product-sync-transcript.md"
+          text: |
+            Maya: We agreed to keep the checkout banner experiment at 10 percent until Friday.
+            Omar: I will prepare the incident review notes by 2026-07-08 and send them to Maya.
+            Lina: Decision: do not ship the saved-card copy change until support reviews the wording.
+            Maya: Lina owns the support wording review. Please finish it by 2026-07-09.
+            Omar: I can add the open metrics to the weekly dashboard by Friday.
+            Maya: Great. The dashboard update should go through our n8n handoff approval before anything is sent.
+        attendees:
+          - { name: "Maya Chen", role: "PM", email: "maya@example.invalid" }
+          - { name: "Omar Patel", role: "Engineering", email: "omar@example.invalid" }
+          - { name: "Lina Gomez", role: "Support", email: "lina@example.invalid" }
+        followup_policy:
+          allowed_task_targets: ["n8n-handoff"]
+          default_timezone: "UTC"
+      caller:
+        answers:
+          agent_task.meeting-followup-summarize.output:
+            summary:
+              meeting_id: "mtg-2026-07-05-product-sync"
+              title: "Product Sync: Checkout Follow-up"
+              overview: "The team kept the checkout banner experiment limited, delayed saved-card copy pending support review, and prepared follow-up notes and dashboard updates."
+            decisions:
+              - decision: "Keep the checkout banner experiment at 10 percent until Friday."
+                evidence: "Maya: We agreed to keep the checkout banner experiment at 10 percent until Friday."
+              - decision: "Do not ship the saved-card copy change until support reviews the wording."
+                evidence: "Lina: Decision: do not ship the saved-card copy change until support reviews the wording."
+            action_items:
+              - owner: "Omar Patel"
+                action: "Prepare the incident review notes and send them to Maya."
+                due_date: "2026-07-08"
+                evidence: "Omar: I will prepare the incident review notes by 2026-07-08 and send them to Maya."
+              - owner: "Lina Gomez"
+                action: "Complete the support wording review."
+                due_date: "2026-07-09"
+                evidence: "Maya: Lina owns the support wording review. Please finish it by 2026-07-09."
+              - owner: "Omar Patel"
+                action: "Add open metrics to the weekly dashboard."
+                due_date: null
+                evidence: "Omar: I can add the open metrics to the weekly dashboard by Friday."
+            task_proposals:
+              - target: "n8n-handoff"
+                title: "Prepare incident review notes"
+                owner: "Omar Patel"
+                due_date: "2026-07-08"
+                requires_approval: true
+                evidence: "Omar committed to prepare incident review notes by 2026-07-08 and send them to Maya."
+              - target: "n8n-handoff"
+                title: "Complete support wording review"
+                owner: "Lina Gomez"
+                due_date: "2026-07-09"
+                requires_approval: true
+                evidence: "Maya assigned Lina the support wording review due 2026-07-09."
+              - target: "n8n-handoff"
+                title: "Update weekly dashboard metrics"
+                owner: "Omar Patel"
+                due_date: null
+                requires_approval: true
+                evidence: "Omar said he can add open metrics to the weekly dashboard by Friday; the date remains null because the transcript does not specify a calendar date."
+            escalation:
+              lane: "human_approval_before_handoff"
+              reason: "The skill only proposes n8n-handoff tasks; a separate governed run must approve and send them."
+      expect:
+        status: sealed
+        receipt:
+          schema: runx.receipt.v1
+
+    - name: missing_transcript_stop
+      runner: summarize
+      inputs:
+        meeting:
+          id: "mtg-2026-07-05-empty"
+          title: "Empty Transcript"
+          date: "2026-07-05"
+        transcript:
+          source_path: "fixtures/empty-transcript.md"
+          text: ""
+        attendees:
+          - { name: "Maya Chen", role: "PM", email: "maya@example.invalid" }
+        followup_policy:
+          allowed_task_targets: ["n8n-handoff"]
+          default_timezone: "UTC"
+      expect:
+        status: needs_agent
+
+runners:
+  summarize:
+    default: true
+    type: agent-task
+    agent: operator
+    task: "meeting-followup-summarize"
+    outputs:
+      summary: object
+      decisions: array
+      action_items: array
+      task_proposals: array
+      escalation: object
+    artifacts:
+      wrap_as: meeting_followup_packet
+      packet: "runx.meeting.followup.v1"
+    inputs:
+      meeting:
+        type: json
+        required: true
+        description: "Meeting id, title, and date."
+      transcript:
+        type: json
+        required: true
+        description: "Transcript source path and bounded transcript text."
+      attendees:
+        type: json
+        required: true
+        description: "Supplied attendee list with names, roles, and optional emails."
+      followup_policy:
+        type: json
+        required: true
+        description: "Allowed task targets and timezone policy."
