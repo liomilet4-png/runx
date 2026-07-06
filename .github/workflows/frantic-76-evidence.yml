@@ -2,12 +2,20 @@ name: Frantic 76 evidence
 
 on:
   workflow_dispatch:
+    inputs:
+      ref:
+        description: "Branch or SHA to verify"
+        required: true
+        default: "codex/frantic-meeting-followup"
 
 jobs:
   evidence:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          repository: liomilet4-png/runx
+          ref: ${{ inputs.ref }}
 
       - uses: actions/setup-node@v4
         with:
