@@ -1,42 +1,116 @@
 ﻿{
     "schema":  "frantic.evidence.meeting_followup.v1",
-    "observations":  {
-                         "runx_version":  "runx-cli 0.6.15",
-                         "publisher_owner":  "liomilet4-png",
-                         "package_name":  "meeting-followup",
-                         "version":  "sha-408dfab19c54",
-                         "registry_ref":  "liomilet4-png/meeting-followup@sha-408dfab19c54",
-                         "public_url":  "https://runx.ai/x/liomilet4-png/meeting-followup@sha-408dfab19c54",
-                         "install_command":  "runx add liomilet4-png/meeting-followup@sha-408dfab19c54 --registry https://api.runx.ai",
-                         "dogfood_command":  "runx skill liomilet4-png/meeting-followup@sha-408dfab19c54 --registry https://api.runx.ai --json; runx resume run_agent_task-meeting-followup-summarize-output artifacts/dogfood-answers-76.json --json",
-                         "verify_command":  "RUNX_RECEIPT_VERIFY_KID=runx-demo-key RUNX_RECEIPT_VERIFY_ED25519_PUBLIC_KEY_BASE64=\u003cpublic key\u003e runx verify --receipt dogfood-receipt-76.json --json",
-                         "receipt_ref":  "runx:receipt:sha256:76d372df1520ea91c24f8048006c3e8699be36a1a301b161dd28ef227925d7a2",
-                         "harness_status":  "passed",
-                         "harness_case_names":  [
-                                                    "product_sync_followup",
-                                                    "missing_transcript_stop"
-                                                ],
-                         "harness_receipt_ids":  [
-                                                     "sha256:e51962ed0e2d20b4c28cf38515cc3b3282c87ffdc2b589c07ebcc3d867c24d8e"
-                                                 ],
-                         "verification_valid":  true,
-                         "verification_signature_status":  "valid",
-                         "registry_digest":  "acd3fecdf444f0e05c6d742fc77df2e9187b478620ba07dfc91535e8fb3ed45c",
-                         "registry_profile_digest":  "bec397b61b579d46a32df0ec7343fc6fb214e4d5d16cb5790b8c9cc972c63ded",
-                         "decisions_count":  2,
-                         "action_items_count":  3,
-                         "task_proposal_count":  3,
-                         "refused_case":  "missing_transcript_stop emits needs_agent and no live task creation",
-                         "pr_url":  "https://github.com/runxhq/runx/pull/252",
-                         "source_url":  "https://github.com/liomilet4-png/runx/tree/codex/frantic-meeting-followup/skills/meeting-followup",
-                         "raw_x_yaml":  "https://raw.githubusercontent.com/liomilet4-png/runx/codex/frantic-meeting-followup/skills/meeting-followup/X.yaml",
-                         "raw_skill_md":  "https://raw.githubusercontent.com/liomilet4-png/runx/codex/frantic-meeting-followup/skills/meeting-followup/SKILL.md",
-                         "evidence_json":  "https://raw.githubusercontent.com/liomilet4-png/runx/codex/frantic-meeting-followup/skills/meeting-followup/harness-evidence/evidence.json",
-                         "verification_json":  "https://raw.githubusercontent.com/liomilet4-png/runx/codex/frantic-meeting-followup/skills/meeting-followup/harness-evidence/verification.json",
-                         "report":  "https://raw.githubusercontent.com/liomilet4-png/runx/codex/frantic-meeting-followup/skills/meeting-followup/harness-evidence/report.md",
-                         "clean_install_status":  "success",
-                         "github_actions_run":  "https://github.com/liomilet4-png/runx/actions/runs/28762624754"
-                     },
+    "summary":  "Meeting Followup is a published runx skill that converts a bounded meeting transcript and attendee list into a source-grounded summary, explicit decisions, owned action items, and approval-gated n8n-handoff task proposals. Linux evidence with runx-cli 0.6.15 shows local harness passing two cases, clean registry install, post-publish dogfood execution, and a valid runx verify verdict for the dogfood receipt.",
+    "observations":  [
+                         {
+                             "value":  "runx-cli 0.6.15",
+                             "name":  "runx_version"
+                         },
+                         {
+                             "value":  "liomilet4-png",
+                             "name":  "publisher_owner"
+                         },
+                         {
+                             "value":  "meeting-followup",
+                             "name":  "package_name"
+                         },
+                         {
+                             "value":  "liomilet4-png/meeting-followup@sha-408dfab19c54",
+                             "name":  "registry_ref"
+                         },
+                         {
+                             "value":  "https://runx.ai/x/liomilet4-png/meeting-followup@sha-408dfab19c54",
+                             "name":  "public_url"
+                         },
+                         {
+                             "value":  "https://github.com/runxhq/runx/pull/252",
+                             "name":  "pr_url"
+                         },
+                         {
+                             "value":  "https://github.com/liomilet4-png/runx/tree/codex/frantic-meeting-followup/skills/meeting-followup",
+                             "name":  "source_url"
+                         },
+                         {
+                             "value":  "passed",
+                             "name":  "harness_status"
+                         },
+                         {
+                             "value":  [
+                                           "product_sync_followup",
+                                           "missing_transcript_stop"
+                                       ],
+                             "name":  "harness_case_names"
+                         },
+                         {
+                             "value":  "success",
+                             "name":  "clean_install_status"
+                         },
+                         {
+                             "value":  "runx:receipt:sha256:76d372df1520ea91c24f8048006c3e8699be36a1a301b161dd28ef227925d7a2",
+                             "name":  "dogfood_receipt_ref"
+                         },
+                         {
+                             "value":  true,
+                             "name":  "verification_valid"
+                         },
+                         {
+                             "value":  "valid",
+                             "name":  "verification_signature_status"
+                         },
+                         {
+                             "value":  2,
+                             "name":  "decisions_count"
+                         },
+                         {
+                             "value":  3,
+                             "name":  "action_items_count"
+                         },
+                         {
+                             "value":  3,
+                             "name":  "task_proposal_count"
+                         },
+                         {
+                             "value":  "missing_transcript_stop emits needs_agent and no live task creation",
+                             "name":  "refused_case"
+                         }
+                     ],
+    "details":  {
+                    "runx_version":  "runx-cli 0.6.15",
+                    "publisher_owner":  "liomilet4-png",
+                    "package_name":  "meeting-followup",
+                    "version":  "sha-408dfab19c54",
+                    "registry_ref":  "liomilet4-png/meeting-followup@sha-408dfab19c54",
+                    "public_url":  "https://runx.ai/x/liomilet4-png/meeting-followup@sha-408dfab19c54",
+                    "install_command":  "runx add liomilet4-png/meeting-followup@sha-408dfab19c54 --registry https://api.runx.ai",
+                    "dogfood_command":  "runx skill liomilet4-png/meeting-followup@sha-408dfab19c54 --registry https://api.runx.ai --json; runx resume run_agent_task-meeting-followup-summarize-output artifacts/dogfood-answers-76.json --json",
+                    "verify_command":  "RUNX_RECEIPT_VERIFY_KID=runx-demo-key RUNX_RECEIPT_VERIFY_ED25519_PUBLIC_KEY_BASE64=\u003cpublic key\u003e runx verify --receipt dogfood-receipt-76.json --json",
+                    "receipt_ref":  "runx:receipt:sha256:76d372df1520ea91c24f8048006c3e8699be36a1a301b161dd28ef227925d7a2",
+                    "harness_status":  "passed",
+                    "harness_case_names":  [
+                                               "product_sync_followup",
+                                               "missing_transcript_stop"
+                                           ],
+                    "harness_receipt_ids":  [
+                                                "sha256:e51962ed0e2d20b4c28cf38515cc3b3282c87ffdc2b589c07ebcc3d867c24d8e"
+                                            ],
+                    "verification_valid":  true,
+                    "verification_signature_status":  "valid",
+                    "registry_digest":  "acd3fecdf444f0e05c6d742fc77df2e9187b478620ba07dfc91535e8fb3ed45c",
+                    "registry_profile_digest":  "bec397b61b579d46a32df0ec7343fc6fb214e4d5d16cb5790b8c9cc972c63ded",
+                    "decisions_count":  2,
+                    "action_items_count":  3,
+                    "task_proposal_count":  3,
+                    "refused_case":  "missing_transcript_stop emits needs_agent and no live task creation",
+                    "pr_url":  "https://github.com/runxhq/runx/pull/252",
+                    "source_url":  "https://github.com/liomilet4-png/runx/tree/codex/frantic-meeting-followup/skills/meeting-followup",
+                    "raw_x_yaml":  "https://raw.githubusercontent.com/liomilet4-png/runx/codex/frantic-meeting-followup/skills/meeting-followup/X.yaml",
+                    "raw_skill_md":  "https://raw.githubusercontent.com/liomilet4-png/runx/codex/frantic-meeting-followup/skills/meeting-followup/SKILL.md",
+                    "evidence_json":  "https://raw.githubusercontent.com/liomilet4-png/runx/codex/frantic-meeting-followup/skills/meeting-followup/harness-evidence/evidence.json",
+                    "verification_json":  "https://raw.githubusercontent.com/liomilet4-png/runx/codex/frantic-meeting-followup/skills/meeting-followup/harness-evidence/verification.json",
+                    "report":  "https://raw.githubusercontent.com/liomilet4-png/runx/codex/frantic-meeting-followup/skills/meeting-followup/harness-evidence/report.md",
+                    "clean_install_status":  "success",
+                    "github_actions_run":  "https://github.com/liomilet4-png/runx/actions/runs/28762624754"
+                },
     "dogfood":  {
                     "package":  "liomilet4-png/meeting-followup@sha-408dfab19c54",
                     "input":  {
