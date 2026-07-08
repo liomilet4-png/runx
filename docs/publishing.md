@@ -17,14 +17,12 @@ they behave differently.
 
 The skill must be real and runnable:
 
-- A valid `SKILL.md` (frontmatter `name`, `description`, and `source`, with
-  optional portable `category`) and an execution profile (`X.yaml`) when the
-  skill has a runnable path. Format:
+- A valid `SKILL.md` (frontmatter `name`, `description`, and `source`) and an
+  execution profile (`X.yaml`) when the skill has a runnable path. Format:
   https://runx.ai/SKILL.md
-  Use top-level `category` only for the upstream skill's own portable taxonomy.
   Use `runx.category` for the runx catalog category/facet; runx categories are
-  intentionally specific and should not be inferred from arbitrary upstream
-  category values.
+  maintained slugs, not arbitrary tags. See
+  [skill-catalog.md](skill-catalog.md) before choosing one.
 - It passes the harness:
   ```bash
   runx harness ./skills/<your-skill> --json
@@ -155,9 +153,16 @@ runx treats it like every other governed action, with no special-casing:
   runx add <publisher>/<skill>@<version>  # the friendly install path
   ```
 
+Before opening a first-party skill PR, check the live catalog and the
+maintainer-curated first-party map in [skill-catalog.md](skill-catalog.md).
+Most new skills should start as community registry packages; first-party
+inclusion needs a clear maintainership reason and a narrow PR with no unrelated
+repo history.
+
 ## Links
 
 - Skill format: https://runx.ai/SKILL.md
 - Catalog: https://runx.ai/x
 - Publish surface: https://runx.ai/x/publish
+- Catalog and discovery guide: ./skill-catalog.md
 - Quickstart: https://runx.ai/docs/quickstart
