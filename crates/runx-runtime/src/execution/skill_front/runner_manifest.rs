@@ -21,6 +21,8 @@ use crate::adapter::{SkillAdapter, SkillOutput};
 #[cfg(feature = "cli-tool")]
 use crate::adapters::cli_tool::CliToolAdapter;
 use crate::execution::orchestrator::SkillRunRequest;
+#[cfg(feature = "cli-tool")]
+use crate::receipts::StepSealClosure;
 use crate::services::{ReceiptServices, WorkspaceEnv};
 #[cfg(feature = "cli-tool")]
 use runx_contracts::ClosureDisposition;
@@ -178,9 +180,11 @@ pub(super) fn execute_cli_tool_skill_run(
         &run_id,
         runner,
         &output,
-        disposition.clone(),
-        format!("process_{}", disposition.label()),
-        format!("cli-tool {} completed", runner.name),
+        StepSealClosure {
+            reason_code: format!("process_{}", disposition.label()),
+            summary: format!("cli-tool {} completed", runner.name),
+            disposition,
+        },
         receipts.signature_config(),
         workspace.env(),
     )?;

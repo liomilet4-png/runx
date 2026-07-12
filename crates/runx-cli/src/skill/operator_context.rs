@@ -1,3 +1,5 @@
+use std::io::Write;
+
 use runx_contracts::JsonValue;
 use runx_runtime::skill_front::{
     PreparedSkillRunReport, SkillOperatorContextContextSkill, SkillOperatorContextDocument,
@@ -64,11 +66,11 @@ pub(super) fn write_operator_context(
     }
     if !full {
         out.push_str("  Full context: add --full-operator-context\n");
-        eprint!("{out}\n");
+        let _ignored = writeln!(std::io::stderr(), "{out}");
         return Ok(());
     }
     let Some(chain) = report.chain.as_ref() else {
-        eprint!("{out}\n");
+        let _ignored = writeln!(std::io::stderr(), "{out}");
         return Ok(());
     };
     out.push_str("\nFull operator context\n");
@@ -104,7 +106,7 @@ pub(super) fn write_operator_context(
         chain.max_depth,
     ));
     append_node(&mut out, &chain.entry, true)?;
-    eprint!("{out}\n");
+    let _ignored = writeln!(std::io::stderr(), "{out}");
     Ok(())
 }
 

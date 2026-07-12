@@ -45,9 +45,11 @@ pub(super) fn publish_remote_skill_package(
             &transport,
             registry_url,
             &token,
-            &owner,
-            plan.version.as_deref(),
-            plan.upsert,
+            &AdminPublishTarget {
+                owner: &owner,
+                version: plan.version.as_deref(),
+                upsert: plan.upsert,
+            },
             package,
             harness,
         );
@@ -155,34 +157,36 @@ pub(super) fn publish_remote_skill_package_with_transport<T: Transport>(
     Ok(envelope.publish)
 }
 
+pub(super) struct AdminPublishTarget<'a> {
+    pub(super) owner: &'a str,
+    pub(super) version: Option<&'a str>,
+    pub(super) upsert: bool,
+}
+
 pub(super) fn publish_remote_admin_skill_package_with_transport<T: Transport>(
     transport: &T,
     registry_url: &str,
     token: &str,
-    owner: &str,
-    version: Option<&str>,
-    upsert: bool,
+    target: &AdminPublishTarget<'_>,
     package: &SkillPackage,
     harness: &RegistryPublishHarnessReport,
 ) -> Result<HostedSkillPublishResult, RegistryCliError> {
-    let body = hosted_admin_publish_request_body(owner, version, upsert, package, harness)?;
+    let body = hosted_admin_publish_request_body(target, package, harness)?;
     let response = send_hosted_admin_publish_request(transport, registry_url, token, body)?;
     parse_hosted_admin_publish_response(response)
 }
 
 fn hosted_admin_publish_request_body(
-    owner: &str,
-    version: Option<&str>,
-    upsert: bool,
+    target: &AdminPublishTarget<'_>,
     package: &SkillPackage,
     harness: &RegistryPublishHarnessReport,
 ) -> Result<String, RegistryCliError> {
     serde_json::to_string(&HostedAdminSkillPublishRequest {
-        owner,
+        owner: target.owner,
         markdown: &package.markdown,
         profile_document: package.profile_document.as_deref(),
-        version,
-        upsert,
+        version: target.version,
+        upsert: target.upsert,
         package_files: &package.package_files,
         harness,
     })
@@ -324,7 +328,8 @@ mod tests {
     }
 
     #[test]
-    fn remote_registry_publish_rejects_unsuccessful_2xx_envelope() {
+    fn remote_registry_publish_rejects_unsuccessful_2xx_envelope()
+    -> Result<(), Box<dyn std::error::Error>> {
         let transport = StubTransport::new(HttpResponse {
             status: 200,
             body: serde_json::json!({
@@ -354,16 +359,19 @@ mod tests {
             package_files: Vec::new(),
         };
 
-        let error = publish_remote_skill_package_with_transport(
+        let result = publish_remote_skill_package_with_transport(
             &transport,
             "https://runx.test/",
             "rxk_secret",
             None,
             &package,
-        )
-        .unwrap_err();
+        );
+        let Err(error) = result else {
+            return Err("unsuccessful 2xx envelope must be rejected".into());
+        };
 
         assert!(error.to_string().contains("unsuccessful status"));
+        Ok(())
     }
 
     #[test]
@@ -427,9 +435,11 @@ mod tests {
             &transport,
             "https://runx.test/",
             "admin-token",
-            "runx",
-            Some("sha-123"),
-            true,
+            &AdminPublishTarget {
+                owner: "runx",
+                version: Some("sha-123"),
+                upsert: true,
+            },
             &package,
             &harness,
         )?;

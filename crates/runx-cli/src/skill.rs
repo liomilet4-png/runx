@@ -260,9 +260,9 @@ fn write_operator_approval_required(digest: &str, json: bool) -> ExitCode {
             },
         );
     }
-    println!("Approval required");
-    println!("Rerun the same command with:");
-    println!("  {approval_flag}");
+    let _ignored = writeln!(io::stdout(), "Approval required");
+    let _ignored = writeln!(io::stdout(), "Rerun the same command with:");
+    let _ignored = writeln!(io::stdout(), "  {approval_flag}");
     ExitCode::from(2)
 }
 

@@ -793,9 +793,9 @@ mod tests {
         assert_eq!(baseline.status, prepared_result.status);
 
         fs::write(temp.path().join("SKILL.md"), "# Changed after approval")?;
-        let error = orchestrator
-            .run_prepared_skill(&prepared)
-            .expect_err("drift must fail");
+        let Err(error) = orchestrator.run_prepared_skill(&prepared) else {
+            return Err("prepared artifact drift must fail closed".into());
+        };
         let message = error.to_string();
         assert!(message.contains("prepared artifact drift"));
         assert!(message.contains("SKILL.md"));
