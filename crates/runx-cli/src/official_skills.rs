@@ -37,8 +37,8 @@ pub(crate) const OFFICIAL_SKILLS: &[OfficialSkillLockEntry] = &[
     },
     OfficialSkillLockEntry {
         skill_id: "runx/data-store",
-        version: "sha-4b5c8438cb5a",
-        digest: "5af0e2dd3dd2116874e4fb886e0424f4b944c136b3430a10c31e400a0249113b",
+        version: "sha-ca3a75ec5f21",
+        digest: "fbf0c7356f063f4fa12c9ff3bd944587f9202fb1520238a6652c90c907cb062f",
     },
     OfficialSkillLockEntry {
         skill_id: "runx/deep-research-brief",
@@ -204,6 +204,11 @@ pub(crate) const OFFICIAL_SKILLS: &[OfficialSkillLockEntry] = &[
         skill_id: "runx/open-meteo-weather-forecast",
         version: "sha-5d9f95438c9a",
         digest: "041e0ec18fa4b646b46b72d34662eabbbfbc43ab5a3a65423b49b3e94e81d159",
+    },
+    OfficialSkillLockEntry {
+        skill_id: "runx/operator-inbox",
+        version: "sha-18e7d8102fab",
+        digest: "1f71649a2167ec0fa5fb1c0501530e6ac2048196bd629624f838b4d928b17e83",
     },
     OfficialSkillLockEntry {
         skill_id: "runx/ops-desk",

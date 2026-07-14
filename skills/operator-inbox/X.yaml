@@ -87,12 +87,12 @@ runners:
           inputs:
             data_source_ref: "$input.data_source_ref"
             resource: operator_inbox_scans
+            aggregate_id: "$input.scan.query_digest"
+            expected_version: "$input.expected_version"
+            observed_at: "$input.observed_at"
           context:
-            aggregate_id: plan.transition.data.event.payload.scan.query_digest
-            expected_version: plan.transition.data.expected_version
             idempotency_key: plan.transition.data.idempotency_key
             event: plan.transition.data.event
-            observed_at: plan.transition.data.event.payload.observed_at
 
   record_action_observation:
     default: true
@@ -138,11 +138,11 @@ runners:
             data_source_ref: "$input.data_source_ref"
             resource: operator_inbox_actions
             aggregate_id: "$input.action_id"
+            expected_version: "$input.expected_version"
+            observed_at: "$input.message.occurred_at"
           context:
-            expected_version: plan.transition.data.expected_version
             idempotency_key: plan.transition.data.idempotency_key
             event: plan.transition.data.event
-            observed_at: plan.transition.data.event.payload.action.latest_message.occurred_at
 
   record_disposition:
     type: graph
@@ -183,11 +183,11 @@ runners:
             data_source_ref: "$input.data_source_ref"
             resource: operator_inbox_actions
             aggregate_id: "$input.action_id"
+            expected_version: "$input.expected_version"
+            observed_at: "$input.observed_at"
           context:
-            expected_version: plan.transition.data.expected_version
             idempotency_key: plan.transition.data.idempotency_key
             event: plan.transition.data.event
-            observed_at: plan.transition.data.event.payload.observed_at
 
   import_action:
     type: graph
@@ -224,11 +224,11 @@ runners:
             data_source_ref: "$input.data_source_ref"
             resource: operator_inbox_actions
             aggregate_id: "$input.action_id"
+            expected_version: "$input.expected_version"
+            observed_at: "$input.action.latest_message.occurred_at"
           context:
-            expected_version: plan.transition.data.expected_version
             idempotency_key: plan.transition.data.idempotency_key
             event: plan.transition.data.event
-            observed_at: plan.transition.data.event.payload.action.latest_message.occurred_at
 
   read_action:
     type: graph
