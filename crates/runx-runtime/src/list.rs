@@ -142,8 +142,8 @@ fn read_validated_tool_manifest(manifest_path: &Path) -> Result<runx_parser::Val
 fn tool_emits(artifacts: &runx_parser::SkillArtifactContract) -> Vec<RunxListEmit> {
     if let Some(named_emits) = &artifacts.named_emits {
         return named_emits
-            .iter()
-            .map(|(name, _output)| RunxListEmit {
+            .keys()
+            .map(|name| RunxListEmit {
                 name: name.clone(),
                 packet: artifacts
                     .packets

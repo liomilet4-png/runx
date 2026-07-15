@@ -314,7 +314,8 @@ mod tests {
     }
 
     #[test]
-    fn output_schema_and_validator_share_strict_declared_fields() {
+    fn output_schema_and_validator_share_strict_declared_fields()
+    -> Result<(), Box<dyn std::error::Error>> {
         let output = declared_output();
         let valid = JsonValue::Object(
             [("notify_plan".to_owned(), JsonValue::Object(BTreeMap::new()))]
@@ -331,21 +332,20 @@ mod tests {
         );
 
         assert!(validate_output_value(Some(&output), &valid).is_ok());
-        assert_eq!(
-            validate_output_value(Some(&output), &extra)
-                .expect_err("extra field must fail")
-                .path(),
-            "$.message"
-        );
+        let Err(error) = validate_output_value(Some(&output), &extra) else {
+            return Err("extra field must fail".into());
+        };
+        assert_eq!(error.path(), "$.message");
         assert!(
-            serde_json::to_string(&output_value_schema(Some(&output)))
-                .expect("schema serializes")
+            serde_json::to_string(&output_value_schema(Some(&output)))?
                 .contains("\"additionalProperties\":false")
         );
+        Ok(())
     }
 
     #[test]
-    fn output_validator_enforces_required_type_and_enum() {
+    fn output_validator_enforces_required_type_and_enum() -> Result<(), Box<dyn std::error::Error>>
+    {
         let output = declared_output();
         let missing = JsonValue::Object(BTreeMap::new());
         let wrong_enum = JsonValue::Object(
@@ -365,22 +365,22 @@ mod tests {
             .collect(),
         );
 
-        assert_eq!(
-            validate_output_value(Some(&output), &missing)
-                .expect_err("missing required field must fail")
-                .path(),
-            "$.notify_plan"
-        );
+        let Err(error) = validate_output_value(Some(&output), &missing) else {
+            return Err("missing required field must fail".into());
+        };
+        assert_eq!(error.path(), "$.notify_plan");
         assert!(validate_output_value(Some(&output), &wrong_enum).is_err());
         assert!(validate_output_value(Some(&output), &wrong_type).is_err());
+        Ok(())
     }
 
     #[test]
-    fn output_contract_digest_is_stable() {
+    fn output_contract_digest_is_stable() -> Result<(), serde_json::Error> {
         let output = declared_output();
         assert_eq!(
-            output_contract_digest(Some(&output)).expect("digest"),
-            output_contract_digest(Some(&output)).expect("digest")
+            output_contract_digest(Some(&output))?,
+            output_contract_digest(Some(&output))?
         );
+        Ok(())
     }
 }

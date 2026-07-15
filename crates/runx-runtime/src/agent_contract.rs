@@ -125,7 +125,7 @@ mod tests {
     use super::verified_agent_metadata;
     use crate::adapter::CONTRACT_VERIFICATION_METADATA;
 
-    fn request() -> ResolutionRequest {
+    fn request() -> Result<ResolutionRequest, serde_json::Error> {
         let envelope: AgentContextEnvelope = serde_json::from_value(serde_json::json!({
             "run_id": "run_1",
             "skill": "slack-notify",
@@ -137,9 +137,8 @@ mod tests {
             "provenance": [],
             "output": { "notify_plan": "object" },
             "trust_boundary": "test"
-        }))
-        .expect("valid envelope");
-        ResolutionRequest::AgentAct {
+        }))?;
+        Ok(ResolutionRequest::AgentAct {
             id: "req_1".into(),
             invocation: Box::new(AgentActInvocation {
                 id: "act_1".into(),
@@ -148,24 +147,25 @@ mod tests {
                 task: None,
                 envelope,
             }),
-        }
+        })
     }
 
     #[test]
-    fn verified_metadata_records_contract_digest() {
+    fn verified_metadata_records_contract_digest() -> Result<(), Box<dyn std::error::Error>> {
         let answer = JsonValue::Object(
             [("notify_plan".to_owned(), JsonValue::Object(BTreeMap::new()))]
                 .into_iter()
                 .collect(),
         );
 
-        let metadata = verified_agent_metadata(&request(), &answer).expect("valid answer");
+        let metadata = verified_agent_metadata(&request()?, &answer)?;
 
         assert!(metadata.contains_key(CONTRACT_VERIFICATION_METADATA));
+        Ok(())
     }
 
     #[test]
-    fn undeclared_agent_output_is_rejected() {
+    fn undeclared_agent_output_is_rejected() -> Result<(), Box<dyn std::error::Error>> {
         let answer = JsonValue::Object(
             [
                 ("notify_plan".to_owned(), JsonValue::Object(BTreeMap::new())),
@@ -178,11 +178,13 @@ mod tests {
             .collect(),
         );
 
-        assert!(verified_agent_metadata(&request(), &answer).is_err());
+        assert!(verified_agent_metadata(&request()?, &answer).is_err());
+        Ok(())
     }
 
     #[test]
-    fn provider_output_envelope_is_validated_as_the_declared_payload() {
+    fn provider_output_envelope_is_validated_as_the_declared_payload()
+    -> Result<(), Box<dyn std::error::Error>> {
         let answer = JsonValue::Object(
             [(
                 "output".to_owned(),
@@ -196,11 +198,13 @@ mod tests {
             .collect(),
         );
 
-        assert!(verified_agent_metadata(&request(), &answer).is_ok());
+        assert!(verified_agent_metadata(&request()?, &answer).is_ok());
+        Ok(())
     }
 
     #[test]
-    fn runx_closure_metadata_is_not_treated_as_a_declared_skill_output() {
+    fn runx_closure_metadata_is_not_treated_as_a_declared_skill_output()
+    -> Result<(), Box<dyn std::error::Error>> {
         let answer = JsonValue::Object(
             [
                 ("notify_plan".to_owned(), JsonValue::Object(BTreeMap::new())),
@@ -230,13 +234,14 @@ mod tests {
             .collect(),
         );
 
-        assert!(verified_agent_metadata(&request(), &answer).is_ok());
+        assert!(verified_agent_metadata(&request()?, &answer).is_ok());
+        Ok(())
     }
 
     #[test]
-    fn fixture_contract_is_the_declared_object_field() {
-        let ResolutionRequest::AgentAct { invocation, .. } = request() else {
-            unreachable!();
+    fn fixture_contract_is_the_declared_object_field() -> Result<(), Box<dyn std::error::Error>> {
+        let ResolutionRequest::AgentAct { invocation, .. } = request()? else {
+            return Err("expected agent-act request".into());
         };
         assert_eq!(
             invocation.envelope.output,
@@ -249,5 +254,6 @@ mod tests {
                 .collect()
             )
         );
+        Ok(())
     }
 }

@@ -1006,16 +1006,29 @@ fn cli_tool_args(step: &GraphStep, run: &JsonObject) -> Result<Vec<String>, Runt
 // step's output, projection, and sealed receipt. Both the inline `agent-task`
 // step and a referenced agent skill end here, so the agent-act seal lives in
 // one place.
-fn seal_agent_act_step<A>(
-    runtime: &Runtime<A>,
-    graph_name: &str,
-    step: &GraphStep,
+struct AgentActStepSeal<'a> {
+    graph_name: &'a str,
+    step: &'a GraphStep,
     attempt: u32,
     skill_name: String,
     response: ResolutionResponse,
-    extra_artifacts: Option<&SkillArtifactContract>,
+    extra_artifacts: Option<&'a SkillArtifactContract>,
     verification_metadata: JsonObject,
+}
+
+fn seal_agent_act_step<A>(
+    runtime: &Runtime<A>,
+    request: AgentActStepSeal<'_>,
 ) -> Result<StepRun, RuntimeError> {
+    let AgentActStepSeal {
+        graph_name,
+        step,
+        attempt,
+        skill_name,
+        response,
+        extra_artifacts,
+        verification_metadata,
+    } = request;
     let disposition = agent_answer_disposition_value(step, &response.payload)?;
     let mut output = agent_task_output(response, &disposition)?;
     output.metadata.extend(verification_metadata);
@@ -1111,13 +1124,15 @@ where
     // Inline agent-task step: contract is the step's own `run.outputs` / `artifacts`.
     seal_agent_act_step(
         runtime,
-        graph_name,
-        step,
-        attempt,
-        "run:agent-task".to_owned(),
-        response,
-        None,
-        verification_metadata,
+        AgentActStepSeal {
+            graph_name,
+            step,
+            attempt,
+            skill_name: "run:agent-task".to_owned(),
+            response,
+            extra_artifacts: None,
+            verification_metadata,
+        },
     )
 }
 
@@ -1165,13 +1180,15 @@ where
     // contract at the outer step.
     seal_agent_act_step(
         runtime,
-        graph_name,
-        step,
-        attempt,
-        skill_name,
-        response,
-        artifacts.as_ref(),
-        verification_metadata,
+        AgentActStepSeal {
+            graph_name,
+            step,
+            attempt,
+            skill_name,
+            response,
+            extra_artifacts: artifacts.as_ref(),
+            verification_metadata,
+        },
     )
 }
 

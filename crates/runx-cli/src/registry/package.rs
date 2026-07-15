@@ -1224,8 +1224,9 @@ runners:
 "#,
         )?;
 
+        let skill_path = dir.to_str().ok_or("skill path is not UTF-8")?;
         let package = read_skill_package(
-            dir.to_str().expect("path"),
+            skill_path,
             None,
             &std::collections::BTreeMap::new(),
             &dir,
@@ -1274,14 +1275,16 @@ runners:
             "console.log(JSON.stringify({plan: {}}))\n",
         )?;
 
-        let error = read_skill_package(
-            dir.to_str().expect("path"),
+        let skill_path = dir.to_str().ok_or("skill path is not UTF-8")?;
+        let Err(error) = read_skill_package(
+            skill_path,
             None,
             &std::collections::BTreeMap::new(),
             &dir,
             true,
-        )
-        .expect_err("missing packet schema must fail");
+        ) else {
+            return Err("missing packet schema must fail".into());
+        };
 
         assert!(error.message.contains("was not found"));
         let _ignored = fs::remove_dir_all(dir);

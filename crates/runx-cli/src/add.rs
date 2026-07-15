@@ -238,7 +238,7 @@ mod tests {
     }
 
     #[test]
-    fn resolves_base_url_in_precedence_order() {
+    fn resolves_base_url_in_precedence_order() -> Result<(), Box<dyn std::error::Error>> {
         let plan_with_override = AddUrlPlan {
             repo: "https://github.com/runxhq/runx".to_owned(),
             repo_ref: None,
@@ -252,12 +252,9 @@ mod tests {
         );
 
         // Plan override wins, trailing slash stripped.
-        assert_eq!(
-            resolve_public_api_environment(&plan_with_override, &env, &std::env::temp_dir())
-                .expect("environment")
-                .base_url(),
-            "https://override.example",
-        );
+        let overridden =
+            resolve_public_api_environment(&plan_with_override, &env, &std::env::temp_dir())?;
+        assert_eq!(overridden.base_url(), "https://override.example");
 
         // Without plan override, env takes over.
         let plan_no_override = AddUrlPlan {
@@ -266,21 +263,16 @@ mod tests {
             api_base_url: None,
             json: false,
         };
-        assert_eq!(
-            resolve_public_api_environment(&plan_no_override, &env, &std::env::temp_dir())
-                .expect("environment")
-                .base_url(),
-            "https://from-env.example",
-        );
+        let from_env =
+            resolve_public_api_environment(&plan_no_override, &env, &std::env::temp_dir())?;
+        assert_eq!(from_env.base_url(), "https://from-env.example");
 
         // Without either, default.
         let empty_env: BTreeMap<String, String> = BTreeMap::new();
-        assert_eq!(
-            resolve_public_api_environment(&plan_no_override, &empty_env, &std::env::temp_dir())
-                .expect("environment")
-                .base_url(),
-            "https://api.runx.ai",
-        );
+        let default =
+            resolve_public_api_environment(&plan_no_override, &empty_env, &std::env::temp_dir())?;
+        assert_eq!(default.base_url(), "https://api.runx.ai");
+        Ok(())
     }
 
     #[test]

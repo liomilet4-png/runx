@@ -264,7 +264,8 @@ mod tests {
     }
 
     #[test]
-    fn named_output_and_packet_identity_are_preserved_separately() {
+    fn named_output_and_packet_identity_are_preserved_separately()
+    -> Result<(), Box<dyn std::error::Error>> {
         let artifacts = JsonValue::Object(BTreeMap::from([
             (
                 "named_emits".to_owned(),
@@ -282,9 +283,9 @@ mod tests {
             ),
         ]));
 
-        let contract = validate_artifact_contract(Some(&artifacts), "artifacts")
-            .expect("valid artifacts")
-            .expect("artifact contract");
+        let Some(contract) = validate_artifact_contract(Some(&artifacts), "artifacts")? else {
+            return Err("artifact contract is missing".into());
+        };
 
         assert_eq!(
             contract
@@ -302,5 +303,6 @@ mod tests {
                 .map(String::as_str),
             Some("runx.plan.v1")
         );
+        Ok(())
     }
 }

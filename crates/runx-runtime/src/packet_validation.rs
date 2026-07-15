@@ -212,22 +212,16 @@ fn discover_packet_schemas(
 mod tests {
     use std::collections::BTreeMap;
     use std::fs;
-    use std::path::PathBuf;
-    use std::time::{SystemTime, UNIX_EPOCH};
 
     use runx_contracts::JsonValue;
     use runx_parser::SkillArtifactContract;
 
     use super::verify_declared_packets;
 
-    fn temp_skill(name: &str) -> PathBuf {
-        let nonce = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .expect("clock")
-            .as_nanos();
-        let directory = std::env::temp_dir().join(format!("runx-{name}-{nonce}"));
-        fs::create_dir_all(directory.join("packets")).expect("packet directory");
-        directory
+    fn temp_skill() -> Result<tempfile::TempDir, std::io::Error> {
+        let directory = tempfile::tempdir()?;
+        fs::create_dir_all(directory.path().join("packets"))?;
+        Ok(directory)
     }
 
     fn artifacts() -> SkillArtifactContract {
@@ -247,7 +241,7 @@ mod tests {
         JsonValue::Object(BTreeMap::from([("plan".to_owned(), value)]))
     }
 
-    fn write_schema(skill: &std::path::Path) {
+    fn write_schema(skill: &std::path::Path) -> Result<(), std::io::Error> {
         fs::write(
             skill.join("packets/plan.schema.json"),
             r#"{
@@ -259,27 +253,30 @@ mod tests {
   "additionalProperties": false
 }
 "#,
-        )
-        .expect("schema");
+        )?;
+        Ok(())
     }
 
     #[test]
-    fn declared_packet_schema_is_verified_and_pinned() {
-        let skill = temp_skill("packet-valid");
-        write_schema(&skill);
+    fn declared_packet_schema_is_verified_and_pinned() -> Result<(), Box<dyn std::error::Error>> {
+        let skill = temp_skill()?;
+        write_schema(skill.path())?;
         let value = payload(JsonValue::Object(BTreeMap::from([(
             "decision".to_owned(),
             JsonValue::String("ready".to_owned()),
         )])));
 
-        let evidence =
-            verify_declared_packets(&value, Some(&artifacts()), None, &skill, &BTreeMap::new())
-                .expect("valid packet");
+        let evidence = verify_declared_packets(
+            &value,
+            Some(&artifacts()),
+            None,
+            skill.path(),
+            &BTreeMap::new(),
+        )?;
 
-        let plan = evidence
-            .get("plan")
-            .and_then(JsonValue::as_object)
-            .expect("plan evidence");
+        let Some(plan) = evidence.get("plan").and_then(JsonValue::as_object) else {
+            return Err("plan evidence is missing".into());
+        };
         assert_eq!(
             plan.get("packet").and_then(JsonValue::as_str),
             Some("runx.test.plan.v1")
@@ -289,37 +286,49 @@ mod tests {
                 .and_then(JsonValue::as_str)
                 .is_some_and(|value| value.starts_with("sha256:"))
         );
-        let _ignored = fs::remove_dir_all(skill);
+        Ok(())
     }
 
     #[test]
-    fn invalid_packet_output_cannot_seal() {
-        let skill = temp_skill("packet-invalid");
-        write_schema(&skill);
+    fn invalid_packet_output_cannot_seal() -> Result<(), Box<dyn std::error::Error>> {
+        let skill = temp_skill()?;
+        write_schema(skill.path())?;
         let value = payload(JsonValue::Object(BTreeMap::from([(
             "decision".to_owned(),
             JsonValue::Bool(true),
         )])));
 
         assert!(
-            verify_declared_packets(&value, Some(&artifacts()), None, &skill, &BTreeMap::new(),)
-                .is_err()
+            verify_declared_packets(
+                &value,
+                Some(&artifacts()),
+                None,
+                skill.path(),
+                &BTreeMap::new(),
+            )
+            .is_err()
         );
-        let _ignored = fs::remove_dir_all(skill);
+        Ok(())
     }
 
     #[test]
-    fn missing_packet_schema_cannot_seal() {
-        let skill = temp_skill("packet-missing");
+    fn missing_packet_schema_cannot_seal() -> Result<(), Box<dyn std::error::Error>> {
+        let skill = temp_skill()?;
         let value = payload(JsonValue::Object(BTreeMap::from([(
             "decision".to_owned(),
             JsonValue::String("ready".to_owned()),
         )])));
 
         assert!(
-            verify_declared_packets(&value, Some(&artifacts()), None, &skill, &BTreeMap::new(),)
-                .is_err()
+            verify_declared_packets(
+                &value,
+                Some(&artifacts()),
+                None,
+                skill.path(),
+                &BTreeMap::new(),
+            )
+            .is_err()
         );
-        let _ignored = fs::remove_dir_all(skill);
+        Ok(())
     }
 }

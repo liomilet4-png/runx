@@ -234,7 +234,7 @@ fn github_cli_login_rejects_an_unpinned_principal() -> Result<(), Box<dyn std::e
         })
         .to_string(),
     }]);
-    let error = run_provider_token_login_with_transport(
+    let Err(error) = run_provider_token_login_with_transport(
         &LoginPlan {
             api_base_url: Some("https://runx.test/".to_owned()),
             provider: Some("github".to_owned()),
@@ -247,8 +247,9 @@ fn github_cli_login_rejects_an_unpinned_principal() -> Result<(), Box<dyn std::e
         &temp,
         &transport,
         "github_cli_secret",
-    )
-    .expect_err("login without a principal must fail closed");
+    ) else {
+        return Err("login without a principal must fail closed".into());
+    };
 
     assert!(matches!(error, LoginCliError::MissingPrincipal));
     assert!(!temp.join("config.json").exists());

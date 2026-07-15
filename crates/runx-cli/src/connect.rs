@@ -322,7 +322,12 @@ mod tests {
     impl Transport for StubTransport {
         fn send(&self, request: HttpRequest) -> Result<HttpResponse, RuntimeHttpError> {
             self.requests.borrow_mut().push(request);
-            Ok(self.responses.borrow_mut().pop().expect("stub response"))
+            self.responses
+                .borrow_mut()
+                .pop()
+                .ok_or_else(|| RuntimeHttpError::Transport {
+                    message: "missing stub response".to_owned(),
+                })
         }
     }
 
