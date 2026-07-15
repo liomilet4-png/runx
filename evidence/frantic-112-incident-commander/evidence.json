@@ -1,0 +1,128 @@
+{
+  "schema": "runx.incident-commander.evidence.v1",
+  "summary": "Published and dogfooded an approval-gated incident command decision over the runx agency spine with an immutable registry package, a green two-case harness, and a verified post-publish receipt.",
+  "generated_at": "2026-07-15T05:48:52.002Z",
+  "package": {
+    "owner": "liomilet4-png",
+    "name": "incident-commander",
+    "manifest_version": "0.1.1",
+    "registry_version": "sha-af08d8fac7af",
+    "registry_ref": "liomilet4-png/incident-commander@sha-af08d8fac7af",
+    "digest": "sha256:049b1f45b5fee3af58c91a7e0357cb8a5329a56356d2140795c5a2917804a4c2",
+    "profile_digest": "sha256:71a017ce2ee19e9db24d97093080006db86cb062247a991d14cdf53624c52f3c"
+  },
+  "urls": {
+    "public_url": "https://runx.ai/x/liomilet4-png/incident-commander",
+    "source_url": "https://github.com/liomilet4-png/runx/tree/codex/frantic-112-incident-commander/skills/incident-commander",
+    "pr_url": "https://github.com/runxhq/runx/pull/330",
+    "x_yaml": "https://raw.githubusercontent.com/runxhq/runx/refs/pull/330/head/skills/incident-commander/X.yaml",
+    "skill_md": "https://raw.githubusercontent.com/runxhq/runx/refs/pull/330/head/skills/incident-commander/SKILL.md",
+    "evidence_json": "https://raw.githubusercontent.com/runxhq/runx/refs/pull/330/head/evidence/frantic-112-incident-commander/evidence.json",
+    "verification_json": "https://raw.githubusercontent.com/runxhq/runx/refs/pull/330/head/evidence/frantic-112-incident-commander/verification.json",
+    "harness_evidence": "https://raw.githubusercontent.com/runxhq/runx/refs/pull/330/head/evidence/frantic-112-incident-commander/harness-results.json",
+    "report": "https://raw.githubusercontent.com/runxhq/runx/refs/pull/330/head/evidence/frantic-112-incident-commander/report.md"
+  },
+  "cli": {
+    "publish_version_output": "runx-cli 0.6.15",
+    "install_dogfood_verify_version_output": "runx-cli 0.7.2",
+    "minimum_required": "0.6.14",
+    "minimum_satisfied": true
+  },
+  "commands": {
+    "publish": "runx registry publish ./skills/incident-commander/SKILL.md --registry https://api.runx.ai",
+    "read": "runx registry read liomilet4-png/incident-commander@sha-af08d8fac7af --registry https://api.runx.ai --json",
+    "install": "runx add liomilet4-png/incident-commander@sha-af08d8fac7af --registry https://api.runx.ai --json",
+    "local_harness": "runx harness ./skills/incident-commander --json",
+    "dogfood": "runx skill liomilet4-png/incident-commander@sha-af08d8fac7af advance --registry https://api.runx.ai --skip-operator-context -i case_id=incident-112-dogfood-20260715-134835 -i driver_id=incident-commander-postapproval -i incident_objective=send --input-json case_state=<recorded-json> --input-json roster=<recorded-json> --input-json approval=<recorded-json> --json",
+    "verify": "runx verify --receipt sha256-698755f06556247d4e7226a42e2906e903df0d848d43fd5a1d76742d63f90025.json --json"
+  },
+  "dogfood": {
+    "package": "liomilet4-png/incident-commander@sha-af08d8fac7af",
+    "input": {
+      "case_id": "incident-112-dogfood-20260715-134835",
+      "driver_id": "incident-commander-postapproval",
+      "incident_objective": "send",
+      "case_state": {
+        "status": "awaiting",
+        "turn": 1,
+        "severity": "SEV-2",
+        "scope": "checkout-api",
+        "declared": true,
+        "pending_lane": "human:incident-reviewer"
+      },
+      "roster_roles": [
+        "commander",
+        "responder_lead",
+        "comms_lead"
+      ],
+      "approval": {
+        "principal": "incident:comms:morgan",
+        "reason": "Approved the digest-bound checkout status update for the declared stakeholder audience."
+      }
+    },
+    "command": "runx skill liomilet4-png/incident-commander@sha-af08d8fac7af advance --registry https://api.runx.ai --json",
+    "receipt_id": "sha256:698755f06556247d4e7226a42e2906e903df0d848d43fd5a1d76742d63f90025",
+    "receipt_ref": "runx:receipt:sha256:698755f06556247d4e7226a42e2906e903df0d848d43fd5a1d76742d63f90025",
+    "verify_verdict": "valid",
+    "harness_cases": [
+      {
+        "name": "incident-send-awaits-then-approves",
+        "status": "sealed"
+      },
+      {
+        "name": "incident-assign-missing-owner",
+        "status": "needs_agent"
+      }
+    ]
+  },
+  "observations": [
+    {
+      "id": "runx_versions",
+      "summary": "Publishing ran with runx-cli 0.6.15; clean install, direct registry dogfood, and receipt verification ran with runx-cli 0.7.2. Both satisfy the required minimum of 0.6.14."
+    },
+    {
+      "id": "publisher_and_registry",
+      "summary": "Publisher liomilet4-png published manifest version 0.1.1 of the exact incident-commander package as immutable registry version sha-af08d8fac7af with digest sha256:049b1f45b5fee3af58c91a7e0357cb8a5329a56356d2140795c5a2917804a4c2."
+    },
+    {
+      "id": "public_provenance",
+      "summary": "The live registry page, public PR 330, public source branch, and raw X.yaml and SKILL.md URLs all identify the same incident-commander package."
+    },
+    {
+      "id": "harness",
+      "summary": "The local inline harness passed with zero assertion errors and the hosted registry publish passed; case incident-send-awaits-then-approves sealed and case incident-assign-missing-owner stopped with needs_agent."
+    },
+    {
+      "id": "approval_gate_before",
+      "summary": "For a declared SEV-2 checkout-api incident, the pre-approval turn returned awaiting_approval with executable=false in human:incident-reviewer."
+    },
+    {
+      "id": "bound_comms_run",
+      "summary": "The turn named send-as runner plan for principal incident:comms:morgan, audience stakeholders:checkout-api with classification incident-stakeholders, and content_digest sha256:4e44f31f628799267f0957c554b8c47d90d2eabf41e5a84248941d28c45955ae."
+    },
+    {
+      "id": "approval_gate_after",
+      "summary": "After approval principal incident:comms:morgan matched the comms_lead roster entry, the post-approval turn returned advanced with executable=true; the skill still performed no provider delivery."
+    },
+    {
+      "id": "missing_owner_stop",
+      "summary": "For an assign objective with no named owner, ops-desk remained needs_agent and no named run was emitted rather than inventing a responder."
+    },
+    {
+      "id": "dogfood_receipt",
+      "summary": "The direct post-publish registry dogfood run sealed receipt sha256:698755f06556247d4e7226a42e2906e903df0d848d43fd5a1d76742d63f90025; runx verify returned exit code 0."
+    },
+    {
+      "id": "clean_install",
+      "summary": "A clean runx add of liomilet4-png/incident-commander@sha-af08d8fac7af completed successfully before the direct registry dogfood run."
+    },
+    {
+      "id": "registry_read",
+      "summary": "runx registry read resolved owner, exact package name, immutable version, digest, profile digest, runner advance, and public install/run commands."
+    },
+    {
+      "id": "external_effects",
+      "summary": "The rehearsal performed no provider send, purchase, payment, account mutation, or other external business write."
+    }
+  ]
+}

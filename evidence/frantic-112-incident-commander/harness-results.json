@@ -1,0 +1,36 @@
+{
+  "schema": "runx.incident-commander.harness-evidence.v1",
+  "evidence_scope": "repository-level proof; not part of the immutable registry package",
+  "package": "liomilet4-png/incident-commander@sha-af08d8fac7af",
+  "manifest_version": "0.1.1",
+  "source_revision": "codex/frantic-112-incident-commander",
+  "local": {
+    "command": "runx harness ./skills/incident-commander --json",
+    "runx_version": "runx-cli 0.6.15",
+    "status": "passed",
+    "case_count": 2,
+    "assertion_error_count": 0,
+    "cases": [
+      {
+        "name": "incident-send-awaits-then-approves",
+        "status": "sealed"
+      },
+      {
+        "name": "incident-assign-missing-owner",
+        "status": "needs_agent"
+      }
+    ],
+    "receipt_id": "sha256:67b825dd8ef266ecf6df281f64f3efc29b5398a38bf49e73ecd5b8548469adb5"
+  },
+  "hosted": {
+    "command": "runx registry publish ./skills/incident-commander/SKILL.md --registry https://api.runx.ai",
+    "runx_version": "runx-cli 0.6.15",
+    "target": "hosted",
+    "status": "passed",
+    "publish_status": "published",
+    "version": "sha-af08d8fac7af",
+    "digest": "sha256:049b1f45b5fee3af58c91a7e0357cb8a5329a56356d2140795c5a2917804a4c2",
+    "profile_digest": "sha256:71a017ce2ee19e9db24d97093080006db86cb062247a991d14cdf53624c52f3c",
+    "evidence": "The hosted registry accepted and published the immutable package after running its inline harness."
+  }
+}

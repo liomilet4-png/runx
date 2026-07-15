@@ -1,0 +1,96 @@
+{
+  "schema": "runx.incident-commander.verification.v1",
+  "evidence_scope": "repository-level proof; not part of the immutable registry package",
+  "valid": true,
+  "summary": "All package, publication, harness, install, dogfood, and receipt checks required for the incident-commander delivery passed.",
+  "package": {
+    "owner": "liomilet4-png",
+    "name": "incident-commander",
+    "manifest_version": "0.1.1",
+    "registry_version": "sha-af08d8fac7af",
+    "registry_ref": "liomilet4-png/incident-commander@sha-af08d8fac7af",
+    "digest": "sha256:049b1f45b5fee3af58c91a7e0357cb8a5329a56356d2140795c5a2917804a4c2",
+    "profile_digest": "sha256:71a017ce2ee19e9db24d97093080006db86cb062247a991d14cdf53624c52f3c"
+  },
+  "urls": {
+    "public_url": "https://runx.ai/x/liomilet4-png/incident-commander",
+    "source_url": "https://github.com/liomilet4-png/runx/tree/codex/frantic-112-incident-commander/skills/incident-commander",
+    "pr_url": "https://github.com/runxhq/runx/pull/330",
+    "x_yaml": "https://raw.githubusercontent.com/runxhq/runx/refs/pull/330/head/skills/incident-commander/X.yaml",
+    "skill_md": "https://raw.githubusercontent.com/runxhq/runx/refs/pull/330/head/skills/incident-commander/SKILL.md"
+  },
+  "receipt": {
+    "id": "sha256:698755f06556247d4e7226a42e2906e903df0d848d43fd5a1d76742d63f90025",
+    "ref": "runx:receipt:sha256:698755f06556247d4e7226a42e2906e903df0d848d43fd5a1d76742d63f90025",
+    "source": "post-publish direct registry incident-commander post-approval run",
+    "verify_exit_code": 0,
+    "verify_verdict": "valid"
+  },
+  "checks": [
+    {
+      "id": "cli_minimum",
+      "status": "passed",
+      "evidence": "runx-cli 0.6.15 for publish and runx-cli 0.7.2 for install, dogfood, and verify"
+    },
+    {
+      "id": "exact_package_name",
+      "status": "passed",
+      "evidence": "incident-commander"
+    },
+    {
+      "id": "registry_publish",
+      "status": "passed",
+      "evidence": "hosted publish status published for sha-af08d8fac7af"
+    },
+    {
+      "id": "registry_read",
+      "status": "passed",
+      "evidence": "remote read resolved immutable digest and advance runner"
+    },
+    {
+      "id": "clean_install",
+      "status": "passed",
+      "evidence": "runx add completed for sha-af08d8fac7af"
+    },
+    {
+      "id": "local_harness",
+      "status": "passed",
+      "evidence": "2 cases, 0 assertion errors"
+    },
+    {
+      "id": "hosted_harness",
+      "status": "passed",
+      "evidence": "hosted registry accepted and published the inline-harness package"
+    },
+    {
+      "id": "approval_gate",
+      "status": "passed",
+      "evidence": "awaiting_approval and non-executable before matching approval; advanced and executable after matching comms_lead approval"
+    },
+    {
+      "id": "missing_owner_stop",
+      "status": "passed",
+      "evidence": "needs_agent with no invented named run"
+    },
+    {
+      "id": "direct_registry_dogfood",
+      "status": "passed",
+      "evidence": "immutable registry ref produced the submitted incident-commander receipt"
+    },
+    {
+      "id": "receipt_verify",
+      "status": "passed",
+      "evidence": "runx verify exit code 0"
+    },
+    {
+      "id": "github_star",
+      "status": "passed",
+      "evidence": "Authenticated GitHub account liomilet4-png returned HTTP 204 for /user/starred/runxhq/runx"
+    },
+    {
+      "id": "secret_review",
+      "status": "passed",
+      "evidence": "Public evidence passed credential, secret-pattern, and private-operator-URL review"
+    }
+  ]
+}
