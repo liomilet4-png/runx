@@ -182,8 +182,8 @@ After publication, install and run the immutable registry version, then verify
 the dogfood receipt:
 
 ```text
-runx add <owner>/incident-commander@0.1.0
-runx skill <owner>/incident-commander@0.1.0 --json
+runx add <owner>/incident-commander@0.1.1
+runx skill <owner>/incident-commander@0.1.1 --json
 runx verify --receipt <receipt.json> --json
 ```
 
