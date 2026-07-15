@@ -9,8 +9,9 @@
 //     --root sha256:<graph-receipt-id> \
 //     --outdir docs/assets
 //
-// Emits ops-fanout-dark.svg and ops-fanout-light.svg from one token set; the
-// README selects per GitHub theme via a <picture> element.
+// Emits ops-trace-dark.svg and ops-trace-light.svg from one token set. The
+// scene-driven sibling (render-ops-map.mjs) owns the README hero image; this
+// one renders literal evidence from a sealed run.
 //
 // Form: a transit-map harp. The command is the origin, the first child is the
 // interchange, each remaining child is a line running through its own station,
@@ -206,7 +207,7 @@ ${laneMarkup}
 };
 
 for (const theme of Object.keys(THEMES)) {
-  const outPath = join(outDir, `ops-fanout-${theme}.svg`);
+  const outPath = join(outDir, `ops-trace-${theme}.svg`);
   writeFileSync(outPath, render(theme));
   console.log(`wrote ${outPath}: root ${shortId(rootId)}, ${lanes.length} lanes, ${treeCount} receipts`);
 }

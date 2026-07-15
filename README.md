@@ -69,7 +69,11 @@ runx skill business-ops \
   --json
 ```
 
-![runx business ops execution trace](docs/assets/ops-fanout.svg)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/ops-fanout-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/ops-fanout-light.svg">
+  <img alt="runx governed business operations map" src="docs/assets/ops-fanout-light.svg">
+</picture>
 
 The graph is the core shape: goal in, governed lanes out, receipts and approval
 gates back. Real teams replace the demo lanes with private context, policies,
