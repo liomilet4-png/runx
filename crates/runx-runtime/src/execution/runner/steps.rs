@@ -34,6 +34,7 @@ use crate::adapter::{
 };
 #[cfg(feature = "catalog")]
 use crate::adapters::catalog::CatalogAdapter;
+use crate::agent_contract::verified_agent_metadata_with_artifacts;
 use crate::agent_invocation::{
     AgentActInvocationSourceType, agent_act_invocation_id, agent_act_resolution_request,
 };
@@ -1013,9 +1014,11 @@ fn seal_agent_act_step<A>(
     skill_name: String,
     response: ResolutionResponse,
     extra_artifacts: Option<&SkillArtifactContract>,
+    verification_metadata: JsonObject,
 ) -> Result<StepRun, RuntimeError> {
     let disposition = agent_answer_disposition_value(step, &response.payload)?;
-    let output = agent_task_output(response, &disposition)?;
+    let mut output = agent_task_output(response, &disposition)?;
+    output.metadata.extend(verification_metadata);
     let projection = build_step_output_projection(step, &output, extra_artifacts)?;
     let disposition_label = disposition.label();
     let receipt = seal_step(
@@ -1086,6 +1089,7 @@ where
     let source_type = AgentActInvocationSourceType::AgentStep;
     let request_id = agent_act_invocation_id(&invocation, source_type);
     let request = agent_act_resolution_request(&invocation, source_type)?;
+    let verification_request = request.clone();
     host.report(ExecutionEvent::ResolutionRequested {
         message: format!("agent step '{}' requested resolution", step.id),
         data: Some(resolution_event_data(step, &request)?),
@@ -1096,6 +1100,14 @@ where
             reason: format!("agent act {request_id} requires resolution"),
         });
     };
+    let verification_metadata = verified_agent_metadata_with_artifacts(
+        &verification_request,
+        &response.payload,
+        None,
+        step.artifacts.as_ref(),
+        graph_dir,
+        &runtime.options.env,
+    )?;
     // Inline agent-task step: contract is the step's own `run.outputs` / `artifacts`.
     seal_agent_act_step(
         runtime,
@@ -1105,6 +1117,7 @@ where
         "run:agent-task".to_owned(),
         response,
         None,
+        verification_metadata,
     )
 }
 
@@ -1125,8 +1138,11 @@ where
         source_type,
         artifacts,
     } = agent_task;
+    let skill_directory = invocation.skill_directory.clone();
+    let invocation_env = invocation.env.clone();
     let request_id = agent_act_invocation_id(&invocation, source_type);
     let request = agent_act_resolution_request(&invocation, source_type)?;
+    let verification_request = request.clone();
     let response = resolve_agent_act(
         step,
         host,
@@ -1136,6 +1152,14 @@ where
             "agent skill step '{}' requested resolution for {}",
             step.id, skill_name
         ),
+    )?;
+    let verification_metadata = verified_agent_metadata_with_artifacts(
+        &verification_request,
+        &response.payload,
+        artifacts.as_ref(),
+        None,
+        &skill_directory,
+        &invocation_env,
     )?;
     // Referenced agent-task sub-skill: expose the invoked runner's artifact
     // contract at the outer step.
@@ -1147,6 +1171,7 @@ where
         skill_name,
         response,
         artifacts.as_ref(),
+        verification_metadata,
     )
 }
 

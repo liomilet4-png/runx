@@ -16,9 +16,9 @@ hallucinate evidence. If the evidence is thin, say so and narrow the claims.
 Keep the content grounded in a specific audience, channel, and objective. The
 job is not to sound expansive. The job is to be useful and publishable.
 
-## Quality Bar
+## Drafting rules
 
-The draft should look like a human maintainer or operator did the work:
+Write the artifact as the human maintainer or operator responsible for it:
 
 - lead with the reader's problem, decision, or next action, not the evidence
   collection process
@@ -32,26 +32,6 @@ The draft should look like a human maintainer or operator did the work:
 - if the evidence is not strong enough to publish, return a narrow handoff or
   `needs_more_evidence` state instead of filling the gap with plausible prose
 
-## Quality Profile
-
-- Purpose: convert evidence and operator intent into one publishable or
-  reviewable content artifact.
-- Audience: the declared channel audience, plus the maintainer who must stand
-  behind the wording.
-- Artifact contract: content brief, draft, review checklist, and distribution
-  notes for draft mode; publish packet and handoff notes for package or handoff
-  mode.
-- Evidence bar: every substantive claim must be traceable to `evidence_pack`,
-  project context, receipts, or named source material. Weak evidence narrows
-  claims; it does not invite filler.
-- Voice bar: write in the target project's vocabulary and channel convention.
-  Do not explain the generation process, quote raw packets, or use generic AI
-  positioning.
-- Strategic bar: the draft must make a human action easier: publish, respond,
-  brief a stakeholder, defer, or request more evidence.
-- Stop conditions: return `needs_more_evidence`, `needs_review`, or
-  `not_worth_publishing` when the content would be true but low-value,
-  under-sourced, off-voice, or unclear for the audience.
 
 ## Output
 

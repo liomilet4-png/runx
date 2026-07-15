@@ -106,6 +106,12 @@ harness:
                 - release
                 - draft-content
               why_new: The current catalog lacks a dedicated release-notes skill that turns a bounded release diff into a governed review packet.
+            quality_bar:
+              audience: runx skill maintainers
+              artifact: A reviewable release-notes skill proposal.
+              evidence: Ground the design in the existing release skill contract.
+              stop_conditions:
+                - Stop if the proposal duplicates release publication authority.
             recommended_flow:
               - step: plan
                 rationale: Bound the release-notes scope before authoring.

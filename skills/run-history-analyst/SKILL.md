@@ -65,19 +65,6 @@ governed lane.
 - `scope_usage`: scopes granted but never exercised across runs, a candidate for
   attenuation.
 
-## Quality Profile
-
-- Purpose: produce one read-only, graded report of runx run history with
-  governed recommendations.
-- Audience: the operator reviewing platform behavior and the reviewer of the
-  receipt.
-- Artifact contract: scope, period, read-only tool calls, graded findings, and
-  recommendations routed to governance lanes.
-- Evidence bar: tie every finding to a history metric and a norm; tie every
-  recommendation to a finding and a named lane.
-- Voice bar: direct analyst summary; lead with the headline signal.
-- Strategic bar: the smallest set of read-only calls that answers the question.
-- Stop conditions: `needs_more_evidence` when no attributable history exists.
 
 ## Output schema (`history_report`)
 

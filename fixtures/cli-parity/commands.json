@@ -352,6 +352,48 @@
       ]
     },
     {
+      "id": "connect",
+      "usage": "runx connect list|start|status|invoke|revoke ... [-j|--json]",
+      "aliases": [],
+      "requiredPositionals": [],
+      "flags": [
+        "--scope",
+        "--scope-family",
+        "--authority-kind",
+        "--target-repo",
+        "--target-locator",
+        "--binding",
+        "--grant",
+        "--operation",
+        "--input",
+        "--api-base-url",
+        "--token",
+        "--allow-local-api",
+        "--json",
+        "-j"
+      ],
+      "exitCodes": [
+        0,
+        1,
+        2,
+        64
+      ],
+      "parity": {
+        "humanOutput": "semantic",
+        "jsonOutput": "schema-exact",
+        "receipt": "none",
+        "sideEffect": "external-stub",
+        "surfaces": [
+          "public-api",
+          "connect",
+          "cli-presentation"
+        ]
+      },
+      "cases": [
+        "connect.execute"
+      ]
+    },
+    {
       "id": "policy.inspect",
       "usage": "runx policy inspect <policy.json>",
       "aliases": [],
@@ -669,6 +711,7 @@
         "--input",
         "--receipt-dir",
         "--credential",
+        "--credential-scope",
         "--secret-env",
         "--non-interactive",
         "--json"
@@ -734,13 +777,15 @@
     },
     {
       "id": "harness",
-      "usage": "runx harness <fixture.yaml...>",
+      "usage": "runx harness <skill-dir|fixture.yaml...>",
       "aliases": [],
       "requiredPositionals": [
-        "<fixture.yaml...>"
+        "<skill-dir|fixture.yaml...>"
       ],
       "flags": [
-        "--json"
+        "--json",
+        "--help",
+        "-h"
       ],
       "exitCodes": [
         0,

@@ -17,23 +17,18 @@ should take next.
 Do not drift into a generic article, daily update, or trend recap. The point is
 to help a human decide, not to narrate that research happened.
 
-## Quality Profile
+Separate verified evidence from inference and carry unresolved questions into
+the memo. The synthesis must say what the reader should monitor, do, defer, or
+investigate next. Return `needs_more_evidence` when the packet cannot support a
+recommendation, and `not_worth_publishing` when the answer is sound but does not
+matter to the stated decision.
 
-- Purpose: answer one high-signal question well enough to support a concrete
-  product, ecosystem, or operator decision.
-- Audience: a maintainer, operator, or reviewer who needs a bounded brief, not
-  a generic explainer.
-- Artifact contract: research packet, synthesized draft, approval decision, and
-  publish packet.
-- Evidence bar: separate verified evidence from inference, carry open questions
-  forward, and avoid claims the packet cannot support.
-- Voice bar: decision memo, not SEO copy, launch copy, or thought-leadership
-  filler.
-- Strategic bar: explain what the reader should monitor, do, defer, or
-  investigate next.
-- Stop conditions: return `needs_more_evidence` when the packet is too thin to
-  support a recommendation and `not_worth_publishing` when the question is true
-  but not decision-relevant.
+## Output
+
+- `research_packet`: bounded evidence, confidence, inference, and open questions.
+- `brief_draft`: the decision memo synthesized from that packet.
+- `approval_decision`: review of the exact brief and its remaining uncertainty.
+- `publish_packet`: approved brief and delivery metadata.
 
 ## Inputs
 

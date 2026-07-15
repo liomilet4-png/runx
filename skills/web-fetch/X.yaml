@@ -53,4 +53,6 @@ runners:
             - net:allowlist
           artifacts:
             named_emits:
+              fetch_result: fetch_result
+            packets:
               fetch_result: runx.fetch.v1

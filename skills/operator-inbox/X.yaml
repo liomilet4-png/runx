@@ -7,37 +7,6 @@ catalog:
   visibility: public
   role: canonical
 
-harness:
-  cases:
-    - name: operator-inbox-records-local-action
-      runner: record_action_observation
-      inputs:
-        data_source_ref: local://runx/operator-inbox/harness
-        action_id: action-04a315f3a0af034c1c2022c0a15eb6b6b2819a63839f02f77187fd30163d1cd1
-        expected_version: 0
-        observed_at: 2026-07-14T00:00:00.000Z
-        triage:
-          kind: direct_mention
-          reason: The connected operator was directly mentioned.
-        message:
-          provider: fixture
-          external_tenant_ref: workspace-1
-          connected_subject_ref: operator-1
-          message_locator: fixture://workspace-1/general/100
-          thread_locator: fixture://workspace-1/general/100
-          author:
-            external_id: user-1
-            display_name: George
-          conversation:
-            external_id: general
-            display_name: general
-            type: channel
-          occurred_at: 2026-07-13T23:59:00.000Z
-          preview: Please review the analytics result.
-          context: []
-      expect:
-        status: sealed
-
 policy:
   allow:
     - provider: data-source

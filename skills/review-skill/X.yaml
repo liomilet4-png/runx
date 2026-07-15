@@ -51,9 +51,6 @@ harness:
 
 
 runners:
-  agent:
-    type: agent
-
   evaluate:
     default: true
     type: agent-task

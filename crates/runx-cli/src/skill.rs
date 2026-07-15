@@ -41,10 +41,11 @@ pub struct SkillPlan {
     pub approve_operator_context: Option<String>,
     pub inputs: BTreeMap<String, JsonValue>,
     /// One-shot, per-run local credential descriptor supplied via
-    /// `--credential` and `--secret-env`. The secret is read from the named
-    /// process environment variable so raw secret material never appears on
-    /// argv. Runner-specific execution validates whether that delivery channel
-    /// is supported before any child process starts.
+    /// `--credential`, repeatable `--credential-scope`, and `--secret-env`.
+    /// The secret is read from the named process environment variable so raw
+    /// secret material never appears on argv. Runner-specific execution
+    /// validates whether that delivery channel is supported before any child
+    /// process starts.
     pub local_credential: Option<LocalCredentialDescriptor>,
 }
 

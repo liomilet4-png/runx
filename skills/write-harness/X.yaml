@@ -120,6 +120,12 @@ harness:
             skill_spec:
               name: write-harness
               note: No change. Upstream review.verdict was pass.
+            pain_points: []
+            catalog_fit:
+              adjacent_skills:
+                - write-harness
+              why_new: No new capability or catalog entry is proposed because the upstream review passed.
+            maintainer_decisions: []
             execution_plan:
               runner: agent-task
               note: No change.

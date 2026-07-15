@@ -307,9 +307,9 @@ tools/<namespace>/<tool>/
 artifacts:
 
 ```bash
-pnpm exec tsx packages/cli/src/index.ts tool build --all --json
-pnpm exec tsx packages/cli/src/index.ts dev --lane deterministic --json
-pnpm exec tsx packages/cli/src/index.ts dev --lane repo-integration --json
+runx tool build --all --json
+runx dev --lane deterministic --json
+runx dev --lane repo-integration --json
 ```
 
 `run.mjs` is intentionally checked in as the thin runtime shim that imports the

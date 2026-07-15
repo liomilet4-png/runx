@@ -281,7 +281,7 @@ dispatch_decision:
     reason: string
 ```
 
-## Quality Bar
+## Decision rules
 
 - Prefer one clear next action over a dashboard dump.
 - Never bury a required approval in prose; put it in `approval_prompt`.

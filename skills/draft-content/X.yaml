@@ -94,9 +94,6 @@ harness:
           schema: runx.receipt.v1
 
 runners:
-  agent:
-    type: agent
-
   draft:
     default: true
     type: agent-task

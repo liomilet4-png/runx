@@ -294,7 +294,10 @@ runners:
     task: work-plan
     outputs:
       change_set: object
-      harness_context: object
+      harness_context:
+        type: object
+        required: false
+        description: Preserved harness context when one was supplied.
       objective_summary: string
       workspace_change_plan: object
       orchestration_steps: array

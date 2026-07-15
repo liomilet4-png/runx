@@ -16,7 +16,7 @@ status, dispositions, replay suppression, reopen rules, and scan coverage. Every
 read and write is composed through `data-store`; the skill does not call Slack,
 SQLite, Postgres, or another provider directly.
 
-## State boundary
+## What this skill does
 
 Use `local://runx/operator-inbox/default` unless the operator selects another
 logical source. Unbound local refs resolve to SQLite under
@@ -28,6 +28,23 @@ Observations and resumable checkpoints live in `operator_inbox_scans`, partition
 by query digest. Action snapshots live in `operator_inbox_actions`, with one
 stream per stable thread digest. Queue reads use bounded `list_stream_heads`
 pages; no command folds or transports the complete queue.
+
+## When to use this skill
+
+- Build or revisit a local action queue from bounded connector observations.
+- Preserve an explicit `resolved`, `dismissed`, `waiting`, or `followed_up`
+  decision across repeated provider scans.
+- Reopen a completed item when a newer external occurrence arrives.
+- Inspect bounded action or scan state without handing queue ownership to the
+  provider or hosted control plane.
+
+## When not to use this skill
+
+- Do not fetch provider data, reply, send, or mutate a remote account here.
+- Do not infer that an item is complete from message text or provider state.
+- Do not use it as an unbounded archive of raw messages or credentials.
+- Do not place a private operator's routing policy or identity in this public
+  package; pass normalized observations and explicit dispositions as inputs.
 
 ## Status rules
 
@@ -47,7 +64,7 @@ Items use `open`, `waiting`, `followed_up`, `resolved`, or `dismissed`.
 The provider-neutral thread locator is the item key. Stored previews are bounded;
 credentials, tokens, and full provider response envelopes are forbidden.
 
-## Host loop
+## Procedure
 
 1. Read the latest checkpoint for the bounded query digest.
 2. Resume its provider cursor when the prior scan was interrupted or truncated.
@@ -62,7 +79,7 @@ credentials, tokens, and full provider response envelopes are forbidden.
 The loop is outside the kernel. Each page or disposition remains one governed,
 receipt-backed Runx turn.
 
-## Stop conditions
+## Edge cases and stop conditions
 
 - `needs_input`: missing query identity, observation, disposition,
   actor, reason, or scan coverage.
@@ -72,3 +89,26 @@ receipt-backed Runx turn.
   provider data.
 - `refused`: a caller asks this skill to send, reply, broaden a grant, store a
   token, or silently claim complete coverage.
+
+## Output schema
+
+Write runners emit `runx.effect.transition.v1`, containing the effect family,
+operation, expected projection version, idempotency key, and one normalized
+event. Read and list runners return the corresponding bounded `data-store`
+event result; they never synthesize provider coverage or completion.
+
+## Worked example
+
+Given a normalized direct mention from a teammate in one provider thread,
+`record_action_observation` derives the stable action id from the provider-neutral
+thread locator and appends an `open` action snapshot. If the operator later
+records `resolved` with a reason, replaying that mention preserves `resolved`;
+a newer external reply in the same thread appends a reopened `open` snapshot.
+
+## Inputs
+
+All runners require `data_source_ref`. Write runners also take the target id,
+`expected_version`, and `observed_at`, plus exactly the normalized payload for
+their operation: `scan` and `messages`, `message` and `triage`, `disposition`,
+or an imported `action`. Reads take `action_id` or `query_digest`; list runners
+take bounded `limit` and optional cursor or filter fields.

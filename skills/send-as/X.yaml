@@ -1,5 +1,5 @@
 skill: send-as
-version: "0.1.2"
+version: "0.1.3"
 catalog:
   kind: skill
   audience: public
@@ -15,7 +15,7 @@ runners:
       send_plan: object
     artifacts:
       named_emits:
-        send_plan: runx.send_as.plan.v1
+        send_plan: send_plan
       packets:
         send_plan: runx.send_as.plan.v1
     runx:

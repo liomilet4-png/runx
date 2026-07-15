@@ -14,17 +14,18 @@ This skill does not send messages or mutate calendars. It composes context that
 a consuming product has already hydrated and redacted. Final sending,
 rescheduling, and destructive provider actions remain separate governed actions.
 
-## Quality Profile
+Every queued action or draft must identify the source thread or calendar item
+that justifies it. Lead with decisions and risks rather than summarizing the
+whole inbox. Return `needs_context` when the redacted snippets cannot support a
+safe recommendation, and force `manual_review` for legal, billing, HR, or
+sensitive account changes.
 
-- Purpose: help an operator decide what to answer, schedule, delegate, or defer.
-- Audience: an executive operator or assistant reviewing proposed actions.
-- Artifact contract: priority queue, draft replies, scheduling proposals, and
-  risks/open questions.
-- Evidence bar: cite the supplied thread or calendar item for every action.
-- Voice bar: crisp operator brief, not an inbox digest.
-- Strategic bar: reduce decision load while preserving human final approval.
-- Stop conditions: return `needs_context` when source snippets are insufficient
-  and `manual_review` for legal, billing, HR, or sensitive account changes.
+## Output
+
+- `priority_queue`: ranked actions with source refs and rationale.
+- `draft_replies`: unsent replies bound to their threads.
+- `scheduling_proposals`: proposed calendar changes, never mutations.
+- `risks_and_questions`: missing context and mandatory review flags.
 
 ## Inputs
 

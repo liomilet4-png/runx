@@ -49,9 +49,6 @@ harness:
 
 
 runners:
-  agent:
-    type: agent
-
   research:
     default: true
     type: agent-task
