@@ -1,0 +1,67 @@
+{
+  "schema": "runx.incident-commander.agency-spine.v1",
+  "status": "passed",
+  "generated_at": "2026-07-16T13:59:44.121Z",
+  "case_id": "incident-112-dogfood-20260716-215911",
+  "registry_package": {
+    "ref": "liomilet4-png/incident-commander@sha-af08d8fac7af",
+    "digest": "sha256:049b1f45b5fee3af58c91a7e0357cb8a5329a56356d2140795c5a2917804a4c2"
+  },
+  "agency_flow": [
+    {
+      "step": "fold_declared_case",
+      "folded_version": 3,
+      "status": "awaiting",
+      "pending_lane": "human:incident-reviewer"
+    },
+    {
+      "step": "run_incident_commander",
+      "receipt_ref": "runx:receipt:sha256:7acc298ec1afeaee8effa0c8c6eaf618edd7b6f4d2af08a2b52390f43639eb8d",
+      "receipt_verdict": "valid",
+      "result": "advanced"
+    },
+    {
+      "step": "append_incident_result",
+      "expected_version": 3,
+      "before_version": 3,
+      "after_version": 4,
+      "status": "committed",
+      "idempotency_key": "incident-112-dogfood-20260716-215911:turn:2:agency-driver-incident-result",
+      "member": "commander",
+      "member_receipt_ref": "runx:receipt:sha256:7acc298ec1afeaee8effa0c8c6eaf618edd7b6f4d2af08a2b52390f43639eb8d",
+      "agency_receipt_ref": "runx:receipt:sha256:5b56390ecb37f56614447f2730c6c245addb69e85021c3beff138a9532b23472",
+      "agency_receipt_verdict": "valid"
+    },
+    {
+      "step": "run_send_as_plan",
+      "receipt_ref": "runx:receipt:sha256:0cd3211482a87de1ebe46bc63be28691fd1fd6b5b8f8df1dde95a413d54ec87e",
+      "receipt_verdict": "valid",
+      "result": "ready",
+      "external_send": false
+    },
+    {
+      "step": "append_send_plan_result",
+      "expected_version": 4,
+      "before_version": 4,
+      "after_version": 5,
+      "status": "committed",
+      "idempotency_key": "incident-112-dogfood-20260716-215911:turn:3:preclaim-driver-2",
+      "member": "comms_lead",
+      "member_receipt_ref": "runx:receipt:sha256:0cd3211482a87de1ebe46bc63be28691fd1fd6b5b8f8df1dde95a413d54ec87e",
+      "agency_receipt_ref": "runx:receipt:sha256:d987a74a14f1c692c45027372273936d81aed089c2ca130145bcf3297573bcbb",
+      "agency_receipt_verdict": "valid"
+    }
+  ],
+  "assertions": {
+    "real_shipped_agency_runner": true,
+    "case_stream_folded_before_append": true,
+    "incident_receipt_persisted_by_agency": true,
+    "incident_append_used_folded_expected_version": true,
+    "incident_append_was_cas_commit": true,
+    "send_plan_receipt_persisted_by_agency": true,
+    "send_plan_append_used_folded_expected_version": true,
+    "send_plan_append_was_cas_commit": true,
+    "all_named_receipts_verified": true,
+    "external_writes": 0
+  }
+}

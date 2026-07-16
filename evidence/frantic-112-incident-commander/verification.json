@@ -2,7 +2,7 @@
   "schema": "runx.incident-commander.verification.v1",
   "evidence_scope": "repository-level proof; not part of the immutable registry package",
   "valid": true,
-  "summary": "All package, publication, harness, install, dogfood, and receipt checks required for the incident-commander delivery passed.",
+  "summary": "All package, publication, harness, install, direct registry run, shipped agency-runner fold, CAS append, and receipt verification checks required for the incident-commander delivery passed.",
   "package": {
     "owner": "liomilet4-png",
     "name": "incident-commander",
@@ -20,8 +20,8 @@
     "skill_md": "https://raw.githubusercontent.com/runxhq/runx/refs/pull/330/head/skills/incident-commander/SKILL.md"
   },
   "receipt": {
-    "id": "sha256:698755f06556247d4e7226a42e2906e903df0d848d43fd5a1d76742d63f90025",
-    "ref": "runx:receipt:sha256:698755f06556247d4e7226a42e2906e903df0d848d43fd5a1d76742d63f90025",
+    "id": "sha256:7acc298ec1afeaee8effa0c8c6eaf618edd7b6f4d2af08a2b52390f43639eb8d",
+    "ref": "runx:receipt:sha256:7acc298ec1afeaee8effa0c8c6eaf618edd7b6f4d2af08a2b52390f43639eb8d",
     "source": "post-publish direct registry incident-commander post-approval run",
     "verify_exit_code": 0,
     "verify_verdict": "valid"
@@ -76,6 +76,16 @@
       "id": "direct_registry_dogfood",
       "status": "passed",
       "evidence": "immutable registry ref produced the submitted incident-commander receipt"
+    },
+    {
+      "id": "agency_spine_fold_and_cas",
+      "status": "passed",
+      "evidence": "shipped agency runner folded version 3, committed incident result 3 to 4, and committed send-plan result 4 to 5 using the folded expected_version each time"
+    },
+    {
+      "id": "agency_receipt_linkage",
+      "status": "passed",
+      "evidence": "agency turns persist the exact verified incident-commander and send-as member receipt refs; both agency receipts also verify"
     },
     {
       "id": "receipt_verify",
